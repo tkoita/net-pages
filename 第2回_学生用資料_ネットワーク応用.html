@@ -1,0 +1,862 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>第2回 演習資料：ストリームと文字コード — ネットワーク応用</title><style>
+
+:root{--paper:#fbfaf7;--ink:#1f2933;--soft:#52606d;--line:#d9dee5;--codebg:#f4f6f9;}
+*{box-sizing:border-box;}html,body{margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:#e8ebef;color:var(--ink);font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased;padding:0 16px 80px;}
+/* ---- Web閲覧向け：固定ナビゲーション ---- */
+.topnav{position:sticky;top:0;z-index:60;margin:0 -16px 24px;padding:0 16px;background:rgba(232,235,239,.93);backdrop-filter:saturate(150%) blur(10px);-webkit-backdrop-filter:saturate(150%) blur(10px);border-bottom:1px solid #d3d9e0;}
+.topnav .inner{max-width:880px;margin:0 auto;display:flex;align-items:center;gap:14px;height:54px;}
+.topnav .brand{font-size:12.5px;font-weight:800;color:#1f2933;white-space:nowrap;letter-spacing:.02em;}
+.topnav .brand span{display:block;font-size:10.5px;font-weight:700;color:#7b8794;letter-spacing:.06em;}
+.topnav .links{display:flex;gap:3px;overflow-x:auto;flex:1;scrollbar-width:none;-ms-overflow-style:none;}
+.topnav .links::-webkit-scrollbar{display:none;}
+.topnav .links a{font-size:12px;font-weight:700;color:#52606d;text-decoration:none;padding:6px 11px;border-radius:6px;white-space:nowrap;transition:background .12s,color .12s;}
+.topnav .links a:hover{background:#dde2e8;color:#1f2933;}
+.topnav .links a.on{background:#1f2933;color:#fff;}
+.topnav .go{flex:0 0 auto;font-size:11.5px;font-weight:800;color:#fff;background:#4338ca;border-radius:6px;padding:7px 13px;text-decoration:none;white-space:nowrap;}
+.topnav .go:hover{background:#312e81;}
+.sheet,.topnotice{scroll-margin-top:70px;}
+/* ---- リンク ---- */
+a.ulink{text-decoration:none;border-bottom:1px solid rgba(11,108,181,.35);}
+a.ulink code{color:#0b6cb5;cursor:pointer;}
+a.ulink:hover code{background:#eef6fc;border-color:#bcdcf2;}
+/* ---- コードのコピーボタン ---- */
+.codewrap{position:relative;}
+.copybtn{position:absolute;top:9px;right:9px;font-size:11px;font-weight:700;color:#52606d;background:#fff;border:1px solid var(--line);border-radius:5px;padding:4px 11px;cursor:pointer;font-family:inherit;line-height:1.6;}
+.copybtn:hover{background:#eef1f4;color:#1f2933;}
+.copybtn.done{background:#eafaf0;border-color:#b9e4c8;color:#1f6631;}
+/* ---- チェックリストを操作可能に ---- */
+.checklist li{cursor:pointer;-webkit-user-select:none;user-select:none;border-radius:5px;transition:opacity .15s,background .12s;}
+.checklist li:hover{background:#f7f9fb;}
+.checklist li.done{opacity:.45;}
+.checklist li.done::before{background:var(--accent);border-color:var(--accent);}
+.checklist li.done::after{content:"\2713";position:absolute;left:3px;top:1px;color:#fff;font-size:12px;font-weight:900;line-height:1.45;}
+.ckprog{float:right;font-size:11px;font-weight:800;color:var(--soft);letter-spacing:.04em;}
+.ckhint{font-size:11px;color:#8a97a3;font-weight:600;margin:0 0 9px;}
+.sheet{max-width:880px;margin:0 auto 26px;background:var(--paper);border:1px solid var(--line);border-radius:6px;box-shadow:0 8px 30px rgba(20,30,45,.10);padding:44px 48px 52px;}
+.sheet.k1{--accent:#2f9e44;--accent-deep:#1f6631;--accentbg:#eafaf0;--accentbd:#b9e4c8;}
+.sheet.k2{--accent:#0b6cb5;--accent-deep:#08507f;--accentbg:#eef6fc;--accentbd:#bcdcf2;}
+.sheet.k3{--accent:#D97706;--accent-deep:#9a5407;--accentbg:#fff4e2;--accentbd:#f0cd9a;}
+.sheet.k4{--accent:#7c3aed;--accent-deep:#5b21b6;--accentbg:#f3eefe;--accentbd:#d6c6f5;}
+.sheet.k5{--accent:#4338ca;--accent-deep:#312e81;--accentbg:#eef0fd;--accentbd:#c7cbf5;}
+.sheet.k6{--accent:#be185d;--accent-deep:#831843;--accentbg:#fdeef5;--accentbd:#f3bdd7;}
+.sheet.i1{--accent:#0f766e;--accent-deep:#0b4a44;--accentbg:#f0fdf9;--accentbd:#a8ded7;}
+.sheet.i2{--accent:#334155;--accent-deep:#1e293b;--accentbg:#f1f5f9;--accentbd:#cbd5e1;}
+.figure{margin-top:14px;padding:16px 18px 10px;background:#fff;border:1px solid var(--line);border-radius:8px;overflow-x:auto;}
+.figure .cap{font-size:11.5px;color:var(--soft);margin:6px 0 0;text-align:left;line-height:1.7;}
+.figure svg{display:block;min-width:620px;}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:700;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;}
+.eyebrow .no{font-family:"SFMono-Regular",Consolas,Menlo,monospace;font-size:15px;}
+.badge{font-size:11px;letter-spacing:.08em;font-weight:800;color:#fff;background:var(--accent);padding:2px 9px;border-radius:20px;}
+.badge.alt{background:#334155;}
+h1{font-size:28px;font-weight:800;margin:6px 0 0;line-height:1.25;}
+.lead{margin:13px 0 0;color:var(--soft);font-size:14px;}
+.lead b{color:var(--ink);font-weight:700;} code{font-family:"SFMono-Regular",Consolas,Menlo,monospace;}
+.meta{margin-top:16px;display:flex;gap:22px;flex-wrap:wrap;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:11px 0;font-size:12.5px;color:var(--soft);}
+.meta b{color:var(--ink);font-weight:700;}
+.grid2{display:flex;gap:14px;margin-top:18px;flex-wrap:wrap;}
+.card{flex:1;min-width:240px;padding:14px 16px;border-radius:8px;border:1px solid var(--accentbd);background:var(--accentbg);}
+.card h3{margin:0 0 7px;font-size:13px;font-weight:800;color:var(--accent-deep);letter-spacing:.03em;}
+.card ul{margin:0;padding-left:18px;font-size:12.8px;color:#444;} .card li{margin:3px 0;}
+.card code{background:#fff;border:1px solid var(--accentbd);border-radius:4px;padding:0 4px;font-size:12px;}
+.verify{margin-top:14px;padding:13px 16px;background:#eef6fc;border:1px solid #bcdcf2;border-left:4px solid #1971c2;border-radius:8px;font-size:12.8px;color:#1d4e74;line-height:1.7;}
+.verify b{font-weight:800;} .verify code{font-family:"SFMono-Regular",Consolas,Menlo,monospace;background:#fff;border:1px solid #bcdcf2;border-radius:4px;padding:0 4px;}
+.warn{margin-top:12px;padding:11px 15px;background:#fdecec;border:1px solid #f3b9b9;border-left:4px solid #c0392b;border-radius:8px;font-size:12.6px;color:#7a1f1f;line-height:1.65;} .warn b{font-weight:800;}
+.warn code{background:#fff;border:1px solid #f3b9b9;border-radius:4px;padding:0 4px;}
+.timerule{margin-top:14px;padding:13px 16px;background:#fff1f0;border:1px solid #f0b4ae;border-left:5px solid #c0392b;border-radius:8px;font-size:13.3px;color:#7a1f1f;line-height:1.7;} .timerule b{font-weight:800;} .timerule .big{display:inline-block;font-size:15px;font-weight:800;margin-right:6px;}
+.notimerule{margin-top:14px;padding:13px 16px;background:#eafaf0;border:1px solid #b9e4c8;border-left:5px solid #2f9e44;border-radius:8px;font-size:13.3px;color:#1f6631;line-height:1.7;} .notimerule b{font-weight:800;} .notimerule .big{display:inline-block;font-size:15px;font-weight:800;margin-right:6px;}
+.notimerule code{background:#fff;border:1px solid #b9e4c8;border-radius:4px;padding:0 4px;}
+.plabel{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--soft);text-transform:uppercase;margin:26px 0 9px;}
+pre.code{margin:0;background:var(--codebg);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:5px;padding:18px 20px;overflow-x:auto;font-family:"SFMono-Regular",Consolas,Menlo,"Yu Gothic",monospace;font-size:13px;line-height:1.9;color:#27313b;white-space:pre;}
+.cmt{color:#8a97a3;} .kw{color:#0b6cb5;font-weight:600;} .str{color:#1f7a3d;}
+.idnote{margin:14px 0 0;padding:11px 15px;background:#fff7e0;border:1px solid #f0d68a;border-left:4px solid #e0a800;border-radius:8px;font-size:13px;color:#6e5200;line-height:1.6;}
+.idnote b{font-weight:800;} .idnote code{font-family:"SFMono-Regular",Consolas,Menlo,monospace;background:#fff;border:1px solid #f0d68a;border-radius:4px;padding:0 4px;}
+.dayof{margin-top:14px;padding:13px 16px;background:#2a2f38;border-radius:8px;color:#f4f6f9;font-size:12.8px;line-height:1.8;}
+.dayof b{color:#ffd479;font-weight:800;}
+.dayof code{background:#3a4049;border-radius:4px;padding:0 5px;color:#e6edf3;}
+.ainote{margin-top:14px;padding:13px 16px;background:#f0fdf9;border:1px solid #a8ded7;border-left:4px solid #0f766e;border-radius:8px;font-size:12.8px;color:#0b4a44;line-height:1.75;}
+.ainote b{font-weight:800;} .ainote code{background:#fff;border:1px solid #a8ded7;border-radius:4px;padding:0 4px;}
+.design{margin-top:14px;padding:13px 16px;background:#f4f6f9;border:1px solid var(--line);border-left:4px solid var(--soft);border-radius:8px;font-size:12.6px;color:#3a4654;line-height:1.75;}
+.design b{color:var(--ink);}
+.topnotice{max-width:880px;margin:0 auto 26px;background:#fffaf0;border:2px solid #e0a800;border-radius:8px;padding:22px 26px;box-shadow:0 8px 30px rgba(20,30,45,.10);}
+.topnotice h2{margin:0 0 10px;font-size:16px;font-weight:800;color:#8a6200;display:flex;align-items:center;gap:8px;}
+.topnotice h2::before{content:"";width:4px;height:18px;background:#e0a800;border-radius:2px;}
+.topnotice p{margin:0 0 8px;font-size:13.3px;line-height:1.85;color:#4a3c00;}
+.topnotice ul{margin:6px 0 8px;padding-left:20px;font-size:13.3px;line-height:1.85;color:#4a3c00;}
+.topnotice li{margin:4px 0;}
+.topnotice b{color:#5c4700;}
+.topnotice .axis{margin-top:10px;padding:11px 15px;background:#fff;border:1px solid #e0a800;border-radius:6px;font-size:13px;color:#4a3c00;}
+h2{font-size:16px;font-weight:800;margin:30px 0 6px;display:flex;align-items:center;gap:10px;}
+h2::before{content:"";width:4px;height:18px;background:var(--accent);border-radius:2px;}
+.note{font-size:12.8px;color:var(--soft);margin:0 0 14px;}
+table.levels{border-collapse:collapse;width:100%;margin:4px 0 6px;font-size:13px;}
+table.levels th,table.levels td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top;}
+table.levels thead th{background:var(--accentbg);color:var(--accent-deep);font-weight:800;}
+table.levels tbody tr:nth-child(even){background:#fafbfc;}
+table.levels code{background:#f1f3f6;border:1px solid #e0e4ea;border-radius:4px;padding:0 4px;font-size:11.6px;word-break:break-all;}
+table.levels b{font-weight:700;}
+.level{margin-bottom:12px;border:1px solid var(--accentbd);border-radius:8px;overflow:hidden;background:#fff;}
+.lvhead{display:flex;align-items:center;gap:10px;padding:8px 13px;background:var(--accentbg);border-bottom:1px solid var(--accentbd);}
+.chip{font-size:11px;font-weight:800;color:#fff;padding:2px 10px;border-radius:20px;}
+.c-beg{background:#2f9e44;}.c-mid{background:#1971c2;}.c-adv{background:#9a3412;}.c-exp{background:#6741d9;}
+.lvhead .t{font-size:13px;font-weight:700;} .level ul,.level ol{margin:9px 15px 13px;padding-left:20px;font-size:12.8px;line-height:1.7;color:#3a4654;} .level li{margin:4px 0;}
+.level code{background:#f1f3f6;border:1px solid #e0e4ea;border-radius:4px;padding:0 4px;font-size:12px;word-break:break-all;} .level b{font-weight:700;color:var(--ink);}
+.level p{margin:9px 15px 11px;font-size:12.8px;line-height:1.7;color:#3a4654;}
+.cmdlist{margin:10px 15px 15px;}
+.cmdlist .cmd{border:1px solid #e0e4ea;border-left:3px solid var(--accent);border-radius:6px;background:#fafbfc;padding:12px 15px;margin:10px 0;}
+.cmdlist .cmdhead{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.cmdlist .cmdname{font-family:"SFMono-Regular",Consolas,Menlo,monospace;font-size:13.5px;font-weight:800;color:var(--accent-deep);background:#fff;border:1px solid var(--accentbd);border-radius:4px;padding:2px 9px;}
+.cmdlist .cmdtag{font-size:10.5px;font-weight:800;color:#fff;background:var(--accent);border-radius:20px;padding:2px 9px;letter-spacing:.04em;}
+.cmdlist .cmdtag.red{background:#c0392b;}
+.cmdlist p{margin:9px 0 0;font-size:12.6px;line-height:1.8;color:#3a4654;}
+.cmdlist p .lbl{display:inline-block;font-size:10.5px;font-weight:800;color:var(--accent-deep);background:var(--accentbg);border:1px solid var(--accentbd);border-radius:3px;padding:0 6px;margin-right:7px;vertical-align:1px;}
+.cmdlist code{background:#fff;border:1px solid #e0e4ea;border-radius:4px;padding:0 4px;font-size:12px;}
+.cmdlist .ex{margin-top:9px;padding:9px 12px;background:#fff;border:1px dashed #b8c2ce;border-radius:5px;font-size:12px;line-height:1.8;color:#52606d;}
+.cmdlist .ex .q{display:block;font-family:"SFMono-Regular",Consolas,Menlo,"Hiragino Kaku Gothic ProN",monospace;color:#27313b;margin:3px 0;}
+.cmdlist .ex b{color:var(--accent-deep);}
+.lbl{display:inline-block;font-size:10.5px;font-weight:800;color:var(--accent-deep);background:var(--accentbg);border:1px solid var(--accentbd);border-radius:3px;padding:0 6px;margin-right:7px;vertical-align:1px;}
+.stats{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap;}
+.stat{flex:1;min-width:148px;background:#fff;border:1px solid var(--accentbd);border-radius:8px;padding:14px 14px 12px;text-align:center;}
+.stat .n{font-size:31px;font-weight:800;color:var(--accent);line-height:1.05;letter-spacing:-.02em;}
+.stat .n small{font-size:16px;font-weight:800;}
+.stat .l{font-size:11.5px;color:#3a4654;margin-top:8px;line-height:1.6;}
+.stat.bad{border-color:#f3b9b9;background:#fffafa;}
+.stat.bad .n{color:#c0392b;}
+.statsrc{font-size:11px;color:var(--soft);margin-top:9px;line-height:1.6;}
+.statlead{font-size:12.5px;font-weight:800;color:var(--accent-deep);margin:18px 0 0;letter-spacing:.03em;}
+.statlead.bad{color:#c0392b;}
+.qrbox{flex:0 0 auto;width:158px;text-align:center;}
+.qrimg{width:158px;height:158px;background:#fff;border:1px solid var(--accentbd);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;box-sizing:border-box;}
+.qrimg svg{width:100%;height:auto;display:block;flex:0 0 auto;}
+.qrimg .ph{font-size:11.5px;font-weight:800;color:var(--accent);line-height:1.7;}
+.qrcap{font-size:11px;color:var(--soft);margin-top:8px;line-height:1.55;}
+.formurl{margin:11px 0 0;padding:11px 14px;background:#fff;border:1px solid var(--accentbd);border-radius:6px;font-family:"SFMono-Regular",Consolas,Menlo,monospace;font-size:12.5px;color:#0b6cb5;word-break:break-all;font-weight:700;}
+.formfields{margin:11px 0 0;padding:0;list-style:none;}
+.formfields li{font-size:12.6px;line-height:1.75;color:#3a4654;padding:5px 0 5px 26px;position:relative;border-bottom:1px dotted var(--accentbd);}
+.formfields li:last-child{border-bottom:none;}
+.formfields li::before{content:"";position:absolute;left:2px;top:11px;width:9px;height:9px;border-radius:2px;background:var(--accent);}
+.formfields li b{color:var(--ink);}
+.record{margin-top:30px;display:flex;gap:22px;align-items:center;background:var(--accentbg);border:1px solid var(--accentbd);border-left:4px solid var(--accent);border-radius:8px;padding:20px 22px;}
+.record .txt{flex:1;min-width:0;} .record .rh{font-size:15px;font-weight:800;margin:0 0 7px;display:flex;align-items:center;gap:9px;color:var(--accent-deep);}
+.record .rh .ic{width:25px;height:25px;border-radius:6px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.record p{margin:0 0 8px;font-size:13px;line-height:1.65;color:#444;}
+.record .vals{display:flex;gap:10px;flex-wrap:wrap;margin:9px 0 11px;}
+.record .vals span{background:#fff;border:1px solid var(--accentbd);border-radius:5px;padding:5px 12px;font-size:12.3px;font-weight:700;color:var(--accent-deep);}
+.record .lnk{font-size:12px;word-break:break-all;} .record .lnk a{color:#0b6cb5;font-weight:700;}
+.foot{margin-top:30px;padding-top:14px;border-top:1px dashed var(--line);font-size:12px;color:var(--soft);}
+ol.steps{margin:12px 0 0;padding-left:22px;font-size:13.3px;line-height:1.85;}
+ol.steps li{margin:7px 0;} ol.steps code{background:#f1f3f6;border:1px solid #e0e4ea;border-radius:4px;padding:0 5px;font-size:12.3px;word-break:break-all;}
+ol.steps b{font-weight:700;}
+.checklist{margin-top:16px;padding:16px 18px;background:#fff;border:1px solid var(--accentbd);border-radius:8px;}
+.checklist h4{margin:0 0 10px;font-size:12px;font-weight:800;letter-spacing:.1em;color:var(--accent-deep);text-transform:uppercase;}
+.checklist ul{margin:0;padding:0;list-style:none;font-size:13px;}
+.checklist li{margin:8px 0;padding-left:29px;position:relative;line-height:1.7;color:#3a4654;}
+.checklist li::before{content:"";position:absolute;left:0;top:3px;width:16px;height:16px;border:2px solid var(--accent);border-radius:3px;background:#fff;}
+.checklist li b{color:var(--ink);font-weight:700;}
+.checklist code{background:#f1f3f6;border:1px solid #e0e4ea;border-radius:4px;padding:0 4px;font-size:12px;}
+.checklist .fill{display:inline-block;min-width:80px;border-bottom:1.5px dashed var(--accent);}
+.flowbox{margin-top:12px;display:flex;flex-direction:column;gap:0;}
+.frow{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #e0a800;border-radius:6px;padding:10px 14px;}
+.frow .fno{flex:0 0 auto;font-family:"SFMono-Regular",Consolas,Menlo,monospace;font-size:11px;font-weight:800;letter-spacing:.1em;color:#8a6200;background:#fff7e0;border:1px solid #f0d68a;border-radius:20px;padding:2px 11px;}
+.frow .ftxt{flex:1;font-size:13px;color:#4a3c00;}
+.frow .ftime{flex:0 0 auto;font-size:11.5px;color:#8a6200;font-weight:700;}
+.farrow{text-align:center;color:#c39a00;font-size:14px;line-height:1;padding:3px 0;}
+.frow.home{background:#fffdf5;}
+.ftag{flex:0 0 auto;font-size:10.5px;font-weight:800;color:#fff;background:#c39a00;border-radius:20px;padding:2px 9px;letter-spacing:.04em;}
+.roomnote{margin-top:12px;padding:13px 16px;background:#eafaf0;border:2px solid #2f9e44;border-radius:8px;font-size:13.2px;color:#1f6631;line-height:1.8;}
+.roomnote b{font-weight:800;}
+.roomnote .rt{display:block;font-size:14px;font-weight:800;margin-bottom:7px;}
+.roomnote code{background:#fff;border:1px solid #b9e4c8;border-radius:4px;padding:0 4px;}
+.roomtag{display:inline-flex;align-items:center;gap:7px;margin-top:14px;padding:9px 14px;background:#eafaf0;border:1px solid #b9e4c8;border-left:4px solid #2f9e44;border-radius:8px;font-size:12.8px;color:#1f6631;line-height:1.7;}
+.fwait{background:#fdecec;border:1px dashed #c0392b;border-radius:6px;padding:8px 14px;font-size:12.6px;color:#7a1f1f;font-weight:700;text-align:center;}
+@media print{html{scroll-behavior:auto;}body{background:#fff;padding:0;}.topnav,.copybtn,.ckprog,.ckhint{display:none!important;}a.ulink{border-bottom:none;}.sheet{box-shadow:none;border:none;border-radius:0;max-width:none;padding:24px 28px;margin:0;}.topnotice{box-shadow:none;max-width:none;margin:0 0 14px;}.sheet.i2,.sheet.k1,.sheet.k2,.sheet.k3,.sheet.k4,.sheet.k5,.sheet.k6{page-break-before:always;}.level,pre.code,.record,.card,.verify,.checklist,.ainote,.warn,.dayof,.idnote,.figure,table.levels{break-inside:avoid;}}
+@media (max-width:640px){.topnav .inner{height:50px;gap:9px;}.topnav .brand span{display:none;}.topnav .go{padding:6px 10px;font-size:11px;}.qrbox{width:100%;}.qrimg{margin:0 auto;}.sheet{padding:30px 22px 40px;}h1{font-size:23px;}pre.code{font-size:12px;padding:15px;}.record{flex-direction:column;align-items:flex-start;}.frow{flex-wrap:wrap;gap:7px;}}
+
+/* --- 第2回追加：図（コピーボタンなし・等幅） --- */
+pre.fig{margin:14px 0 0;background:#fff;border:1px solid var(--line);border-left:4px solid var(--soft);border-radius:6px;padding:16px 18px;overflow-x:auto;font-family:"SFMono-Regular",Consolas,Menlo,"Yu Gothic",monospace;font-size:12.5px;line-height:1.75;color:#27313b;white-space:pre;}
+@media (max-width:640px){pre.fig{font-size:11px;padding:12px;}}
+@media print{pre.fig{break-inside:avoid;}}
+</style></head>
+<body>
+
+<header class="topnav">
+  <div class="inner">
+    <div class="brand">第2回 演習資料：ストリームと文字コード<span>ネットワーク応用</span></div>
+    <div class="links">
+      <a href="#overview">この回の全体像</a>
+      <a href="#part1">PART 1 講義</a>
+      <a href="#part2">演習A</a>
+      <a href="#part3">演習B</a>
+      <a href="#part4">演習C</a>
+      <a href="#part5">演習D</a>
+      <a href="#part6">宿題提示</a>
+      <a href="#hw">宿題仕様</a>
+      <a href="#help">困ったときは</a>
+    </div>
+    <a class="go" href="#hw">宿題を見る</a>
+  </div>
+</header>
+
+<section class="topnotice" id="top">
+  <h2>★ 今日この教室でやること、ひとことで</h2>
+  <p><b>つながった線の上を、実際に何が流れているのかを見ます。</b>第1回は「つながる／つながらない」でした。今日は<b>その次の1バイト目から</b>です。</p>
+  <ul>
+    <li><b>バイト → 文字 → 行</b>の3段を、下から順に自分で書きます。<b>最後に <code>BufferedReader</code> に置き換えて、ライブラリが何を隠していたかを確認</b>します。</li>
+    <li><b>今日いちばん体験してほしいのは「エラー」ではなく「固まる」ことです。</b>ネットワークのプログラムは、間違えても止まらず、黙って待ち続けます。</li>
+    <li>サーバは今日も書きません（第3回）。使うのは第1回と同じ <code>EchoServer.jar</code>、ポートも <code>40001</code> のままです。</li>
+    <li><b>今日は文字コードを、1か所残らず自分で明示します。</b>「書かなくても動いた」は、この回では不正解です。</li>
+  </ul>
+  <div class="axis">
+    <b>始める前の3点確認</b>
+    <div class="flowbox" style="margin-top:8px;">
+      <div class="frow"><span class="fno">1</span><span class="ftxt"><code>java -version</code> が通る（JDK 17 以降）</span><span class="ftime">30秒</span></div>
+      <div class="farrow">＋</div>
+      <div class="frow"><span class="fno">2</span><span class="ftxt"><code>EchoServer.jar</code> が手元にある（第1回の配布物。無い人は eclass から再取得）</span><span class="ftime">30秒</span></div>
+      <div class="farrow">＋</div>
+      <div class="frow"><span class="fno">3</span><span class="ftxt">第1回の <code>Connect.java</code> が手元にある　<b>今日はこれをコピーして始めます</b></span><span class="ftime">30秒</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 全体像 ============================ -->
+<section class="sheet i1" id="overview">
+  <div class="eyebrow">この回の全体像 <span class="badge">まず読む</span></div>
+  <h1>第2回：TCPクライアント ／ ストリーム・文字コード・行単位プロトコル</h1>
+  <p class="lead">第1回で <code>CONNECTED</code> が出たところまで来ました。しかし、<b>接続できただけでは、まだ何も送れていません。</b>今日は「文字列を送る」と思っている操作が、実際には<b>バイト列を書き込む操作</b>であることを、目で見て確認します。</p>
+
+  <div class="meta">
+    <div><b>時間</b>　90分（講義20分 ／ 演習55分 ／ 宿題提示15分）</div>
+    <div><b>言語</b>　Java（JDK 17 以降）</div>
+    <div><b>ポート</b>　<code>40001</code>（第1回と同じ）</div>
+    <div><b>管理者権限</b>　不要</div>
+  </div>
+
+  <h2>この回の到達目標</h2>
+  <p class="note">帰るときに、次の5つが「はい」になっていれば成功です。</p>
+  <div class="checklist">
+    <h4>Goal of the day</h4>
+    <ul>
+      <li><b>文字列を <code>byte[]</code> に変換して送信し、返ってきたバイト列を16進で表示できた</b></li>
+      <li><b>同じバイト列が、読み方を変えるだけで別の文字になることを確認した</b></li>
+      <li><b>改行を付け忘れたプログラムが「固まる」ことを、実際に体験した</b></li>
+      <li><b><code>flush()</code> を消すと1バイトも送信されないことを確認した</b></li>
+      <li>宿題 <code>EchoClient.java</code> に着手し、<b>1ケースでも自己採点を通した</b></li>
+    </ul>
+  </div>
+
+  <h2>タイムテーブル</h2>
+  <p class="note">表記は<b>開始からの経過時間</b>です。</p>
+  <table class="levels">
+    <thead><tr><th style="width:110px;">経過</th><th>内容</th><th style="width:50px;">分</th></tr></thead>
+    <tbody>
+      <tr><td>0:00〜0:20</td><td><b>PART 1</b>　講義：ストリームの3段／TCPに境界はない／文字コード</td><td>20</td></tr>
+      <tr><td>0:20〜0:35</td><td><b>PART 2</b>　演習A：バイト列を送り、返りを16進で見る</td><td>15</td></tr>
+      <tr><td>0:35〜0:52</td><td><b>PART 3</b>　演習B：<b>同じバイト列を、違う文字コードで読む</b></td><td>17</td></tr>
+      <tr><td>0:52〜1:08</td><td><b>PART 4</b>　演習C：<b>固まる体験</b>（改行なし／<code>flush()</code> 忘れ）★本日の中心</td><td>16</td></tr>
+      <tr><td>1:08〜1:15</td><td><b>PART 5</b>　演習D：<code>Reader</code> / <code>Writer</code> に書き直す</td><td>7</td></tr>
+      <tr><td>1:15〜1:30</td><td><b>PART 6</b>　宿題の提示・自己採点の実演・<b>教室内で着手</b></td><td>15</td></tr>
+    </tbody>
+  </table>
+
+  <div class="design"><b>なぜこの順番なのか。</b>第1回と同じく<b>下から積みます。</b>いきなり <code>BufferedReader</code> から入ると、文字化けや「固まる」が起きたときに、<b>自分のコードが悪いのか、ライブラリの挙動なのかが区別できません。</b><br><br>
+  そこで今日は、<b>バイト(A) → 文字(B) → 行(C)</b> と自分で組み立ててから、<b>最後にライブラリへ置き換え(D)</b> ます。この順で通しておくと、以降12回、<b><code>readLine()</code> が返ってこないときに何を疑えばよいかが分かる</b>ようになります。</div>
+
+  <h2>この回にやらないこと</h2>
+  <div class="warn"><b>サーバは書きません。</b>第3回でやります。今日 <code>ServerSocket</code> に手を出すと、ほぼ確実に演習Cまで到達できません。<br><br>
+  <b>文字コードの歴史の話はしません。</b>JIS・EUC-JP・CP932 の成り立ちは扱いません。この授業で必要なのは、<b>「送る側と読む側で、同じ指定をしているか」</b>の1点だけです。<br><br>
+  <b>GUI も作りません。</b>提出物は第13回まですべて<b>標準出力に決められた形式で出す CLI プログラム</b>です。</div>
+
+  <div class="idnote"><b>★ この回で最初に言っておくこと。</b>今日の演習には、<b>意図的に「固まるコード」を書かせる場面が2回</b>あります（演習C）。<b>プログラムが反応しなくなっても故障ではありません。</b>そのときは <code>Ctrl</code>＋<code>C</code> で止めてください。<b>止め方を先に覚えます。</b></div>
+
+  <div class="foot">ネットワーク応用 ／ 第2回 演習資料 ／ 全13回中の第2回</div>
+</section>
+
+<!-- ============================ PART 1 ============================ -->
+<section class="sheet k1" id="part1">
+  <div class="eyebrow">PART <span class="no">1</span><span class="badge">0:00〜0:20　講義</span></div>
+  <h1>ストリーム・境界・文字コード</h1>
+  <p class="lead">図を3枚だけ見ます。<b>この3枚が、そのまま演習A・B・Cに対応</b>しています。</p>
+
+  <h2>1-1　前回の続きから</h2>
+  <p class="note">第1回で書いた1行を思い出してください。</p>
+<pre class="fig">socket.connect(new InetSocketAddress(host, port), 2000);   <-- 第1回はここまで
+
+     この時点で、まだ 0バイト も送っていない。
+     接続とは「送る準備ができた」という状態にすぎない。</pre>
+  <div class="verify"><b>今日やるのは、この次の1行目です。</b>つまり <code>socket.getOutputStream()</code> と <code>socket.getInputStream()</code> の2つを、どう扱うかという話です。</div>
+
+  <h2>1-2　図1　ストリームは3段になっている</h2>
+  <p class="note"><b>ソケットから出てくるのはバイトだけ</b>です。文字も行も、後から人間が乗せた解釈です。</p>
+<div class="figure"><svg viewBox="0 0 840 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ソケットから出てくるバイトが、文字、行へと解釈されていく3段の図" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'><defs>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+        orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#52606d"/></marker>
+<marker id="arb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+        orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#0b6cb5"/></marker>
+<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+        orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#c0392b"/></marker>
+</defs><line x1="86" y1="384" x2="86" y2="52" stroke="#d9dee5" stroke-width="2" marker-end="url(#ar)"/><text transform="rotate(-90 52 218)" x="52" y="218" font-size="12.5" fill="#52606d" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>生（そのまま） 　→　 便利（解釈ずみ）</text><rect x="112" y="56" width="658" height="78" rx="8" fill="#eafaf0" stroke="#b9e4c8" stroke-width="1.5"/><text x="134" y="88" font-size="15.5" fill="#1f6631" text-anchor="start" font-family='"SFMono-Regular",Consolas,Menlo,monospace' font-weight="700">BufferedReader</text><text x="134" y="112" font-size="12.5" fill="#52606d" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>改行までを1行と決める</text><line x1="470" y1="95" x2="516" y2="95" stroke="#1f6631" stroke-width="1.6" marker-end="url(#ar)"/><rect x="524" y="76" width="116" height="38" rx="6" fill="#ffffff" stroke="#b9e4c8" stroke-width="1.3"/><text x="582" y="101" font-size="15" fill="#1f6631" text-anchor="middle" font-family='"SFMono-Regular",Consolas,Menlo,monospace' font-weight="700">String</text><rect x="664" y="80" width="84" height="30" rx="15" fill="#1f6631" stroke="#1f6631" stroke-width="0"/><text x="706" y="100" font-size="13" fill="#ffffff" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">演習D</text><rect x="112" y="158" width="658" height="78" rx="8" fill="#fff7e0" stroke="#f0d68a" stroke-width="1.5"/><text x="134" y="190" font-size="15.5" fill="#9a7000" text-anchor="start" font-family='"SFMono-Regular",Consolas,Menlo,monospace' font-weight="700">InputStreamReader</text><text x="134" y="214" font-size="12.5" fill="#52606d" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>文字コードを指定して束ねる</text><line x1="470" y1="197" x2="516" y2="197" stroke="#9a7000" stroke-width="1.6" marker-end="url(#ar)"/><rect x="524" y="178" width="116" height="38" rx="6" fill="#ffffff" stroke="#f0d68a" stroke-width="1.3"/><text x="582" y="203" font-size="15" fill="#9a7000" text-anchor="middle" font-family='"SFMono-Regular",Consolas,Menlo,monospace' font-weight="700">char</text><rect x="664" y="182" width="84" height="30" rx="15" fill="#9a7000" stroke="#9a7000" stroke-width="0"/><text x="706" y="202" font-size="13" fill="#ffffff" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">演習B</text><rect x="112" y="260" width="658" height="78" rx="8" fill="#eef6fc" stroke="#bcdcf2" stroke-width="1.5"/><text x="134" y="292" font-size="15.5" fill="#0b6cb5" text-anchor="start" font-family='"SFMono-Regular",Consolas,Menlo,monospace' font-weight="700">InputStream</text><text x="134" y="316" font-size="12.5" fill="#52606d" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>何も解釈しない</text><line x1="470" y1="299" x2="516" y2="299" stroke="#0b6cb5" stroke-width="1.6" marker-end="url(#ar)"/><rect x="524" y="280" width="116" height="38" rx="6" fill="#ffffff" stroke="#bcdcf2" stroke-width="1.3"/><text x="582" y="305" font-size="15" fill="#0b6cb5" text-anchor="middle" font-family='"SFMono-Regular",Consolas,Menlo,monospace' font-weight="700">byte[]</text><rect x="664" y="284" width="84" height="30" rx="15" fill="#0b6cb5" stroke="#0b6cb5" stroke-width="0"/><text x="706" y="304" font-size="13" fill="#ffffff" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">演習A</text><line x1="300" y1="252" x2="300" y2="228" stroke="#52606d" stroke-width="1.6" marker-end="url(#ar)"/><line x1="300" y1="150" x2="300" y2="126" stroke="#52606d" stroke-width="1.6" marker-end="url(#ar)"/><line x1="300" y1="350" x2="300" y2="342" stroke="#52606d" stroke-width="1.6" marker-end="url(#ar)"/><rect x="112" y="352" width="658" height="52" rx="8" fill="#272e38" stroke="#272e38" stroke-width="1.5"/><text x="134" y="374" font-size="11.5" fill="#9fb0c4" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>ソケットから出てくるもの</text><text x="134" y="394" font-size="16" fill="#8fc7f5" text-anchor="start" font-family='"SFMono-Regular",Consolas,Menlo,monospace' font-weight="700">…  48 45 4C 4C 4F 0A  …</text><text x="748" y="384" font-size="12.5" fill="#9fb0c4" text-anchor="end" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>バイトだけ</text></svg><p class="cap">ソケットから出てくるのはバイトだけ。文字も行も、上の層が後から乗せた解釈です。<b>今日はこの3段を、下から順に自分で書きます。</b></p></div>
+  <div class="ainote"><b>★ 覚えておくこと。</b><code>BufferedReader.readLine()</code> の1行は、<b>「バイトを集め、指定の文字コードで文字に直し、改行が来るまで待って、そこまでを1件として返す」</b>という3段ぶんの処理です。<b>今日は、この3段を下から自分で書きます。</b></div>
+
+  <h2>1-3　図2　TCP に「境界」はない</h2>
+  <p class="note">ここが、初めてネットワークを書く人がいちばん誤解する点です。</p>
+<div class="figure"><svg viewBox="0 0 840 436" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="送った回数と読めた回数が一致しないことを示す図" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'><defs>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+        orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#52606d"/></marker>
+<marker id="arb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+        orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#0b6cb5"/></marker>
+<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+        orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#c0392b"/></marker>
+</defs><text x="140" y="28" font-size="13" fill="#52606d" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">送った側</text><text x="420" y="28" font-size="13" fill="#52606d" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">線の上</text><text x="706" y="28" font-size="13" fill="#52606d" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">受け取った側</text><line x1="30" y1="40" x2="810" y2="40" stroke="#d9dee5" stroke-width="1"/><text x="30" y="70" font-size="13" fill="#1f2933" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">ケース1　3回に分けて送った</text><rect x="52" y="84" width="176" height="32" rx="6" fill="#eef6fc" stroke="#bcdcf2" stroke-width="1.3"/><text x="140" y="105" font-size="13" fill="#0b6cb5" text-anchor="middle" font-family='"SFMono-Regular",Consolas,Menlo,monospace'>write("AB\n")</text><line x1="232" y1="100" x2="252" y2="100" stroke="#0b6cb5" stroke-width="1.4"/><rect x="52" y="124" width="176" height="32" rx="6" fill="#eef6fc" stroke="#bcdcf2" stroke-width="1.3"/><text x="140" y="145" font-size="13" fill="#0b6cb5" text-anchor="middle" font-family='"SFMono-Regular",Consolas,Menlo,monospace'>write("CD\n")</text><line x1="232" y1="140" x2="252" y2="140" stroke="#0b6cb5" stroke-width="1.4"/><rect x="52" y="164" width="176" height="32" rx="6" fill="#eef6fc" stroke="#bcdcf2" stroke-width="1.3"/><text x="140" y="185" font-size="13" fill="#0b6cb5" text-anchor="middle" font-family='"SFMono-Regular",Consolas,Menlo,monospace'>write("EF\n")</text><line x1="232" y1="180" x2="252" y2="180" stroke="#0b6cb5" stroke-width="1.4"/><line x1="252" y1="100" x2="252" y2="180" stroke="#0b6cb5" stroke-width="1.4"/><line x1="252" y1="122" x2="268" y2="122" stroke="#0b6cb5" stroke-width="1.4" marker-end="url(#arb)"/><rect x="274" y="100" width="268" height="44" rx="6" fill="#272e38" stroke="#272e38" stroke-width="1.5"/><text x="408" y="128" font-size="16" fill="#8fc7f5" text-anchor="middle" font-family='"SFMono-Regular",Consolas,Menlo,monospace' font-weight="700">AB\nCD\nEF\n</text><text x="408" y="164" font-size="11.5" fill="#52606d" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>区切りは残っていない</text><line x1="548" y1="122" x2="594" y2="122" stroke="#9a7000" stroke-width="1.6" marker-end="url(#ar)"/><rect x="602" y="98" width="208" height="48" rx="6" fill="#fff7e0" stroke="#f0d68a" stroke-width="1.3"/><text x="706" y="120" font-size="13" fill="#9a7000" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">read() が 1回で</text><text x="706" y="138" font-size="13" fill="#9a7000" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">全部返すことがある</text><line x1="30" y1="206" x2="810" y2="206" stroke="#d9dee5" stroke-width="1" stroke-dasharray="4 4"/><text x="30" y="238" font-size="13" fill="#1f2933" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">ケース2　1回で送った</text><rect x="52" y="254" width="176" height="32" rx="6" fill="#eef6fc" stroke="#bcdcf2" stroke-width="1.3"/><text x="140" y="275" font-size="13" fill="#0b6cb5" text-anchor="middle" font-family='"SFMono-Regular",Consolas,Menlo,monospace'>write("HELLO\n")</text><line x1="232" y1="270" x2="266" y2="270" stroke="#0b6cb5" stroke-width="1.4" marker-end="url(#arb)"/><rect x="274" y="250" width="130" height="44" rx="6" fill="#272e38" stroke="#272e38" stroke-width="1.5"/><text x="339" y="278" font-size="16" fill="#8fc7f5" text-anchor="middle" font-family='"SFMono-Regular",Consolas,Menlo,monospace' font-weight="700">HEL</text><rect x="412" y="250" width="130" height="44" rx="6" fill="#272e38" stroke="#272e38" stroke-width="1.5"/><text x="477" y="278" font-size="16" fill="#8fc7f5" text-anchor="middle" font-family='"SFMono-Regular",Consolas,Menlo,monospace' font-weight="700">LO\n</text><text x="408" y="314" font-size="11.5" fill="#52606d" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>途中で切れることがある</text><line x1="548" y1="262" x2="594" y2="262" stroke="#9a7000" stroke-width="1.6" marker-end="url(#ar)"/><rect x="602" y="248" width="208" height="28" rx="6" fill="#fff7e0" stroke="#f0d68a" stroke-width="1.3"/><text x="706" y="267" font-size="13" fill="#9a7000" text-anchor="middle" font-family='"SFMono-Regular",Consolas,Menlo,monospace' font-weight="700">read() ①　HEL</text><line x1="548" y1="296" x2="594" y2="296" stroke="#9a7000" stroke-width="1.6" marker-end="url(#ar)"/><rect x="602" y="282" width="208" height="28" rx="6" fill="#fff7e0" stroke="#f0d68a" stroke-width="1.3"/><text x="706" y="301" font-size="13" fill="#9a7000" text-anchor="middle" font-family='"SFMono-Regular",Consolas,Menlo,monospace' font-weight="700">read() ②　LO\n</text><rect x="30" y="348" width="780" height="62" rx="8" fill="#ffffff" stroke="#1f2933" stroke-width="2"/><text x="50" y="374" font-size="15" fill="#1f2933" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">TCP が保証するのは「バイトの順番」だけ。</text><text x="50" y="396" font-size="13" fill="#52606d" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>送った回数も、1件の切れ目も残らない。だから区切りは自分たちで決める。</text></svg><p class="cap">この授業で使う取り決めは <b>「改行 <code>0A</code> までが1件」</b>（行単位プロトコル）。第5回では、この取り決めを自分で設計します。</p></div>
+  <div class="verify"><b>「行単位プロトコル」という言葉は、これだけの意味です。</b>「区切り文字を改行にする」という、送る側と受け取る側の<b>約束</b>。第5回で自分たちのプロトコルを設計するとき、この約束を自分で決めることになります。</div>
+
+  <h2>1-4　図3　文字コードは「解釈のしかた」</h2>
+<div class="figure"><svg viewBox="0 0 840 326" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="同じバイト列が、読み方を変えると別の文字になることを示す図" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'><defs>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+        orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#52606d"/></marker>
+<marker id="arb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+        orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#0b6cb5"/></marker>
+<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+        orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#c0392b"/></marker>
+</defs><rect x="24" y="126" width="186" height="72" rx="8" fill="#eef6fc" stroke="#bcdcf2" stroke-width="1.5"/><text x="117" y="152" font-size="12" fill="#52606d" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>送信側</text><text x="117" y="180" font-size="13.5" fill="#0b6cb5" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">「あ」を UTF-8 で書く</text><line x1="216" y1="162" x2="262" y2="162" stroke="#0b6cb5" stroke-width="1.8" marker-end="url(#arb)"/><rect x="270" y="118" width="206" height="88" rx="8" fill="#272e38" stroke="#272e38" stroke-width="1.5"/><text x="373" y="146" font-size="11.5" fill="#9fb0c4" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>線の上を流れるもの</text><text x="373" y="180" font-size="23" fill="#8fc7f5" text-anchor="middle" font-family='"SFMono-Regular",Consolas,Menlo,monospace' font-weight="700">E3 81 82</text><text x="373" y="228" font-size="12" fill="#52606d" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>この 3バイト だけ</text><path d="M482,162 L512,162 L512,80 L556,80" fill="none" stroke="#1f6631" stroke-width="1.8" marker-end="url(#ar)"/><path d="M482,162 L512,162 L512,246 L556,246" fill="none" stroke="#c0392b" stroke-width="1.8" marker-end="url(#arr)"/><rect x="564" y="50" width="252" height="62" rx="8" fill="#eafaf0" stroke="#b9e4c8" stroke-width="1.5"/><text x="584" y="74" font-size="12.5" fill="#52606d" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>UTF-8 として読む</text><text x="584" y="98" font-size="15" fill="#1f6631" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">「あ」　正しく戻る</text><rect x="564" y="216" width="252" height="62" rx="8" fill="#fdecec" stroke="#f3b9b9" stroke-width="1.5"/><text x="584" y="240" font-size="12.5" fill="#52606d" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>Shift_JIS として読む</text><text x="584" y="264" font-size="15" fill="#c0392b" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">別の文字になる（文字化け）</text><text x="24" y="304" font-size="15" fill="#1f2933" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">バイトは1つも壊れていない。壊れたのは「解釈」のほう。</text></svg><p class="cap"><b>文字化けとは、破損ではなく読み間違いです。</b>だからこの授業では、送る側と読む側の両方で文字コードを必ず明示します。</p></div>
+  <div class="idnote"><b>だから、この授業では文字コードを必ず引数で明示します。</b>「書かなければ既定値が使われる」——その既定値が、<b>OS・JDKのバージョン・環境変数で変わります。</b>下の注意書きは必ず読んでください。</div>
+
+  <div class="warn"><b>★ JDK 18 以降と 17 で、既定の文字コードが違います。</b><br>
+  JDK 18 から、ファイル入出力の既定文字コードが <b>UTF-8 に統一</b>されました。JDK 17 の Windows 日本語環境では <b>MS932（Shift_JIS 系）</b>です。<br><br>
+  つまり <b><code>new InputStreamReader(in)</code> のように文字コードを省略したコードは、隣の席と結果が変わります。</b>今日の演習と課題では、<b><code>StandardCharsets.UTF_8</code> のように必ず明示</b>してください。省略したコードは、動いていても減点対象です。</div>
+
+  <h2>1-5　★ この回で Copilot が特に間違えるところ</h2>
+  <p class="note">第1回のルール（<b>Tab を押す前に読む／プロンプトを記録する／学籍番号やパスワードを入力しない</b>）はそのままです。そのうえで、今日は次の3つが頻出します。</p>
+  <div class="checklist">
+    <h4>Tab を押す前に、この3点だけ見る</h4>
+    <ul>
+      <li><b>文字コードを省略していないか。</b><code>getBytes()</code>／<code>new String(b)</code>／<code>new InputStreamReader(in)</code> は<b>すべて引数なしで書けてしまいます</b>。今日はすべて明示</li>
+      <li><b><code>newLine()</code> を使っていないか。</b><code>BufferedWriter.newLine()</code> は <b>Windows では <code>\r\n</code>（2バイト）</b>を書きます。この授業の約束は <code>\n</code>（<code>0A</code>）1バイトです</li>
+      <li><b><code>flush()</code> があるか。</b>Copilot は <code>write()</code> だけ書いて終わることがあります。<b>これが今日いちばん多い「固まる」原因</b>です</li>
+    </ul>
+  </div>
+
+  <div class="foot">PART 1 ／ 講義</div>
+</section>
+
+<!-- ============================ PART 2 ============================ -->
+<section class="sheet k2" id="part2">
+  <div class="eyebrow">PART <span class="no">2</span><span class="badge">0:20〜0:35　演習A</span></div>
+  <h1>演習A：バイト列を送り、返りを16進で見る</h1>
+  <p class="lead">第1回の <code>Connect.java</code> をコピーして始めます。<b>ゼロから書きません。</b></p>
+
+  <h2>A-1　準備（2分）</h2>
+  <ol class="steps">
+    <li><b>ターミナルを2枚開きます。</b>1枚目でサーバを起動し、<b>そのまま放置</b>します。<br>
+      <code>java -jar EchoServer.jar 40001</code></li>
+    <li><code>Connect.java</code> を <b><code>Bytes.java</code></b> という名前でコピーし、クラス名も <code>Bytes</code> に変えます。</li>
+  </ol>
+  <div class="warn"><b>1枚目のターミナルは、固まっているように見えます。それが正常です。</b>第1回でいちばん多かった質問です。実行は必ず<b>2枚目</b>で行ってください。</div>
+
+  <h2>A-2　書き足す部分</h2>
+  <p class="note"><code>CONNECTED</code> と表示した<b>直後</b>に、次の処理を足します。</p>
+  <div class="checklist">
+    <h4>やること</h4>
+    <ul>
+      <li>文字列 <code>"HELLO"</code> を <b>UTF-8 で <code>byte[]</code> に変換</b>する</li>
+      <li>その後ろに <b>改行 <code>0x0A</code> を1バイト自分で足す</b></li>
+      <li><code>socket.getOutputStream()</code> に <b><code>write()</code> して <code>flush()</code></b> する</li>
+      <li><code>socket.getInputStream()</code> から <b>最大64バイト読む</b></li>
+      <li>読めたバイトを <b><code>%02X</code> 形式で16進表示</b>し、そのあと <b>UTF-8 の文字列としても表示</b>する</li>
+    </ul>
+  </div>
+
+  <h2>A-3　Copilot への指示（この文面をそのまま打つ）</h2>
+<pre class="code"><span class="cmt">// 接続に成功したら、文字列 "HELLO" を UTF-8 でバイト配列に変換し、</span>
+<span class="cmt">// 末尾に改行 0x0A を1バイト足して OutputStream に write し、flush する。</span>
+<span class="cmt">// そのあと InputStream から最大64バイト読み取り、</span>
+<span class="cmt">// 読めたバイト数と、1バイトずつ "%02X " 形式の16進表示と、</span>
+<span class="cmt">// 同じバイト列を UTF-8 で文字列に戻したものを、それぞれ1行ずつ表示する。</span>
+<span class="cmt">// 文字コードは StandardCharsets を使って必ず明示すること。</span></pre>
+  <div class="ainote"><b>★ 提案が出たら、Tab の前に2点だけ確認。</b><br>
+  ① <code>getBytes()</code> が<b>引数なし</b>になっていないか（<code>getBytes(StandardCharsets.UTF_8)</code> が正）<br>
+  ② <code>flush()</code> があるか<br><br>
+  違っていたら <code>Esc</code> で消し、コメントを足して出し直してください。<b>直すのではなく、出し直すのが速い</b>です。</div>
+
+  <h2>A-4　期待される出力</h2>
+<pre class="fig">CONNECTED
+SEND_BYTES=6
+RECV_BYTES=6
+HEX: 48 45 4C 4C 4F 0A
+TEXT: HELLO</pre>
+
+  <h2>A-5　考えること</h2>
+  <table class="levels">
+    <thead><tr><th style="width:34%;">見るもの</th><th>気づくこと</th></tr></thead>
+    <tbody>
+      <tr><td><b><code>0A</code></b></td><td><b>改行は1バイトの文字である。</b>目には見えないが、確かに送られている</td></tr>
+      <tr><td><b>6バイト</b></td><td>"HELLO" は<b>5文字</b>なのに、送ったのは<b>6バイト</b>。<b>文字数とバイト数は違う</b></td></tr>
+      <tr><td><b>返りが 6バイト</b></td><td>サーバは受け取った行を<b>そのまま返している</b>。だから同じ長さになる</td></tr>
+    </tbody>
+  </table>
+  <div class="verify"><b>ここまでで 0:35 です。</b>まだ「文字」を扱っていません。<b>扱ったのはバイトだけ</b>です。それで正しい進度です。</div>
+
+  <div class="foot">PART 2 ／ 演習A</div>
+</section>
+
+<!-- ============================ PART 3 ============================ -->
+<section class="sheet k3" id="part3">
+  <div class="eyebrow">PART <span class="no">3</span><span class="badge">0:35〜0:52　演習B</span></div>
+  <h1>演習B：同じバイト列を、違う文字コードで読む</h1>
+  <p class="lead"><b>送信側は一切変えません。変えるのは「読み方」だけ</b>です。</p>
+
+  <h2>B-1　まず、日本語を送る</h2>
+  <p class="note">演習Aの送信文字列を <code>"HELLO"</code> から <code>"こんにちは"</code> に変えて、もう一度実行してください。</p>
+<pre class="fig">SEND_BYTES=16
+HEX: E3 81 93 E3 82 93 E3 81 AB E3 81 A1 E3 81 AF 0A
+TEXT: こんにちは</pre>
+  <div class="verify"><b>5文字なのに 16バイト</b>です。日本語は UTF-8 で<b>1文字3バイト</b>、それに改行1バイトを足して <code>5 × 3 + 1 = 16</code>。<b>この計算が合うことを、自分で確かめてください。</b></div>
+
+  <h2>B-2　★ 受信側の読み方だけを変える</h2>
+  <p class="note"><b>送信は UTF-8 のまま</b>です。最後の <b>「バイト列を文字列に戻す」1か所だけ</b>を <code>Shift_JIS</code> に変えます。</p>
+<pre class="code"><span class="cmt">// 変える前</span>
+String text = <span class="kw">new</span> String(buf, 0, n, StandardCharsets.UTF_8);
+
+<span class="cmt">// 変えた後（この1行だけ）</span>
+String text = <span class="kw">new</span> String(buf, 0, n, Charset.forName(<span class="str">"Shift_JIS"</span>));</pre>
+
+  <h2>B-3　結果を並べて比べる</h2>
+  <table class="levels">
+    <thead><tr><th style="width:30%;">読むときの指定</th><th style="width:36%;">HEX の行</th><th>TEXT の行</th></tr></thead>
+    <tbody>
+      <tr><td><code>UTF-8</code></td><td><b>E3 81 93 E3 82 93 …</b></td><td>こんにちは</td></tr>
+      <tr><td><code>Shift_JIS</code></td><td><b>E3 81 93 E3 82 93 …</b>（<b>まったく同じ</b>）</td><td>読めない文字の列になる</td></tr>
+    </tbody>
+  </table>
+  <div class="timerule"><span class="big">★</span><b>HEX の行が1バイトも変わっていないことを、必ず自分の目で確認してください。</b><br><br>
+  <b>ネットワークは何も間違えていません。</b>16バイトを送り、16バイトが返ってきました。<b>間違えたのは、そのバイト列を「Shift_JIS だ」と思い込んだ自分のプログラム</b>です。<br><br>
+  <b>文字化けを見たら、まず HEX を見る。</b>この習慣を今日から付けてください。第9回（JSON）でも第11回（TLS）でも、同じ切り分けをします。</div>
+
+  <h2>B-4　早く終わった人へ</h2>
+  <ul style="font-size:13.3px;line-height:1.85;">
+    <li>送信側だけを <code>Shift_JIS</code> にして、受信側を <code>UTF-8</code> に戻すと、<b>HEX は何バイトになりますか。</b>（16 にはなりません）</li>
+    <li><b>なぜ英数字だけなら化けないのか</b>を考えてください。<code>HELLO</code> は UTF-8 でも Shift_JIS でも <code>48 45 4C 4C 4F</code> です。</li>
+    <li>絵文字を1文字送ると<b>何バイトになるか</b>、確かめてください。（3バイトではありません）</li>
+  </ul>
+
+  <div class="foot">PART 3 ／ 演習B</div>
+</section>
+
+<!-- ============================ PART 4 ============================ -->
+<section class="sheet k4" id="part4">
+  <div class="eyebrow">PART <span class="no">4</span><span class="badge">0:52〜1:08　演習C</span></div>
+  <h1>演習C：わざと固まらせる　<span style="font-size:14px;color:var(--soft);">★ 本日の中心</span></h1>
+  <p class="lead"><b>ネットワークのプログラムは、間違えても例外を出しません。黙って待ち続けます。</b>今日はそれを3回体験します。</p>
+
+  <div class="warn"><b>先に止め方を確認してください。</b>プログラムが反応しなくなったら、<b>そのターミナルで <code>Ctrl</code>＋<code>C</code></b>。故障ではありません。<b>止まって当然の状態を、これから自分で作ります。</b></div>
+
+  <h2>C-1　実験①　改行を付けずに送る</h2>
+  <p class="note">演習Aで足した <b><code>0x0A</code> の1バイトを消して</b>、実行してください。</p>
+  <table class="levels">
+    <thead><tr><th style="width:36%;">起きること</th><th>なぜか</th></tr></thead>
+    <tbody>
+      <tr><td><b><code>CONNECTED</code> のあと、何も表示されないまま止まる</b></td><td>サーバは <code>readLine()</code> で<b>改行が来るまで待っている</b>。だから返事をしない。こちらは<b>その返事を待っている</b>。<b>両方が相手を待つ</b></td></tr>
+    </tbody>
+  </table>
+  <div class="timerule"><span class="big">★</span><b>これがネットワークで最も多い不具合です。</b>エラーは出ません。ログにも何も出ません。<b>ただ返ってこないだけ</b>です。<br><br>
+  <b>合言葉：「固まったら、相手が何を待っているかを考える」。</b>第3回以降、自分のサーバが返事をしなくなったとき、まずここを疑ってください。</div>
+
+  <h2>C-2　実験②　<code>flush()</code> を消す</h2>
+  <p class="note">改行を元に戻し、今度は <b><code>flush()</code> の行だけをコメントアウト</b>して実行してください。</p>
+<div class="figure"><svg viewBox="0 0 840 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="flush を呼ぶまでデータが送信バッファに留まることを示す図" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'><defs>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+        orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#52606d"/></marker>
+<marker id="arb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+        orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#0b6cb5"/></marker>
+<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+        orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#c0392b"/></marker>
+</defs><text x="140" y="28" font-size="13" fill="#52606d" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">あなたのプログラム</text><line x1="140" y1="40" x2="140" y2="286" stroke="#d9dee5" stroke-width="1" stroke-dasharray="3 5"/><text x="420" y="28" font-size="13" fill="#52606d" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">OS の送信バッファ</text><line x1="420" y1="40" x2="420" y2="286" stroke="#d9dee5" stroke-width="1" stroke-dasharray="3 5"/><text x="700" y="28" font-size="13" fill="#52606d" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">サーバ</text><line x1="700" y1="40" x2="700" y2="286" stroke="#d9dee5" stroke-width="1" stroke-dasharray="3 5"/><rect x="44" y="74" width="192" height="40" rx="6" fill="#eef6fc" stroke="#bcdcf2" stroke-width="1.3"/><text x="140" y="100" font-size="13.5" fill="#0b6cb5" text-anchor="middle" font-family='"SFMono-Regular",Consolas,Menlo,monospace'>write("HELLO\n")</text><line x1="242" y1="94" x2="318" y2="94" stroke="#0b6cb5" stroke-width="1.6" marker-end="url(#arb)"/><rect x="326" y="74" width="188" height="40" rx="6" fill="#272e38" stroke="#272e38" stroke-width="1.5"/><text x="420" y="100" font-size="15" fill="#8fc7f5" text-anchor="middle" font-family='"SFMono-Regular",Consolas,Menlo,monospace' font-weight="700">HELLO\n</text><text x="420" y="134" font-size="13" fill="#9a7000" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">ここで溜まる</text><line x1="520" y1="94" x2="596" y2="94" stroke="#c0392b" stroke-width="1.6" stroke-dasharray="5 4"/><line x1="548" y1="82" x2="568" y2="106" stroke="#c0392b" stroke-width="2.6"/><line x1="568" y1="82" x2="548" y2="106" stroke="#c0392b" stroke-width="2.6"/><text x="558" y="64" font-size="12.5" fill="#c0392b" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">flush() を呼ぶまで出ていかない</text><rect x="606" y="74" width="188" height="40" rx="6" fill="#ffffff" stroke="#d9dee5" stroke-width="1.3"/><text x="700" y="100" font-size="12.5" fill="#52606d" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>readLine() で待っている</text><rect x="44" y="196" width="192" height="40" rx="6" fill="#ffffff" stroke="#d9dee5" stroke-width="1.3"/><text x="140" y="222" font-size="13.5" fill="#52606d" text-anchor="middle" font-family='"SFMono-Regular",Consolas,Menlo,monospace'>read() で待つ</text><line x1="700" y1="216" x2="248" y2="216" stroke="#c0392b" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arr)"/><text x="474" y="206" font-size="13" fill="#c0392b" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">何も返ってこない</text><rect x="24" y="264" width="792" height="46" rx="8" fill="#ffffff" stroke="#1f2933" stroke-width="2"/><text x="44" y="293" font-size="15" fill="#1f2933" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">write() は「送った」ではなく「送るものを渡した」にすぎない。</text></svg><p class="cap">症状は実験①（改行なし）と同じ「固まる」ですが、原因は正反対です。<b>①は1件が完成していない。②はそもそも線の上に出ていない。</b></p></div>
+  <div class="verify"><b>症状は実験①とまったく同じ（固まる）ですが、原因は正反対</b>です。①は<b>送りすぎていない</b>（改行がない）、②は<b>そもそも出ていない</b>。<b>同じ「固まる」でも、原因が複数あることを覚えて帰ってください。</b></div>
+
+  <h2>C-3　実験③　<code>\r\n</code> で送ってみる</h2>
+  <p class="note">改行を <code>0x0A</code> ではなく <b><code>0x0D 0x0A</code> の2バイト</b>にして送ってください。</p>
+<pre class="fig">SEND_BYTES=7      <-- 48 45 4C 4C 4F 0D 0A
+RECV_BYTES=6      <-- 48 45 4C 4C 4F 0A     0D が消えている
+
+   サーバの readLine() は 0D 0A を「1つの改行」として扱い、
+   返すときは 0A だけを付けて返した。
+   -> 送ったバイト列と、返ってきたバイト列が 一致しない</pre>
+  <div class="ainote"><b>★ これは故障ではなく、取り決めの差です。</b>Windows のメモ帳は <code>\r\n</code>、Linux と macOS は <code>\n</code>。<b><code>BufferedWriter.newLine()</code> は、動いている OS の流儀で書きます。</b><br><br>
+  <b>ネットワーク越しでは「動いている OS の流儀」は通用しません。</b>だからこの授業では、<b>改行を <code>\n</code>（<code>0A</code>）1バイトに固定</b>します。第6回で HTTP を手で書くとき、今度は逆に <b><code>\r\n</code> が必須</b>になります。<b>そのとき「どちらでもいい」ではないことを、今日の実験で知っておいてください。</b></div>
+
+  <h2>C-4　3つの実験のまとめ</h2>
+  <table class="levels">
+    <thead><tr><th style="width:26%;">やったこと</th><th style="width:26%;">症状</th><th>原因</th></tr></thead>
+    <tbody>
+      <tr><td>改行を付けない</td><td><b>固まる</b></td><td>相手が<b>行の終わりを待っている</b></td></tr>
+      <tr><td><code>flush()</code> を消す</td><td><b>固まる</b></td><td><b>1バイトも出ていっていない</b></td></tr>
+      <tr><td><code>\r\n</code> で送る</td><td>動くが<b>一致しない</b></td><td>改行の<b>取り決めが違う</b></td></tr>
+    </tbody>
+  </table>
+  <div class="notimerule"><span class="big">★</span><b>3つとも、コンパイルは通り、例外も出ません。</b>これがネットワークプログラミングの難しさです。<b>「動かない」ではなく「黙る」。</b>今日、その黙り方を3種類見たことが、この回のいちばんの収穫です。</div>
+
+  <div class="foot">PART 4 ／ 演習C</div>
+</section>
+
+<!-- ============================ PART 5 ============================ -->
+<section class="sheet k5" id="part5">
+  <div class="eyebrow">PART <span class="no">5</span><span class="badge">1:08〜1:15　演習D</span></div>
+  <h1>演習D：ライブラリに任せる</h1>
+  <p class="lead">ここまで自分で書いた処理を、<b><code>BufferedReader</code> / <code>BufferedWriter</code> に置き換えます。</b></p>
+
+  <h2>D-1　置き換える</h2>
+<pre class="code">BufferedWriter out = <span class="kw">new</span> BufferedWriter(
+    <span class="kw">new</span> OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
+BufferedReader in = <span class="kw">new</span> BufferedReader(
+    <span class="kw">new</span> InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+
+out.write(<span class="str">"こんにちは"</span>);
+out.write(<span class="str">"\n"</span>);      <span class="cmt">// newLine() は使わない。\r\n になる環境がある</span>
+out.flush();               <span class="cmt">// これは消えない。演習C-2 の通り</span>
+
+String line = in.readLine();
+System.out.println(<span class="str">"TEXT: "</span> + line);</pre>
+
+  <h2>D-2　何が消えて、何が消えなかったか</h2>
+  <table class="levels">
+    <thead><tr><th style="width:44%;">自分で書いていたこと</th><th>いま誰がやっているか</th></tr></thead>
+    <tbody>
+      <tr><td>文字列 → バイト列の変換</td><td><b><code>OutputStreamWriter</code></b> が、指定した文字コードで</td></tr>
+      <tr><td>改行までを1件として集める</td><td><b><code>BufferedReader.readLine()</code></b> が</td></tr>
+      <tr><td>16進で確認する</td><td><b>誰もやらない。見えなくなった</b></td></tr>
+      <tr><td><b><code>flush()</code></b></td><td><b>自分。消えていない</b></td></tr>
+      <tr><td><b>文字コードの指定</b></td><td><b>自分。消えていない</b></td></tr>
+    </tbody>
+  </table>
+  <div class="timerule"><span class="big">★</span><b>ライブラリが肩代わりしたのは「手間」であって「責任」ではありません。</b><b>文字コードと <code>flush()</code> は、最後まで自分の責任として残ります。</b>今日の3つの実験は、すべて<b>この2つに関する事故</b>でした。<br><br>
+  <b>そして、<code>readLine()</code> が返ってこないときに何が起きているかは、演習C-1 で見た通り</b>です。</div>
+
+  <div class="warn"><b>1:15 になったら、動いていなくても手を止めてください。</b>演習Dは<b>宿題の必須要素ではありません。</b>宿題は演習A〜Bの形（バイトを自分で扱う形）で提出します。</div>
+
+  <div class="foot">PART 5 ／ 演習D</div>
+</section>
+
+<!-- ============================ PART 6 ============================ -->
+<section class="sheet k6" id="part6">
+  <div class="eyebrow">PART <span class="no">6</span><span class="badge">1:15〜1:30　宿題提示</span></div>
+  <h1>宿題の提示と、教室内での着手</h1>
+
+  <table class="levels">
+    <thead><tr><th style="width:110px;">経過</th><th>やること</th><th style="width:50px;">分</th></tr></thead>
+    <tbody>
+      <tr><td>1:15〜1:19</td><td>課題仕様の説明（<code>EchoClient.java</code>）</td><td>4</td></tr>
+      <tr><td>1:19〜1:23</td><td><b>採点スクリプトの実演を見る</b>（わざと1ケース落とした状態を見せます）</td><td>4</td></tr>
+      <tr><td>1:23〜1:29</td><td><b>各自で着手。</b>演習Bの <code>Bytes.java</code> をコピーして始める</td><td>6</td></tr>
+      <tr><td>1:29〜1:30</td><td>提出方法・締切の確認</td><td>1</td></tr>
+    </tbody>
+  </table>
+
+  <div class="verify"><b>赤い <code>FAIL</code> は故障ではありません。</b>第1回と同じです。<b>作りかけのプログラムが FAIL になるのは当たり前</b>で、それを1つずつ <code>PASS</code> に変えていくのがこの課題です。<b>4 / 4 になってから提出</b>してください。</div>
+
+  <h2>教室を出る前に、ここまで</h2>
+  <div class="checklist">
+    <h4>Before you leave</h4>
+    <ul>
+      <li><code>Bytes.java</code> を <code>EchoClient.java</code> にコピーした</li>
+      <li><code>javac -encoding UTF-8 EchoClient.java</code> が通った</li>
+      <li>採点スクリプトを実行し、<b>1ケースでも PASS が出た</b></li>
+      <li><code>prompt_log.md</code> を作成し、<b>今日使ったプロンプトを1件書いた</b></li>
+    </ul>
+  </div>
+  <div class="warn"><b>採点スクリプトが「そもそも実行できない」場合は、この6分の間に必ず手を挙げてください。</b>家に帰ってから気づくと、締切まで誰にも聞けません。<b>環境の問題は、教室にいるうちにしか解決できません。</b></div>
+
+  <h2>提出</h2>
+  <table class="levels">
+    <tbody>
+      <tr><td style="width:110px;"><b>提出先</b></td><td>eclass</td></tr>
+      <tr><td><b>締切</b></td><td><b>次回授業の開始まで</b></td></tr>
+      <tr><td><b>提出物</b></td><td><code>EchoClient.java</code> ／ <code>prompt_log.md</code> の<b>2ファイル</b>（ZIP不可・<code>.class</code> を含めない）</td></tr>
+    </tbody>
+  </table>
+
+  <div class="foot">PART 6 ／ 宿題提示</div>
+</section>
+
+<!-- ============================ 宿題 ============================ -->
+<section class="sheet i2" id="hw">
+  <div class="eyebrow">第2回 宿題 <span class="badge alt">次回授業の開始まで</span></div>
+  <h1><code>EchoClient.java</code></h1>
+  <p class="lead">サーバに1行送り、返ってきたものと<b>バイト単位で一致するかを判定</b>するプログラムを作ります。<b>演習Bの <code>Bytes.java</code> に、引数処理と出力形式を足すだけ</b>です。</p>
+
+  <h2>実行方法</h2>
+<pre class="code">java EchoClient &lt;ホスト名&gt; &lt;ポート番号&gt; &lt;ASCII|JP&gt; &lt;文字コード名&gt;</pre>
+  <div class="idnote"><b>★ 送信する文字列は、プログラムの中に持たせます。</b>コマンドライン引数で日本語を渡させません。<b>Windows のターミナルは、引数の文字コードが環境によって変わる</b>ためで、採点が不安定になるのを避けるためです。
+  <ul style="margin:8px 0 0;padding-left:20px;">
+    <li><code>ASCII</code> … <code>HELLO</code> を送る</li>
+    <li><code>JP</code> … <code>こんにちは</code> を送る（<b>ソース中は <code>\u3053\u3093\u306B\u3061\u306F</code> と書いてよい</b>）</li>
+  </ul></div>
+
+  <h2>★ 出力形式（1文字も変えないこと）</h2>
+  <p class="note"><b>接続できた場合は 9行</b>、順番も固定です。余計な行・装飾・空行を出してはいけません。</p>
+<pre class="fig">HOST=localhost
+PORT=40001
+CHARSET=UTF-8
+SEND_CHARS=5
+SEND_BYTES=16
+SEND_HEX=E3 81 93 E3 82 93 E3 81 AB E3 81 A1 E3 81 AF 0A
+RECV_BYTES=16
+RECV_HEX=E3 81 93 E3 82 93 E3 81 AB E3 81 A1 E3 81 AF 0A
+MATCH=true</pre>
+
+  <table class="levels">
+    <thead><tr><th style="width:150px;">行</th><th>入れる値</th></tr></thead>
+    <tbody>
+      <tr><td><code>HOST=</code></td><td>第1引数を<b>そのまま</b></td></tr>
+      <tr><td><code>PORT=</code></td><td>第2引数を<b>そのまま</b></td></tr>
+      <tr><td><code>CHARSET=</code></td><td>第4引数を<b>そのまま</b></td></tr>
+      <tr><td><code>SEND_CHARS=</code></td><td>送信する文字列の<b>文字数</b>（改行を<b>含めない</b>）</td></tr>
+      <tr><td><code>SEND_BYTES=</code></td><td>実際に送信した<b>バイト数</b>（改行 <code>0A</code> を<b>含める</b>）</td></tr>
+      <tr><td><code>SEND_HEX=</code></td><td>送信バイトを <code>%02X</code> で、<b>半角スペース区切り</b>。<b>末尾にスペースを付けない</b></td></tr>
+      <tr><td><code>RECV_BYTES=</code></td><td>受信した<b>バイト数</b></td></tr>
+      <tr><td><code>RECV_HEX=</code></td><td>受信バイトを同じ形式で</td></tr>
+      <tr><td><code>MATCH=</code></td><td><b><code>true</code> ／ <code>false</code> のみ。</b>送信バイト列と受信バイト列が<b>完全一致</b>すれば <code>true</code></td></tr>
+    </tbody>
+  </table>
+
+  <p class="plabel">接続できなかった場合</p>
+  <p class="note"><b>4行だけ</b>出して正常終了します。第1回の例外3分類をそのまま使います。</p>
+<pre class="fig">HOST=localhost
+PORT=40099
+CHARSET=UTF-8
+ERROR=REFUSED        <-- REFUSED / UNKNOWN_HOST / TIMEOUT の3種のみ</pre>
+
+  <h2>要件</h2>
+  <div class="checklist">
+    <h4>Requirements</h4>
+    <ul>
+      <li><b>接続タイムアウトは 2000ms 固定。</b><code>socket.connect(addr, 2000)</code> を使う（第1回と同じ）</li>
+      <li><b>例外を <code>catch (Exception e)</code> でまとめない。</b>3種類に区別して <code>ERROR=</code> に反映する</li>
+      <li><b>文字コードを省略しない。</b><code>getBytes()</code> ／ <code>new String(byte[])</code> の<b>引数なし版を使わない</b></li>
+      <li><b>改行は <code>0x0A</code> 1バイト。</b><code>newLine()</code> は使わない</li>
+      <li><b>出力はすべて ASCII 文字のみ。</b>送った日本語そのものは<b>表示しない</b>（16進で表す）</li>
+      <li><b>スタックトレースを出さない。</b>どの入力でも、9行または4行だけ出して正常終了する</li>
+      <li>ポート番号が数値でない、引数が足りない等でも<b>落ちずに終了する</b></li>
+      <li><code>prompt_log.md</code> に、使ったプロンプトを<b>3件</b>記録する</li>
+    </ul>
+  </div>
+  <div class="warn"><b>★ 出力に日本語を含めない理由。</b>Windows のターミナルは表示に使う文字コードが環境ごとに違うため、<b>日本語を出力させると、正しいプログラムでも採点が落ちることがあります。</b>「送った日本語を16進で示す」形にしてあるのは、<b>どの環境でも同じ判定になるようにするため</b>です。</div>
+
+  <h2>採点される4ケース</h2>
+  <p class="note">1〜3は <code>EchoServer.jar</code> を <code>40001</code> で<b>起動した状態</b>で実行されます。</p>
+  <table class="levels">
+    <thead><tr><th style="width:34px;">#</th><th>引数</th><th>期待される値</th></tr></thead>
+    <tbody>
+      <tr><td><b>1</b></td><td><code>localhost 40001 ASCII UTF-8</code></td><td><code>SEND_CHARS=5</code> ／ <code>SEND_BYTES=6</code> ／ <b><code>MATCH=true</code></b></td></tr>
+      <tr><td><b>2</b></td><td><code>localhost 40001 JP UTF-8</code></td><td><code>SEND_CHARS=5</code> ／ <b><code>SEND_BYTES=16</code></b> ／ <code>MATCH=true</code></td></tr>
+      <tr><td><b>3</b></td><td><code>localhost 40001 JP Shift_JIS</code></td><td><b><code>SEND_BYTES=11</code></b> ／ <b><code>MATCH=false</code></b></td></tr>
+      <tr><td><b>4</b></td><td><code>localhost 40099 ASCII UTF-8</code></td><td><b>4行</b>で <code>ERROR=REFUSED</code></td></tr>
+    </tbody>
+  </table>
+  <div class="timerule"><span class="big">★</span><b>ケース1と2を見比べてください。どちらも <code>SEND_CHARS=5</code> なのに、バイト数は 6 と 16 です。</b>この課題で確認したいのは、この1点です。<br><br>
+  <b>ケース3で <code>MATCH=false</code> になるのは、バグではなく正解です。</b>Shift_JIS で書き出した11バイトを、サーバがそのまま返し、それを<b>Shift_JIS で読み直しているのに一致しない</b>——理由を <code>prompt_log.md</code> の末尾に1〜2行で書いてください。<b>ここが今回の考えどころ</b>です。</div>
+
+  <h2><code>prompt_log.md</code> の形式</h2>
+  <p class="note"><b>Copilot に出した指示を3つ選んで記録します。</b>コードの中に書いたコメントでも、チャット欄に打った文でも構いません。</p>
+  <p class="note"><b>指示の文は、打ったものをコピーして貼ってください。</b>誤字があっても、言葉が足りなくても直さないこと。「どんな指示を出したら、どんなコードが返ってきたか」を見るための記録なので、<b>後からきれいに書き直すと意味がなくなります。</b></p>
+  <p class="plabel">書式（このまま写して埋める）</p>
+<pre class="code">## プロンプト 1
+- 打った文面: (原文のまま)
+- 生成結果の扱い: そのまま採用 / 修正して採用 / 破棄
+- 修正した場合、どこをどう直したか:
+- そのコードは今どのファイルの何行目にあるか:
+
+## プロンプト 2
+（同上）
+
+## プロンプト 3
+（同上）
+
+## ケース3の考察（1〜2行）
+- MATCH=false になる理由:</pre>
+  <p class="plabel">記入例（1件分）</p>
+<pre class="code">## プロンプト 1
+- 打った文面: // HELLOをUTF-8でバイトにして送る、最後に改行
+- 生成結果の扱い: 修正して採用
+- 修正した場合、どこをどう直したか: getBytes() に文字コードが無かったので UTF_8 を指定した
+- そのコードは今どのファイルの何行目にあるか: EchoClient.java 42〜44行目</pre>
+  <table class="levels">
+    <thead><tr><th style="width:28%;">項目</th><th>書くこと</th></tr></thead>
+    <tbody>
+      <tr><td>打った文面</td><td>Copilot に打った指示を<b>コピーして貼る</b></td></tr>
+      <tr><td>生成結果の扱い</td><td><b>そのまま採用／修正して採用／破棄</b>のどれか1つ</td></tr>
+      <tr><td>どこをどう直したか</td><td>「修正して採用」のときだけ。何が問題で、どう直したか</td></tr>
+      <tr><td>何行目にあるか</td><td>採用したコードが<b>今</b>どこにあるか。破棄したなら「なし」</td></tr>
+    </tbody>
+  </table>
+  <div class="dayof"><b>★ 「Copilot が書いたので分かりません」は通用しません。</b><br><br>
+  提出された <code>EchoClient.java</code> の<b>任意の行</b>について、次回授業で説明を求めることがあります。<b>動くことより、理解していることのほうが重要</b>であり、評価はその方針で行います。</div>
+
+  <h2>提出前チェックリスト</h2>
+  <div class="checklist">
+    <h4>Before you submit</h4>
+    <ul>
+      <li>提出ファイルは <code>EchoClient.java</code> と <code>prompt_log.md</code> の<b>2つだけ</b></li>
+      <li>接続成功時の出力が<b>9行ちょうど</b>、失敗時が<b>4行ちょうど</b></li>
+      <li><b>行の順番</b>が仕様どおり</li>
+      <li><code>MATCH=</code> が <b><code>true</code> / <code>false</code> 以外を出さない</b></li>
+      <li><code>SEND_HEX=</code> の<b>末尾にスペースが付いていない</b></li>
+      <li>16進が<b>大文字</b>で、<b>2桁</b>（<code>0A</code> であって <code>A</code> ではない）</li>
+      <li>出力に<b>日本語が1文字も含まれていない</b></li>
+      <li>どの入力でも<b>スタックトレースが出ない</b></li>
+      <li><b>手元で採点スクリプトを実行し、<code>4 / 4 passed</code> を確認した</b></li>
+      <li><code>prompt_log.md</code> のプロンプトが<b>3件</b>あり、<b>ケース3の考察</b>を書いた</li>
+    </ul>
+  </div>
+
+  <div class="ainote"><b>この課題で測っているもの。</b>送受信の処理そのものは10行程度です。<b>難しいのは、「文字」と「バイト」を最後まで混同せずに書き切ること</b>のほうです。<br><br>
+  <b>ネットワークに流れるのはバイトだけ</b>で、文字は<b>両端でそう解釈しているだけ</b>——第13回まで、ずっとこの前提で進みます。今日それを最初に体験しておいてください。</div>
+
+  <div class="foot">第2回 宿題 ／ <code>EchoClient.java</code></div>
+</section>
+
+<!-- ============================ 困ったときは ============================ -->
+<section class="sheet i1" id="help">
+  <div class="eyebrow">困ったときは <span class="badge">自宅で詰まったら</span></div>
+  <h1>自己診断</h1>
+
+  <h2>「固まった」ときの切り分け</h2>
+  <p class="note"><b>上から順に自分に聞いてください。</b>今日の演習が、そのまま診断の道具になります。</p>
+  <table class="levels">
+    <thead><tr><th style="width:44%;">自分への質問</th><th>「いいえ」だった場合、原因はここ</th></tr></thead>
+    <tbody>
+      <tr><td><b><code>CONNECTED</code> は出た?</b></td><td>出ていなければ<b>第1回の範囲</b>です。サーバが起動していないか、ポートが違います</td></tr>
+      <tr><td><b><code>flush()</code> は書いた?</b></td><td><b>最頻出。</b>1バイトも送信されていません（演習C-2）</td></tr>
+      <tr><td><b>送信バイトの末尾は <code>0A</code> ?</b></td><td>改行がないと、サーバは<b>行の終わりを待ち続けます</b>（演習C-1）</td></tr>
+      <tr><td><b>ターミナルを2枚開いている?</b></td><td>サーバを起動したウィンドウは<b>固まって見えるのが正常</b>です。実行は別ウィンドウで</td></tr>
+      <tr><td><b><code>SEND_HEX</code> を表示させてみた?</b></td><td><b>推測で直さないこと。</b>まず16進を出す。今日の演習は全部そのためにやりました</td></tr>
+    </tbody>
+  </table>
+
+  <h2>よくあるつまずき</h2>
+  <table class="levels">
+    <thead><tr><th style="width:38%;">起きること</th><th>原因と直し方</th></tr></thead>
+    <tbody>
+      <tr><td><b>何も出ずに止まる</b></td><td><code>flush()</code> がない／改行 <code>0A</code> がない。<b>この2つで9割</b></td></tr>
+      <tr><td><code>SEND_BYTES=7</code> になる（ASCIIケース）</td><td><b><code>newLine()</code> を使っています。</b>Windows では <code>0D 0A</code> の2バイトが書かれます</td></tr>
+      <tr><td><code>Address already in use</code></td><td>前に起動した <code>EchoServer</code> が生きています。<b>そのウィンドウで <code>Ctrl</code>＋<code>C</code></b></td></tr>
+      <tr><td><b>ターミナルに <code>?</code> や <code>縺</code> が出る</b></td><td>プログラムではなく<b>ターミナルの表示</b>の問題。だから課題では<b>日本語を出力させていません</b></td></tr>
+      <tr><td><code>lines=10</code> と表示される</td><td>デバッグ用の <code>System.out.println</code> が残っています。<b>消してください</b></td></tr>
+      <tr><td>16進が <code>a</code>／<code>e3</code> と小文字になる</td><td><code>%02x</code> ではなく <b><code>%02X</code></b>（大文字）を使ってください</td></tr>
+      <tr><td>隣の人と <code>SEND_BYTES</code> が違う</td><td><b>文字コードを省略しています。</b>JDK のバージョンで既定値が変わります（PART 1-4）</td></tr>
+    </tbody>
+  </table>
+
+  <h2>採点スクリプトの使い方</h2>
+  <p class="note"><code>check2.ps1</code> は<b>学生配布セットに入っています。</b>次の3つを<b>同じフォルダ</b>に置いてください：<code>EchoClient.java</code>（自分で書いたもの）／<code>EchoServer.jar</code>／<code>check2.ps1</code>。そのフォルダでターミナルを開き、次の1行を実行します。</p>
+<pre class="code">powershell -ExecutionPolicy Bypass -File check2.ps1</pre>
+  <ol class="steps">
+    <li>スクリプトが <code>EchoClient.java</code> を<b>コンパイル</b>する</li>
+    <li><code>EchoServer</code> が起動していなければ、<b>スクリプトが自分で起動し、終わったら止める</b>（自分で起動済みなら、それを使う）</li>
+    <li>4ケースを順に実行して、<code>PASS</code> / <code>FAIL</code> を出す</li>
+    <li><b><code>4 / 4 passed</code> になったら提出</b></li>
+  </ol>
+  <table class="levels">
+    <thead><tr><th style="width:36%;">表示</th><th>意味</th></tr></thead>
+    <tbody>
+      <tr><td><code>PASS</code></td><td>そのケースは仕様どおり</td></tr>
+      <tr><td><code>FAIL</code></td><td><code>expected=</code> が期待値、<code>got=</code> が実際の出力。<b>両方を見比べれば、直す場所が分かります</b></td></tr>
+      <tr><td><code>lines=</code></td><td>出力した行数。<b><code>9</code>（失敗ケースは <code>4</code>）以外なら、出力が多すぎるか足りません</b></td></tr>
+      <tr><td><code>8 秒たっても終わりませんでした</code></td><td><b>固まっています。</b><code>flush()</code> と改行 <code>0A</code> を確認してください（演習C）</td></tr>
+      <tr><td><code>警告:</code></td><td>点数には影響しませんが、<b>文字コードの省略や <code>newLine()</code> は減点対象</b>です。直してください</td></tr>
+    </tbody>
+  </table>
+  <div class="warn"><b>★ <code>package</code> の行は消してください。</b>エディタが勝手に <code>package ...;</code> を先頭に足すことがあります。あると <code>java EchoClient</code> で起動できないため、スクリプトは最初に止まります。</div>
+
+  <h2>今日出てきた用語</h2>
+  <table class="levels">
+    <thead><tr><th style="width:30%;">用語</th><th>この授業での意味</th></tr></thead>
+    <tbody>
+      <tr><td><b>ストリーム</b></td><td><b>端から順に流れてくるバイトの列。</b>全体の長さは、読み終わるまで分からない</td></tr>
+      <tr><td><b>文字コード</b></td><td><b>文字とバイト列の対応表。</b>送る側と読む側で<b>同じものを使う約束</b>が要る</td></tr>
+      <tr><td><b>UTF-8</b></td><td>英数字は1バイト、日本語は<b>3バイト</b>になる方式。<b>この授業の既定</b></td></tr>
+      <tr><td><b>行単位プロトコル</b></td><td><b>改行までを1件とする取り決め。</b>TCP自体には切れ目がないので、自分で決める</td></tr>
+      <tr><td><b><code>flush()</code></b></td><td><b>溜めていたものを、実際に送り出す操作。</b>忘れると相手には何も届かない</td></tr>
+      <tr><td><b><code>0A</code> / <code>0D 0A</code></b></td><td>改行のバイト表現。<b>この授業は <code>0A</code> のみ。</b>HTTP（第6回）では <code>0D 0A</code></td></tr>
+    </tbody>
+  </table>
+
+  <h2>次回までにやること</h2>
+  <div class="checklist">
+    <h4>Next</h4>
+    <ul>
+      <li><code>EchoClient.java</code> が <b><code>4 / 4 passed</code></b> になった</li>
+      <li><code>prompt_log.md</code> にプロンプトを<b>3件</b>、<b>ケース3の考察</b>を書いた</li>
+      <li><b>2ファイルを eclass に提出した</b>（ZIP不可・<code>.class</code> を含めない）</li>
+      <li>自分の <code>EchoClient.java</code> を、<b>上から下まで一度読み直した</b></li>
+    </ul>
+  </div>
+  <div class="idnote"><b>★ 次回は、いよいよサーバ側を書きます（<code>ServerSocket</code>）。</b>今日「相手が改行を待っている」と言っていた<b>その相手を、自分で作る回</b>です。今日の演習C-1で見た「固まる」を、<b>今度は自分のサーバが起こします。</b></div>
+
+  <div class="foot">ネットワーク応用 ／ 第2回 演習資料</div>
+</section>
+
+
+<script>
+(function(){
+  // --- コード欄にコピーボタン ---
+  document.querySelectorAll('pre.code').forEach(function(pre){
+    var w=document.createElement('div'); w.className='codewrap';
+    pre.parentNode.insertBefore(w,pre); w.appendChild(pre);
+    var b=document.createElement('button'); b.type='button'; b.className='copybtn'; b.textContent='コピー';
+    b.addEventListener('click',function(){
+      var t=pre.innerText;
+      var done=function(){ b.textContent='コピーしました'; b.classList.add('done');
+        setTimeout(function(){ b.textContent='コピー'; b.classList.remove('done'); },1600); };
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(t).then(done,function(){fallback(t,done);});
+      } else { fallback(t,done); }
+    });
+    w.appendChild(b);
+  });
+  function fallback(t,cb){
+    var ta=document.createElement('textarea'); ta.value=t;
+    ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); cb(); }catch(e){}
+    document.body.removeChild(ta);
+  }
+
+  // --- チェックリストをクリックで消し込み ---
+  document.querySelectorAll('.checklist').forEach(function(cl){
+    var items=cl.querySelectorAll('li'), h4=cl.querySelector('h4');
+    var prog=document.createElement('span'); prog.className='ckprog';
+    if(h4) h4.appendChild(prog);
+    var hint=document.createElement('p'); hint.className='ckhint';
+    hint.textContent='※ クリックすると消し込みできます（保存はされません）';
+    if(h4) h4.insertAdjacentElement('afterend',hint);
+    function upd(){ prog.textContent=cl.querySelectorAll('li.done').length+' / '+items.length; }
+    items.forEach(function(li){
+      li.addEventListener('click',function(e){
+        if(e.target.closest('a')) return;
+        li.classList.toggle('done'); upd();
+      });
+    });
+    upd();
+  });
+
+  // --- 現在位置をナビに反映 ---
+  var links=[].slice.call(document.querySelectorAll('.topnav .links a'));
+  var secs=links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  function spy(){
+    var idx=-1;
+    secs.forEach(function(s,i){ if(s && s.getBoundingClientRect().top<=96) idx=i; });
+    links.forEach(function(a,i){ a.classList.toggle('on', i===idx); });
+    var on=links[idx];
+    if(on && on.parentNode.scrollWidth>on.parentNode.clientWidth){
+      var p=on.parentNode, l=on.offsetLeft-p.offsetLeft;
+      if(l<p.scrollLeft || l+on.offsetWidth>p.scrollLeft+p.clientWidth){
+        p.scrollTo({left:l-16,behavior:'smooth'});
+      }
+    }
+  }
+  window.addEventListener('scroll',spy,{passive:true});
+  window.addEventListener('resize',spy); spy();
+})();
+</script>
+</body>
+</html>

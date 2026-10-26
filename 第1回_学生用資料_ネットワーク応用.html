@@ -1,0 +1,1097 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>第1回 演習資料：ソケットとポート — ネットワーク応用</title><style>
+
+:root{--paper:#fbfaf7;--ink:#1f2933;--soft:#52606d;--line:#d9dee5;--codebg:#f4f6f9;}
+*{box-sizing:border-box;}html,body{margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:#e8ebef;color:var(--ink);font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased;padding:0 16px 80px;}
+/* ---- Web閲覧向け：固定ナビゲーション ---- */
+.topnav{position:sticky;top:0;z-index:60;margin:0 -16px 24px;padding:0 16px;background:rgba(232,235,239,.93);backdrop-filter:saturate(150%) blur(10px);-webkit-backdrop-filter:saturate(150%) blur(10px);border-bottom:1px solid #d3d9e0;}
+.topnav .inner{max-width:880px;margin:0 auto;display:flex;align-items:center;gap:14px;height:54px;}
+.topnav .brand{font-size:12.5px;font-weight:800;color:#1f2933;white-space:nowrap;letter-spacing:.02em;}
+.topnav .brand span{display:block;font-size:10.5px;font-weight:700;color:#7b8794;letter-spacing:.06em;}
+.topnav .links{display:flex;gap:3px;overflow-x:auto;flex:1;scrollbar-width:none;-ms-overflow-style:none;}
+.topnav .links::-webkit-scrollbar{display:none;}
+.topnav .links a{font-size:12px;font-weight:700;color:#52606d;text-decoration:none;padding:6px 11px;border-radius:6px;white-space:nowrap;transition:background .12s,color .12s;}
+.topnav .links a:hover{background:#dde2e8;color:#1f2933;}
+.topnav .links a.on{background:#1f2933;color:#fff;}
+.topnav .go{flex:0 0 auto;font-size:11.5px;font-weight:800;color:#fff;background:#4338ca;border-radius:6px;padding:7px 13px;text-decoration:none;white-space:nowrap;}
+.topnav .go:hover{background:#312e81;}
+.sheet,.topnotice{scroll-margin-top:70px;}
+/* ---- リンク ---- */
+a.ulink{text-decoration:none;border-bottom:1px solid rgba(11,108,181,.35);}
+a.ulink code{color:#0b6cb5;cursor:pointer;}
+a.ulink:hover code{background:#eef6fc;border-color:#bcdcf2;}
+/* ---- コードのコピーボタン ---- */
+.codewrap{position:relative;}
+.copybtn{position:absolute;top:9px;right:9px;font-size:11px;font-weight:700;color:#52606d;background:#fff;border:1px solid var(--line);border-radius:5px;padding:4px 11px;cursor:pointer;font-family:inherit;line-height:1.6;}
+.copybtn:hover{background:#eef1f4;color:#1f2933;}
+.copybtn.done{background:#eafaf0;border-color:#b9e4c8;color:#1f6631;}
+/* ---- チェックリストを操作可能に ---- */
+.checklist li{cursor:pointer;-webkit-user-select:none;user-select:none;border-radius:5px;transition:opacity .15s,background .12s;}
+.checklist li:hover{background:#f7f9fb;}
+.checklist li.done{opacity:.45;}
+.checklist li.done::before{background:var(--accent);border-color:var(--accent);}
+.checklist li.done::after{content:"\2713";position:absolute;left:3px;top:1px;color:#fff;font-size:12px;font-weight:900;line-height:1.45;}
+.ckprog{float:right;font-size:11px;font-weight:800;color:var(--soft);letter-spacing:.04em;}
+.ckhint{font-size:11px;color:#8a97a3;font-weight:600;margin:0 0 9px;}
+.sheet{max-width:880px;margin:0 auto 26px;background:var(--paper);border:1px solid var(--line);border-radius:6px;box-shadow:0 8px 30px rgba(20,30,45,.10);padding:44px 48px 52px;}
+.sheet.k1{--accent:#2f9e44;--accent-deep:#1f6631;--accentbg:#eafaf0;--accentbd:#b9e4c8;}
+.sheet.k2{--accent:#0b6cb5;--accent-deep:#08507f;--accentbg:#eef6fc;--accentbd:#bcdcf2;}
+.sheet.k3{--accent:#D97706;--accent-deep:#9a5407;--accentbg:#fff4e2;--accentbd:#f0cd9a;}
+.sheet.k4{--accent:#7c3aed;--accent-deep:#5b21b6;--accentbg:#f3eefe;--accentbd:#d6c6f5;}
+.sheet.k5{--accent:#4338ca;--accent-deep:#312e81;--accentbg:#eef0fd;--accentbd:#c7cbf5;}
+.sheet.k6{--accent:#be185d;--accent-deep:#831843;--accentbg:#fdeef5;--accentbd:#f3bdd7;}
+.sheet.i1{--accent:#0f766e;--accent-deep:#0b4a44;--accentbg:#f0fdf9;--accentbd:#a8ded7;}
+.sheet.i2{--accent:#334155;--accent-deep:#1e293b;--accentbg:#f1f5f9;--accentbd:#cbd5e1;}
+.figure{margin-top:14px;padding:16px 18px 10px;background:#fff;border:1px solid var(--line);border-radius:8px;overflow-x:auto;}
+.figure .cap{font-size:11.5px;color:var(--soft);margin:6px 0 0;text-align:left;line-height:1.7;}
+.figure svg{display:block;min-width:620px;}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:700;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;}
+.eyebrow .no{font-family:"SFMono-Regular",Consolas,Menlo,monospace;font-size:15px;}
+.badge{font-size:11px;letter-spacing:.08em;font-weight:800;color:#fff;background:var(--accent);padding:2px 9px;border-radius:20px;}
+.badge.alt{background:#334155;}
+h1{font-size:28px;font-weight:800;margin:6px 0 0;line-height:1.25;}
+.lead{margin:13px 0 0;color:var(--soft);font-size:14px;}
+.lead b{color:var(--ink);font-weight:700;} code{font-family:"SFMono-Regular",Consolas,Menlo,monospace;}
+.meta{margin-top:16px;display:flex;gap:22px;flex-wrap:wrap;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:11px 0;font-size:12.5px;color:var(--soft);}
+.meta b{color:var(--ink);font-weight:700;}
+.grid2{display:flex;gap:14px;margin-top:18px;flex-wrap:wrap;}
+.card{flex:1;min-width:240px;padding:14px 16px;border-radius:8px;border:1px solid var(--accentbd);background:var(--accentbg);}
+.card h3{margin:0 0 7px;font-size:13px;font-weight:800;color:var(--accent-deep);letter-spacing:.03em;}
+.card ul{margin:0;padding-left:18px;font-size:12.8px;color:#444;} .card li{margin:3px 0;}
+.card code{background:#fff;border:1px solid var(--accentbd);border-radius:4px;padding:0 4px;font-size:12px;}
+.verify{margin-top:14px;padding:13px 16px;background:#eef6fc;border:1px solid #bcdcf2;border-left:4px solid #1971c2;border-radius:8px;font-size:12.8px;color:#1d4e74;line-height:1.7;}
+.verify b{font-weight:800;} .verify code{font-family:"SFMono-Regular",Consolas,Menlo,monospace;background:#fff;border:1px solid #bcdcf2;border-radius:4px;padding:0 4px;}
+.warn{margin-top:12px;padding:11px 15px;background:#fdecec;border:1px solid #f3b9b9;border-left:4px solid #c0392b;border-radius:8px;font-size:12.6px;color:#7a1f1f;line-height:1.65;} .warn b{font-weight:800;}
+.warn code{background:#fff;border:1px solid #f3b9b9;border-radius:4px;padding:0 4px;}
+.timerule{margin-top:14px;padding:13px 16px;background:#fff1f0;border:1px solid #f0b4ae;border-left:5px solid #c0392b;border-radius:8px;font-size:13.3px;color:#7a1f1f;line-height:1.7;} .timerule b{font-weight:800;} .timerule .big{display:inline-block;font-size:15px;font-weight:800;margin-right:6px;}
+.timerule code{background:#fff;border:1px solid #f0b4ae;border-radius:4px;padding:0 4px;}
+.notimerule{margin-top:14px;padding:13px 16px;background:#eafaf0;border:1px solid #b9e4c8;border-left:5px solid #2f9e44;border-radius:8px;font-size:13.3px;color:#1f6631;line-height:1.7;} .notimerule b{font-weight:800;} .notimerule .big{display:inline-block;font-size:15px;font-weight:800;margin-right:6px;}
+.notimerule code{background:#fff;border:1px solid #b9e4c8;border-radius:4px;padding:0 4px;}
+.plabel{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--soft);text-transform:uppercase;margin:26px 0 9px;}
+pre.code{margin:0;background:var(--codebg);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:5px;padding:18px 20px;overflow-x:auto;font-family:"SFMono-Regular",Consolas,Menlo,"Yu Gothic",monospace;font-size:13px;line-height:1.9;color:#27313b;white-space:pre;}
+.cmt{color:#8a97a3;} .kw{color:#0b6cb5;font-weight:600;} .str{color:#1f7a3d;}
+.idnote{margin:14px 0 0;padding:11px 15px;background:#fff7e0;border:1px solid #f0d68a;border-left:4px solid #e0a800;border-radius:8px;font-size:13px;color:#6e5200;line-height:1.6;}
+.idnote b{font-weight:800;} .idnote code{font-family:"SFMono-Regular",Consolas,Menlo,monospace;background:#fff;border:1px solid #f0d68a;border-radius:4px;padding:0 4px;}
+.dayof{margin-top:14px;padding:13px 16px;background:#2a2f38;border-radius:8px;color:#f4f6f9;font-size:12.8px;line-height:1.8;}
+.dayof b{color:#ffd479;font-weight:800;}
+.dayof code{background:#3a4049;border-radius:4px;padding:0 5px;color:#e6edf3;}
+.ainote{margin-top:14px;padding:13px 16px;background:#f0fdf9;border:1px solid #a8ded7;border-left:4px solid #0f766e;border-radius:8px;font-size:12.8px;color:#0b4a44;line-height:1.75;}
+.ainote b{font-weight:800;} .ainote code{background:#fff;border:1px solid #a8ded7;border-radius:4px;padding:0 4px;}
+.design{margin-top:14px;padding:13px 16px;background:#f4f6f9;border:1px solid var(--line);border-left:4px solid var(--soft);border-radius:8px;font-size:12.6px;color:#3a4654;line-height:1.75;}
+.design b{color:var(--ink);}
+.design code{background:#fff;border:1px solid var(--line);border-radius:4px;padding:0 4px;}
+.topnotice{max-width:880px;margin:0 auto 26px;background:#fffaf0;border:2px solid #e0a800;border-radius:8px;padding:22px 26px;box-shadow:0 8px 30px rgba(20,30,45,.10);}
+.topnotice h2{margin:0 0 10px;font-size:16px;font-weight:800;color:#8a6200;display:flex;align-items:center;gap:8px;}
+.topnotice h2::before{content:"";width:4px;height:18px;background:#e0a800;border-radius:2px;}
+.topnotice p{margin:0 0 8px;font-size:13.3px;line-height:1.85;color:#4a3c00;}
+.topnotice ul{margin:6px 0 8px;padding-left:20px;font-size:13.3px;line-height:1.85;color:#4a3c00;}
+.topnotice li{margin:4px 0;}
+.topnotice b{color:#5c4700;}
+.topnotice code{background:#fff;border:1px solid #f0d68a;border-radius:4px;padding:0 4px;}
+.topnotice .axis{margin-top:10px;padding:11px 15px;background:#fff;border:1px solid #e0a800;border-radius:6px;font-size:13px;color:#4a3c00;}
+h2{font-size:16px;font-weight:800;margin:30px 0 6px;display:flex;align-items:center;gap:10px;}
+h2::before{content:"";width:4px;height:18px;background:var(--accent);border-radius:2px;}
+.note{font-size:12.8px;color:var(--soft);margin:0 0 14px;}
+table.levels{border-collapse:collapse;width:100%;margin:4px 0 6px;font-size:13px;}
+table.levels th,table.levels td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top;}
+table.levels thead th{background:var(--accentbg);color:var(--accent-deep);font-weight:800;}
+table.levels tbody tr:nth-child(even){background:#fafbfc;}
+table.levels code{background:#f1f3f6;border:1px solid #e0e4ea;border-radius:4px;padding:0 4px;font-size:11.6px;word-break:break-all;}
+table.levels b{font-weight:700;}
+.level{margin-bottom:12px;border:1px solid var(--accentbd);border-radius:8px;overflow:hidden;background:#fff;}
+.lvhead{display:flex;align-items:center;gap:10px;padding:8px 13px;background:var(--accentbg);border-bottom:1px solid var(--accentbd);}
+.chip{font-size:11px;font-weight:800;color:#fff;padding:2px 10px;border-radius:20px;}
+.c-beg{background:#2f9e44;}.c-mid{background:#1971c2;}.c-adv{background:#9a3412;}.c-exp{background:#6741d9;}
+.lvhead .t{font-size:13px;font-weight:700;} .level ul,.level ol{margin:9px 15px 13px;padding-left:20px;font-size:12.8px;line-height:1.7;color:#3a4654;} .level li{margin:4px 0;}
+.level code{background:#f1f3f6;border:1px solid #e0e4ea;border-radius:4px;padding:0 4px;font-size:12px;word-break:break-all;} .level b{font-weight:700;color:var(--ink);}
+.level p{margin:9px 15px 11px;font-size:12.8px;line-height:1.7;color:#3a4654;}
+.cmdlist{margin:10px 0 15px;}
+.cmdlist .cmd{border:1px solid #e0e4ea;border-left:3px solid var(--accent);border-radius:6px;background:#fafbfc;padding:12px 15px;margin:10px 0;}
+.cmdlist .cmdhead{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.cmdlist .cmdname{font-family:"SFMono-Regular",Consolas,Menlo,monospace;font-size:13.5px;font-weight:800;color:var(--accent-deep);background:#fff;border:1px solid var(--accentbd);border-radius:4px;padding:2px 9px;}
+.cmdlist .cmdtag{font-size:10.5px;font-weight:800;color:#fff;background:var(--accent);border-radius:20px;padding:2px 9px;letter-spacing:.04em;}
+.cmdlist .cmdtag.red{background:#c0392b;}
+.cmdlist p{margin:9px 0 0;font-size:12.6px;line-height:1.8;color:#3a4654;}
+.cmdlist p .lbl{display:inline-block;font-size:10.5px;font-weight:800;color:var(--accent-deep);background:var(--accentbg);border:1px solid var(--accentbd);border-radius:3px;padding:0 6px;margin-right:7px;vertical-align:1px;}
+.cmdlist code{background:#fff;border:1px solid #e0e4ea;border-radius:4px;padding:0 4px;font-size:12px;}
+.cmdlist .ex{margin-top:9px;padding:9px 12px;background:#fff;border:1px dashed #b8c2ce;border-radius:5px;font-size:12px;line-height:1.8;color:#52606d;}
+.cmdlist .ex .q{display:block;font-family:"SFMono-Regular",Consolas,Menlo,"Hiragino Kaku Gothic ProN",monospace;color:#27313b;margin:3px 0;}
+.cmdlist .ex b{color:var(--accent-deep);}
+.lbl{display:inline-block;font-size:10.5px;font-weight:800;color:var(--accent-deep);background:var(--accentbg);border:1px solid var(--accentbd);border-radius:3px;padding:0 6px;margin-right:7px;vertical-align:1px;}
+.stats{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap;}
+.stat{flex:1;min-width:148px;background:#fff;border:1px solid var(--accentbd);border-radius:8px;padding:14px 14px 12px;text-align:center;}
+.stat .n{font-size:31px;font-weight:800;color:var(--accent);line-height:1.05;letter-spacing:-.02em;}
+.stat .n small{font-size:16px;font-weight:800;}
+.stat .l{font-size:11.5px;color:#3a4654;margin-top:8px;line-height:1.6;}
+.record{margin-top:30px;display:flex;gap:22px;align-items:center;background:var(--accentbg);border:1px solid var(--accentbd);border-left:4px solid var(--accent);border-radius:8px;padding:20px 22px;}
+.record .txt{flex:1;min-width:0;} .record .rh{font-size:15px;font-weight:800;margin:0 0 7px;display:flex;align-items:center;gap:9px;color:var(--accent-deep);}
+.record .rh .ic{width:25px;height:25px;border-radius:6px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.record p{margin:0 0 8px;font-size:13px;line-height:1.65;color:#444;}
+.record .vals{display:flex;gap:10px;flex-wrap:wrap;margin:9px 0 11px;}
+.record .vals span{background:#fff;border:1px solid var(--accentbd);border-radius:5px;padding:5px 12px;font-size:12.3px;font-weight:700;color:var(--accent-deep);}
+.foot{margin-top:30px;padding-top:14px;border-top:1px dashed var(--line);font-size:12px;color:var(--soft);}
+ol.steps{margin:12px 0 0;padding-left:22px;font-size:13.3px;line-height:1.85;}
+ol.steps li{margin:7px 0;} ol.steps code{background:#f1f3f6;border:1px solid #e0e4ea;border-radius:4px;padding:0 5px;font-size:12.3px;word-break:break-all;}
+ol.steps b{font-weight:700;}
+ul.bullets{margin:12px 0 0;padding-left:22px;font-size:13.3px;line-height:1.85;}
+ul.bullets li{margin:6px 0;}
+ul.bullets code{background:#f1f3f6;border:1px solid #e0e4ea;border-radius:4px;padding:0 5px;font-size:12.3px;word-break:break-all;}
+.checklist{margin-top:16px;padding:16px 18px;background:#fff;border:1px solid var(--accentbd);border-radius:8px;}
+.checklist h4{margin:0 0 10px;font-size:12px;font-weight:800;letter-spacing:.1em;color:var(--accent-deep);text-transform:uppercase;}
+.checklist ul{margin:0;padding:0;list-style:none;font-size:13px;}
+.checklist li{margin:8px 0;padding-left:29px;position:relative;line-height:1.7;color:#3a4654;}
+.checklist li::before{content:"";position:absolute;left:0;top:3px;width:16px;height:16px;border:2px solid var(--accent);border-radius:3px;background:#fff;}
+.checklist li b{color:var(--ink);font-weight:700;}
+.checklist code{background:#f1f3f6;border:1px solid #e0e4ea;border-radius:4px;padding:0 4px;font-size:12px;}
+.checklist .fill{display:inline-block;min-width:80px;border-bottom:1.5px dashed var(--accent);}
+.flowbox{margin-top:12px;display:flex;flex-direction:column;gap:0;}
+.frow{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #e0a800;border-radius:6px;padding:10px 14px;}
+.frow .fno{flex:0 0 auto;font-family:"SFMono-Regular",Consolas,Menlo,monospace;font-size:11px;font-weight:800;letter-spacing:.1em;color:#8a6200;background:#fff7e0;border:1px solid #f0d68a;border-radius:20px;padding:2px 11px;}
+.frow .ftxt{flex:1;font-size:13px;color:#4a3c00;}
+.frow .ftime{flex:0 0 auto;font-size:11.5px;color:#8a6200;font-weight:700;}
+.farrow{text-align:center;color:#c39a00;font-size:14px;line-height:1;padding:3px 0;}
+.roomnote{margin-top:12px;padding:13px 16px;background:#eafaf0;border:2px solid #2f9e44;border-radius:8px;font-size:13.2px;color:#1f6631;line-height:1.8;}
+.roomnote b{font-weight:800;}
+.roomnote .rt{display:block;font-size:14px;font-weight:800;margin-bottom:7px;}
+.roomnote code{background:#fff;border:1px solid #b9e4c8;border-radius:4px;padding:0 4px;}
+@media print{html{scroll-behavior:auto;}body{background:#fff;padding:0;}.topnav,.copybtn,.ckprog,.ckhint{display:none!important;}a.ulink{border-bottom:none;}.sheet{box-shadow:none;border:none;border-radius:0;max-width:none;padding:24px 28px;margin:0;}.topnotice{box-shadow:none;max-width:none;margin:0 0 14px;}.sheet.i2,.sheet.k1,.sheet.k2,.sheet.k3,.sheet.k4,.sheet.k5,.sheet.k6{page-break-before:always;}.level,pre.code,.record,.card,.verify,.checklist,.ainote,.warn,.dayof,.idnote,.figure,table.levels{break-inside:avoid;}}
+@media (max-width:640px){.topnav .inner{height:50px;gap:9px;}.topnav .brand span{display:none;}.topnav .go{padding:6px 10px;font-size:11px;}.sheet{padding:30px 22px 40px;}h1{font-size:23px;}pre.code{font-size:12px;padding:15px;}.record{flex-direction:column;align-items:flex-start;}.frow{flex-wrap:wrap;gap:7px;}}
+</style></head>
+<body>
+
+<header class="topnav">
+  <div class="inner">
+    <div class="brand">第1回 演習資料<span>ネットワーク応用</span></div>
+    <div class="links">
+      <a href="#overview">この日の全体像</a>
+      <a href="#part1">PART 1</a>
+      <a href="#part2">PART 2</a>
+      <a href="#part3">PART 3</a>
+      <a href="#part4">PART 4</a>
+      <a href="#part5">PART 5</a>
+      <a href="#part6">PART 6</a>
+      <a href="#hw">課題</a>
+      <a href="#help">困ったときは</a>
+    </div>
+    <a class="go" href="#hw">課題を見る</a>
+  </div>
+</header>
+
+<section class="topnotice" id="top">
+  <h2>★ 今日この教室でやること、ひとことで</h2>
+  <p><b>「ホスト名 → IPアドレス → ポート → TCP接続」の4段を、コマンドと Java の両方で、自分の目で確認します。</b>今日はサーバを書きません。<b>つなぎに行く側だけ</b>をやります。</p>
+  <ul>
+    <li><b>進め方は、講義 → 演習A〜D → 課題提示</b>の順です。課題は<b>最後に配って終わりではなく、教室内で着手まで済ませます。</b></li>
+    <li><b>管理者権限は不要です。</b>この授業で <code>1024</code> 番未満のポートは一切使いません。<b>演習・課題ともポートは <code>40001</code> 以降</b>に統一します。</li>
+    <li><b>通信相手は原則 <code>localhost</code>(自分のPC)です。</b>学外への接続は学内ファイアウォールで遮断される前提で組んでいます。</li>
+    <li><b>GitHub Copilot を使って構いません。ただし、生成された行を説明できることが評価対象です。</b>詳しくは PART 1-4。</li>
+  </ul>
+  <div class="axis">
+    <b>今日使うもの</b>
+    <div class="flowbox" style="margin-top:8px;">
+      <div class="frow"><span class="fno">1</span><span class="ftxt"><b>GitHub Copilot</b>(サインイン済みであること)</span></div>
+      <div class="farrow">＋</div>
+      <div class="frow"><span class="fno">2</span><span class="ftxt">JDK 17 以降　<b><code>java -version</code> が通ることを開始前に確認</b></span></div>
+      <div class="farrow">＋</div>
+      <div class="frow"><span class="fno">3</span><span class="ftxt">配布ファイル <code>EchoServer.jar</code>(eclass からダウンロード)</span></div>
+      <div class="farrow">＋</div>
+      <div class="frow"><span class="fno">4</span><span class="ftxt">ターミナル(Windows は PowerShell)</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 全体像 ============================ -->
+<section class="sheet i1" id="overview">
+  <div class="eyebrow">この日の全体像 <span class="badge">まず読む</span></div>
+  <h1>第1回：ソケットとポート ／ つながる・つながらないを目で見る</h1>
+  <p class="lead">全13回の初回です。<b>ネットワークの用語を覚える回ではありません。</b>「自分のPCが今どこと、どのポートで話しているか」を実際に一覧し、Java から接続を<b>失敗させ、次に成功させる</b>ところまでを1コマでやります。第2回以降のすべての演習が、この日に作る <code>Socket</code> の1行の上に乗ります。</p>
+
+  <div class="meta">
+    <div><b>構成</b>　講義 ／ 演習A〜D ／ 課題提示</div>
+    <div><b>言語</b>　Java 17 以降</div>
+    <div><b>環境</b>　GitHub Copilot</div>
+  </div>
+
+  <h2>この回の到達目標</h2>
+  <p class="note">帰るときに、次の5つが「はい」になっていれば成功です。</p>
+  <div class="checklist">
+    <h4>Goal of the day</h4>
+    <ul>
+      <li><b>自分のPCの IPアドレスと、LISTEN 中のポートを一覧できた</b></li>
+      <li><b><code>InetAddress</code> による名前解決の結果が、<code>nslookup</code> の結果と一致することを確認した</b></li>
+      <li><b><code>Socket</code> の接続を、意図的に失敗させ、次に成功させた</b></li>
+      <li><b>失敗が3種類あること(名前が引けない／拒否された／応答がない)を区別できた</b></li>
+      <li><b>課題 <code>NetProbe.java</code> に着手し、1ケースでも自己採点を通した</b></li>
+    </ul>
+  </div>
+
+  <h2>この日の流れ</h2>
+  <p class="note"><b>上から順に進みます。</b>各パートにかける時間は決めていません。<b>前のパートが通ってから次へ進むこと</b>だけを守ってください。</p>
+  <table class="levels">
+    <thead><tr><th style="width:92px;">ステップ</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td><b>PART 1</b></td><td>講義：ソケットとは何か／Copilot の使い方ルール</td></tr>
+      <tr><td><b>PART 2</b></td><td>演習A：自分のPCを観察する(コマンド)</td></tr>
+      <tr><td><b>PART 3</b></td><td>演習B：名前解決を Java で書く</td></tr>
+      <tr><td><b>PART 4</b></td><td>演習C：<b>接続を失敗させ、次に成功させる</b></td></tr>
+      <tr><td><b>PART 5</b></td><td>演習D：やりとりされたバイト列を見る</td></tr>
+      <tr><td><b>PART 6</b></td><td>課題（全5問）の提示・自己採点の実演・<b>教室内で着手</b></td></tr>
+    </tbody>
+  </table>
+
+  <div class="design"><b>なぜこの順番なのか。</b>ネットワークで最初につまずくのは、<b>「動かない」ときに、どこが動いていないのか分からない</b>という点です。そこで演習を<b>観察(A) → 名前解決(B) → 接続(C) → バイト列(D)</b> という<b>下から積む順</b>に並べてあります。<b>各演習が終わるたびに「ここまでは確実に動いている」が1つ増えていきます。</b><br><br>だから、質問するときは<b>「動きません」ではなく「演習Bまでは通って、Cで止まっています」と言ってください。</b>それだけで原因がほぼ絞れます。</div>
+
+  <h2>全13回の中での位置づけ</h2>
+  <table class="levels">
+    <thead><tr><th style="width:44px;">回</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td><b>1</b></td><td><b>ソケットとポート／接続の成功と失敗</b>　←　今回</td></tr>
+      <tr><td>2</td><td>TCPクライアント：ストリーム、文字コード、行単位プロトコル</td></tr>
+      <tr><td>3</td><td>TCPサーバ：<code>ServerSocket</code>、単一接続</td></tr>
+      <tr><td>4</td><td>マルチスレッドサーバ</td></tr>
+      <tr><td>5</td><td>独自テキストプロトコルの設計</td></tr>
+      <tr><td>6</td><td>HTTP を手で話す(生リクエストの送信)</td></tr>
+      <tr><td>7</td><td>簡易HTTPサーバ</td></tr>
+      <tr><td>8</td><td>UDP：<code>DatagramSocket</code></td></tr>
+      <tr><td>9</td><td>JSON によるデータ交換</td></tr>
+      <tr><td>10</td><td>スレッドプールとタイムアウト設計</td></tr>
+      <tr><td>11</td><td>TLS と認証</td></tr>
+      <tr><td>12</td><td>総合演習(チャット／ファイル転送)</td></tr>
+      <tr><td>13</td><td>発表・総括</td></tr>
+    </tbody>
+  </table>
+
+  <div class="warn"><b>この回にやらないこと</b><br>
+  <b>サーバは書きません。</b>第3回でやります。今日 <code>ServerSocket</code> に手を出した班は、<b>ほぼ確実に演習Dまで到達できません。</b><br><br>
+  <b>GUI も作りません。</b>この授業の提出物は、第13回まですべて<b>標準出力に決められた形式で出す CLI プログラム</b>です。自動採点のためです。</div>
+
+  <div class="foot">ネットワーク応用 ／ 第1回 演習資料</div>
+</section>
+
+<!-- ============================ PART 1 ============================ -->
+<section class="sheet k1" id="part1">
+  <div class="eyebrow">PART <span class="no">1</span><span class="badge">講義</span></div>
+  <h1>ソケットとは何か</h1>
+  <p class="lead"><b>話すのは4点だけ</b>です。用語の網羅はしません。</p>
+
+  <h2>1-1　科目の進め方</h2>
+  <ul class="bullets">
+    <li><b>毎回、講義 → 演習 → 課題提示</b>の順で進みます。</li>
+    <li><b>課題は毎回出ます。</b>すべて<b>出力形式が厳密に決まった CLI プログラム</b>で、<b>採点スクリプトによる自動判定</b>を行います。</li>
+    <li><b>採点スクリプトは、あなたにも配布されます。</b>提出前に手元で、教員と同じ判定を実行できます。<b>「提出したら落ちていた」は起こりません。</b></li>
+    <li>通信相手は原則 <code>localhost</code>。<b>ポートは 40001 以降のみ</b>を使います。</li>
+  </ul>
+
+  <h2>1-2　4層と、今日書く層</h2>
+  <p class="note">TCP/IP の4層のうち、<b>この授業で書くのはアプリケーション層だけ</b>です。重要なのは各層の名前ではなく、<b>下の層に何を任せているか</b>です。</p>
+  <table class="levels">
+    <thead><tr><th style="width:34%;">層</th><th>この授業での扱い</th></tr></thead>
+    <tbody>
+      <tr><td><b>アプリケーション層</b></td><td><b>ここを書く。</b>第2回以降13回まで、ずっとここ</td></tr>
+      <tr><td>トランスポート層(TCP/UDP)</td><td><b>使う。</b><code>Socket</code> を作った時点で、順序保証と再送は任せている</td></tr>
+      <tr><td>インターネット層(IP)</td><td>宛先まで運ぶのは任せる。今日は<b>IPアドレスを見るだけ</b></td></tr>
+      <tr><td>ネットワークインタフェース層</td><td>この授業では扱わない</td></tr>
+    </tbody>
+  </table>
+  <div class="ainote"><b>★ この回で、いちばん覚えておくこと。</b><br><br>
+  <code>new Socket(host, port)</code> の1行は、<b>「名前を引き、経路を決め、3ウェイハンドシェイクをし、以後の順序保証と再送を引き受ける」</b>という膨大な処理を呼び出しています。<b>今日この1行が失敗する3通りを体験することが、本日の中心</b>です。</div>
+
+  <h2>1-3　ソケット＝(IPアドレス, ポート番号)</h2>
+  <p class="note"><b>この2枚の図を、あとで見返せるようにしておいてください。</b>第2回以降、「ポートって何だったか」と思ったら、まずここに戻ります。</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 660 320" xmlns="http://www.w3.org/2000/svg" font-family="'Hiragino Kaku Gothic ProN','Yu Gothic',Meiryo,sans-serif" role="img" aria-label="1台のPCの中で、ポート番号によって届け先のプログラムが決まることを示す図">
+      <defs>
+        <marker id="ar1" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+          <path d="M0,0 L9,4.5 L0,9 z" fill="#0b6cb5"/>
+        </marker>
+      </defs>
+
+      <text x="16" y="24" font-size="12.5" font-weight="700" fill="#52606d">外から届いた通信</text>
+
+      <!-- PC 本体 -->
+      <rect x="200" y="42" width="440" height="256" rx="10" fill="#ffffff" stroke="#0b6cb5" stroke-width="2"/>
+      <line x1="200" y1="82" x2="640" y2="82" stroke="#bcdcf2" stroke-width="1.5"/>
+      <text x="216" y="68" font-size="13.5" font-weight="800" fill="#08507f">あなたのPC</text>
+      <text x="330" y="68" font-size="12.5" font-weight="700" fill="#52606d">IPアドレス</text>
+      <text x="404" y="68" font-size="13" font-weight="800" fill="#08507f" font-family="Consolas,Menlo,monospace">192.168.1.20</text>
+      <text x="530" y="68" font-size="11.5" fill="#8a97a3">← 建物の住所</text>
+
+      <!-- 行1 -->
+      <text x="16" y="122" font-size="11.5" font-weight="700" fill="#08507f" font-family="Consolas,Menlo,monospace">192.168.1.20:40001</text>
+      <line x1="146" y1="118" x2="196" y2="118" stroke="#0b6cb5" stroke-width="2" marker-end="url(#ar1)"/>
+      <rect x="176" y="102" width="52" height="32" rx="5" fill="#eef6fc" stroke="#0b6cb5" stroke-width="2"/>
+      <text x="202" y="123" font-size="12.5" font-weight="800" fill="#08507f" text-anchor="middle" font-family="Consolas,Menlo,monospace">40001</text>
+      <line x1="228" y1="118" x2="300" y2="118" stroke="#0b6cb5" stroke-width="2"/>
+      <rect x="300" y="102" width="300" height="32" rx="5" fill="#fafbfc" stroke="#cbd5e1" stroke-width="1.5"/>
+      <text x="316" y="123" font-size="12.5" font-weight="700" fill="#1f2933">EchoServer　<tspan font-size="11.5" fill="#52606d">今日この授業で起動するもの</tspan></text>
+
+      <!-- 行2 -->
+      <text x="16" y="187" font-size="11.5" font-weight="700" fill="#08507f" font-family="Consolas,Menlo,monospace">192.168.1.20:40002</text>
+      <line x1="146" y1="183" x2="196" y2="183" stroke="#0b6cb5" stroke-width="2" marker-end="url(#ar1)"/>
+      <rect x="176" y="167" width="52" height="32" rx="5" fill="#eef6fc" stroke="#0b6cb5" stroke-width="2"/>
+      <text x="202" y="188" font-size="12.5" font-weight="800" fill="#08507f" text-anchor="middle" font-family="Consolas,Menlo,monospace">40002</text>
+      <line x1="228" y1="183" x2="300" y2="183" stroke="#0b6cb5" stroke-width="2"/>
+      <rect x="300" y="167" width="300" height="32" rx="5" fill="#fafbfc" stroke="#cbd5e1" stroke-width="1.5"/>
+      <text x="316" y="188" font-size="12.5" font-weight="700" fill="#1f2933">別の実習プログラム</text>
+
+      <!-- 行3 -->
+      <text x="16" y="252" font-size="11.5" font-weight="700" fill="#08507f" font-family="Consolas,Menlo,monospace">192.168.1.20:51234</text>
+      <line x1="146" y1="248" x2="196" y2="248" stroke="#0b6cb5" stroke-width="2" marker-end="url(#ar1)"/>
+      <rect x="176" y="232" width="52" height="32" rx="5" fill="#eef6fc" stroke="#0b6cb5" stroke-width="2"/>
+      <text x="202" y="253" font-size="12.5" font-weight="800" fill="#08507f" text-anchor="middle" font-family="Consolas,Menlo,monospace">51234</text>
+      <line x1="228" y1="248" x2="300" y2="248" stroke="#0b6cb5" stroke-width="2"/>
+      <rect x="300" y="232" width="300" height="32" rx="5" fill="#fafbfc" stroke="#cbd5e1" stroke-width="1.5"/>
+      <text x="316" y="253" font-size="12.5" font-weight="700" fill="#1f2933">ブラウザ　<tspan font-size="11.5" fill="#52606d">OSが自動で割り当てた番号</tspan></text>
+
+      <text x="200" y="314" font-size="11.5" font-weight="700" fill="#52606d">IPアドレスが同じでも、ポート番号が違えば、届く先のプログラムは別になる</text>
+    </svg>
+    <p class="cap"><b>図1　IPアドレスは「どのPCか」、ポート番号は「そのPCの中のどのプログラムか」。</b>この2つの組み合わせを<b>ソケット</b>と呼びます。演習Aの <code>netstat</code> で見た LISTENING の行は、この左側の口が今いくつ開いているかの一覧です。</p>
+  </div>
+
+  <div class="figure">
+    <svg viewBox="0 0 660 300" xmlns="http://www.w3.org/2000/svg" font-family="'Hiragino Kaku Gothic ProN','Yu Gothic',Meiryo,sans-serif" role="img" aria-label="1本のTCP接続が、送信元IP・送信元ポート・宛先IP・宛先ポートの4つ組で決まることを示す図">
+      <defs>
+        <marker id="ar2" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+          <path d="M0,0 L9,4.5 L0,9 z" fill="#52606d"/>
+        </marker>
+      </defs>
+
+      <!-- 左：クライアント -->
+      <rect x="30" y="24" width="212" height="76" rx="8" fill="#ffffff" stroke="#0b6cb5" stroke-width="2"/>
+      <text x="136" y="50" font-size="12.5" font-weight="800" fill="#08507f" text-anchor="middle">あなたのプログラム</text>
+      <text x="136" y="76" font-size="13" font-weight="800" fill="#1f2933" text-anchor="middle" font-family="Consolas,Menlo,monospace">127.0.0.1:54321</text>
+
+      <!-- 右：サーバ -->
+      <rect x="418" y="24" width="212" height="76" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
+      <text x="524" y="50" font-size="12.5" font-weight="800" fill="#5b21b6" text-anchor="middle">EchoServer</text>
+      <text x="524" y="76" font-size="13" font-weight="800" fill="#1f2933" text-anchor="middle" font-family="Consolas,Menlo,monospace">127.0.0.1:40001</text>
+
+      <line x1="242" y1="62" x2="414" y2="62" stroke="#52606d" stroke-width="2" marker-end="url(#ar2)"/>
+      <text x="328" y="50" font-size="11.5" font-weight="700" fill="#52606d" text-anchor="middle">1本のTCP接続</text>
+
+      <!-- netstat 行 -->
+      <text x="30" y="140" font-size="11.5" font-weight="700" fill="#52606d">この接続を <tspan font-family="Consolas,Menlo,monospace" font-weight="800" fill="#1f2933">netstat -an</tspan> で見ると、1行としてこう表示される</text>
+      <rect x="30" y="152" width="600" height="44" rx="6" fill="#f4f6f9" stroke="#d9dee5" stroke-width="1.5"/>
+      <text x="48" y="180" font-size="14" fill="#27313b" font-family="Consolas,Menlo,monospace">TCP</text>
+      <text x="104" y="180" font-size="14" fill="#08507f" font-weight="700" font-family="Consolas,Menlo,monospace">127.0.0.1:54321</text>
+      <text x="268" y="180" font-size="14" fill="#5b21b6" font-weight="700" font-family="Consolas,Menlo,monospace">127.0.0.1:40001</text>
+      <text x="436" y="180" font-size="14" fill="#1f6631" font-family="Consolas,Menlo,monospace">ESTABLISHED</text>
+
+      <!-- 引き出し線 -->
+      <path d="M142,196 L142,222 L118,222" fill="none" stroke="#0b6cb5" stroke-width="1.5"/>
+      <text x="112" y="226" font-size="11.5" font-weight="700" fill="#08507f" text-anchor="end">送信元IP</text>
+      <path d="M212,196 L212,254 L118,254" fill="none" stroke="#0b6cb5" stroke-width="1.5"/>
+      <text x="112" y="258" font-size="11.5" font-weight="700" fill="#08507f" text-anchor="end">送信元ポート</text>
+      <path d="M306,196 L306,222 L560,222" fill="none" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="566" y="226" font-size="11.5" font-weight="700" fill="#5b21b6">宛先IP</text>
+      <path d="M376,196 L376,254 L560,254" fill="none" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="566" y="258" font-size="11.5" font-weight="700" fill="#5b21b6">宛先ポート</text>
+
+      <text x="330" y="290" font-size="12" font-weight="800" fill="#1f2933" text-anchor="middle">この4つの値の組が、1本の通信を他と区別している</text>
+    </svg>
+    <p class="cap"><b>図2　通信は「4つ組」で識別される。</b>だから同じサーバに何人が同時につないでも混ざりません。<b>接続する側のポート番号(54321)は、自分で決めていません。</b>OSが空いている番号を自動で割り当てます。</p>
+  </div>
+
+  <ul class="bullets">
+    <li><b>0〜1023 はウェルノウンポート</b>で、多くのOSでは使用に管理者権限が要ります。<b>この授業では使いません。</b>演習・課題とも <code>40001</code> 以降だけを使います。</li>
+    <li><code>localhost</code> ／ <code>127.0.0.1</code> は<b>自分自身</b>を指します。図1のPCが、送る側と受ける側を兼ねている状態です。今日の通信はすべてPCの中で完結します。</li>
+    <li><b>同じポートを、2つのプログラムが同時に LISTEN することはできません。</b>第3回で <code>BindException</code> として出会います。</li>
+  </ul>
+
+  <div class="design"><b>ひとこと：なぜ 1024 未満を使わないのか。</b>ポート番号は <b>0〜65535</b> の範囲で、用途によって3つに分かれています。<b>この授業が 40001 番台を使うのは、好みではなく、管理者権限がないからです。</b></div>
+
+  <table class="levels">
+    <thead><tr><th style="width:132px;">範囲</th><th style="width:132px;">呼び方</th><th>性格</th></tr></thead>
+    <tbody>
+      <tr><td><code>0 〜 1023</code></td><td><b>ウェルノウンポート</b></td><td><b>番号と役割が世界中で決まっている。</b>HTTP は 80、HTTPS は 443、SSH は 22。ブラウザに <code>https://example.com</code> と打つだけでつながるのは、<b>「HTTPS なら 443」が暗黙の了解になっている</b>から</td></tr>
+      <tr><td><code>1024 〜 49151</code></td><td>登録済みポート</td><td>主要なソフトウェアが申請して押さえている番号帯。<b>空いている番号は自由に使える。</b><b>この授業で使う <code>40001</code> はここ</b></td></tr>
+      <tr><td><code>49152 〜 65535</code></td><td>動的・一時ポート</td><td><b>OSが自動で割り当てる番号帯。</b>図2の <code>54321</code> がこれ。<b>接続する側は、この中から勝手に1つ選ばれる</b></td></tr>
+    </tbody>
+  </table>
+
+  <div class="ainote"><b>★ ウェルノウンポートが「決まっている」ことの意味。</b><br><br>
+  <b>80番や443番を、誰でも自由に使えてしまうと困ります。</b>先に起動したプログラムが 443 番を押さえれば、そのPCに来た HTTPS の通信をすべて受け取れてしまうからです。<b>そのため多くのOSは、1024 未満のポートで待ち受けるのに管理者権限を要求します。</b><br><br>
+  <b>この教室のPCに管理者権限はありません。だからこの授業では 1024 未満を一切使いません。</b>制約というより、<b>「ポート番号には社会的な取り決めがある」ことの裏返し</b>だと思ってください。</div>
+
+  <div class="notimerule"><span class="big">★</span><b>この授業が <code>40001</code> を選んだ理由。</b>1024 未満は<b>管理者権限がないため使えず</b>、49152 以上は<b>OSの自動割り当てとぶつかる可能性がある</b>。<b>その両方を避けた、真ん中の帯</b>です。<br><br>
+  それでも <code>Address already in use</code> が出たら、<b>前に起動した <code>EchoServer</code> がまだ生きています。</b>そのウィンドウで <code>Ctrl</code>＋<code>C</code> を押してください。<b>番号を変える必要はありません。</b></div>
+
+  <h2>1-4　★ GitHub Copilot の使い方ルール</h2>
+  <div class="timerule"><span class="big">★</span><b>Copilot は使って構いません。禁止しません。</b>ただし、この授業の評価は<b>「動いたか」ではなく「説明できるか」</b>で行います。<b>提出コードの任意の行について、口頭で説明を求めることがあります。</b></div>
+
+  <div class="checklist">
+    <h4>Copilot 4つのルール</h4>
+    <ul>
+      <li><b>Tab を押す前に、提案を読む。</b>読まずに押した行は、自分のコードではありません</li>
+      <li><b>プロンプトを記録する。</b>課題の提出物に <code>prompt_log.md</code> が含まれます</li>
+      <li><b>学籍番号・氏名・パスワード・未公開の配布資料を入力しない</b></li>
+      <li><b>生成されたコードが動いても、期待した理由で動いているとは限らない。</b>必ず自分で実行して確認する</li>
+    </ul>
+  </div>
+
+  <div class="dayof"><b>★ ネットワークのコードで、Copilot が特に間違えるところ</b><br><br>
+  ・<b>タイムアウトを設定しないコードを平気で出します。</b><code>new Socket(host, port)</code> はタイムアウトを指定できません。今日の課題では <code>connect()</code> を使わせます<br>
+  ・<b>例外を <code>catch (Exception e)</code> でまとめてしまいます。</b>今日の学習内容は<b>「例外を3種類に区別すること」</b>そのものなので、これをやると課題が通りません<br>
+  ・<b>文字コードを指定しないコードを出します。</b>第2回で必ず問題になります</div>
+
+  <div class="foot">PART 1 ／ 講義</div>
+</section>
+
+<!-- ============================ PART 2 ============================ -->
+<section class="sheet k2" id="part2">
+  <div class="eyebrow">PART <span class="no">2</span><span class="badge">演習A</span></div>
+  <h1>演習A：自分のPCを観察する</h1>
+  <p class="lead"><b>まだ Java を書きません。</b>コマンドで、今このPCが持っているアドレスと、開いているポートを見ます。</p>
+
+  <h2>A-1　実行するコマンド</h2>
+  <p class="note">Windows は PowerShell、macOS / Linux は Terminal。<b>4つとも実行し、出力を手元に控えてください。</b></p>
+
+  <div class="cmdlist">
+    <div class="cmd">
+      <div class="cmdhead"><span class="cmdname">ipconfig</span><span class="cmdtag">自分の住所</span></div>
+      <p><span class="lbl">macOS / Linux</span><code>ifconfig</code> または <code>ip addr</code></p>
+      <p><b>自分のIPv4アドレスを見つけて控えてください。</b><code>192.168.</code> や <code>10.</code> で始まっていれば学内ネットワーク内のアドレスです。</p>
+    </div>
+    <div class="cmd">
+      <div class="cmdhead"><span class="cmdname">ping localhost</span><span class="cmdtag">自分自身に届くか</span></div>
+      <p>4回応答が返ればOKです。<b>これが返らない場合、この後の演習はすべて失敗します。</b>その場合はすぐTAを呼んでください。</p>
+    </div>
+    <div class="cmd">
+      <div class="cmdhead"><span class="cmdname">nslookup www.doshisha.ac.jp</span><span class="cmdtag">名前をIPに変える</span></div>
+      <p><b>返ってきたIPアドレスを控えてください。</b>演習Bで、Java が出した結果と突き合わせます。</p>
+    </div>
+    <div class="cmd">
+      <div class="cmdhead"><span class="cmdname">netstat -an</span><span class="cmdtag">今開いているポート</span></div>
+      <p><span class="lbl">Windows</span><code>netstat -an | findstr LISTENING</code></p>
+      <p><span class="lbl">macOS / Linux</span><code>netstat -an | grep LISTEN</code></p>
+      <p><b>LISTENING と表示されている行が、「誰かの接続を待っているプログラム」です。</b>ポート番号をいくつか控えてください。</p>
+    </div>
+  </div>
+
+  <h2>A-2　考えること(ここが本題)</h2>
+  <div class="verify">
+    ① <b>LISTENING の行は何個ありましたか。</b>そのポート番号のうち、1024未満のものはいくつありますか<br>
+    ② <b><code>40001</code> は一覧にありましたか。</b>(ないはずです。だから今日これから使えます)<br>
+    ③ <b><code>ping localhost</code> の応答時間は何ミリ秒でしたか。</b>この数字を覚えておいてください
+  </div>
+  <div class="design"><b>③を控える理由。</b>演習Cで、同じ <code>localhost</code> への<b>接続にかかった時間</b>を測ります。<b>ping の値と近い桁になる</b>はずです。<b>通信にかかる時間は、相手までの距離で決まります。</b>この感覚は、第10回のタイムアウト設計でそのまま使います。</div>
+
+  <div class="notimerule"><span class="big">★</span><b>ここまで、まだ Java を1行も書いていません。それで正しい進度です。</b></div>
+
+  <div class="foot">PART 2 ／ 演習A</div>
+</section>
+
+<!-- ============================ PART 3 ============================ -->
+<section class="sheet k3" id="part3">
+  <div class="eyebrow">PART <span class="no">3</span><span class="badge">演習B</span></div>
+  <h1>演習B：名前解決を Java で書く</h1>
+  <p class="lead"><b>Copilot を使うのは、ここが初めて</b>です。使い方の練習も兼ねます。</p>
+
+  <h2>B-1　作るもの</h2>
+  <p class="note">ファイル名 <code>Lookup.java</code>。<b>コマンドライン引数で受け取ったホスト名を、IPアドレスに変換して表示するだけ</b>のプログラムです。</p>
+
+  <div class="checklist">
+    <h4>手順</h4>
+    <ul>
+      <li>作業フォルダに <code>Lookup.java</code> を新規作成する</li>
+      <li><b>ファイルの先頭にコメントで、これから作るものを日本語で書く</b>(Copilot への指示になります)</li>
+      <li>提案が出たら、<b>読んでから</b> Tab を押す</li>
+      <li><code>java Lookup www.doshisha.ac.jp</code> で実行し、<b>演習Aの <code>nslookup</code> の結果と一致するか確認する</b></li>
+    </ul>
+  </div>
+
+  <h2>B-2　Copilot に書かせるための最初のコメント</h2>
+  <p class="note"><b>この文面をそのまま打ってみてください。</b>そして、<b>出てきた提案を採用する前に読んでください。</b></p>
+<pre class="code"><span class="cmt">// コマンドライン引数で受け取ったホスト名を InetAddress で解決し、</span>
+<span class="cmt">// ホスト名とIPアドレスを1行ずつ表示する。</span>
+<span class="cmt">// 解決できなかった場合は UnknownHostException を捕まえて</span>
+<span class="cmt">// "UNKNOWN_HOST" と表示する。</span></pre>
+
+  <div class="ainote"><b>★ 提案が出たら、Tab を押す前に次の2点を確認してください。</b><br><br>
+  ・<b><code>catch</code> しているのは <code>UnknownHostException</code> ですか。</b><code>Exception</code> でまとめられていませんか<br>
+  ・<b>使っているクラスは <code>InetAddress</code> ですか。</b>別のライブラリを勝手に <code>import</code> していませんか<br><br>
+  <b>違っていたら、Tab を押さずに Esc で消して、コメントを書き足してから出し直してください。</b>これが Copilot の正しい使い方です。</div>
+
+  <h2>B-3　確認する内容</h2>
+  <div class="verify">
+    ① <code>java Lookup www.doshisha.ac.jp</code> → <b>IPアドレスが出て、<code>nslookup</code> と一致する</b><br>
+    ② <code>java Lookup localhost</code> → <b><code>127.0.0.1</code> が出る</b><br>
+    ③ <code>java Lookup no-such-host.invalid</code> → <b><code>UNKNOWN_HOST</code> と出る(落ちない)</b>
+  </div>
+  <div class="warn"><b>③でスタックトレースが出て終了した人は、例外を捕まえられていません。</b>これは失敗ではなく、<b>今日いちばん大事な確認</b>です。Copilot の提案をそのまま採用すると、ここが <code>throws</code> になっていることがよくあります。<b>自分で <code>try-catch</code> に直してください。</b></div>
+
+  <h2>B-4　早く終わった人へ</h2>
+  <ul class="bullets">
+    <li><code>InetAddress.getAllByName()</code> に変えて、<b>1つのホスト名に複数のIPアドレスが対応する</b>例を探してください。</li>
+    <li>見つけたら、<b>なぜ複数あるのか</b>を考えてみてください(第7回で回収します)。</li>
+  </ul>
+
+  <div class="foot">PART 3 ／ 演習B</div>
+</section>
+
+<!-- ============================ PART 4 ============================ -->
+<section class="sheet k4" id="part4">
+  <div class="eyebrow">PART <span class="no">4</span><span class="badge">演習C</span></div>
+  <h1>演習C：接続を失敗させ、次に成功させる</h1>
+  <p class="lead"><b>この演習が今日の中心です。</b>先に失敗させます。</p>
+
+  <h2>C-1　まず、失敗させる</h2>
+  <p class="note">ファイル名 <code>Connect.java</code>。<b>まだサーバは起動しません。</b>誰も待っていないポートに接続を試みます。</p>
+<pre class="code"><span class="kw">import</span> java.net.*;
+
+<span class="kw">public class</span> Connect {
+  <span class="kw">public static void</span> main(String[] args) {
+    String host = args[<span class="str">0</span>];
+    <span class="kw">int</span> port = Integer.parseInt(args[<span class="str">1</span>]);
+
+    <span class="kw">long</span> start = System.currentTimeMillis();
+    <span class="kw">try</span> (Socket socket = <span class="kw">new</span> Socket()) {
+      socket.connect(<span class="kw">new</span> InetSocketAddress(host, port), <span class="str">2000</span>);
+      System.out.println(<span class="str">"CONNECTED"</span>);
+    } <span class="kw">catch</span> (UnknownHostException e) {
+      System.out.println(<span class="str">"UNKNOWN_HOST"</span>);
+    } <span class="kw">catch</span> (SocketTimeoutException e) {
+      System.out.println(<span class="str">"TIMEOUT"</span>);
+    } <span class="kw">catch</span> (ConnectException e) {
+      System.out.println(<span class="str">"REFUSED"</span>);
+    } <span class="kw">catch</span> (Exception e) {
+      System.out.println(<span class="str">"ERROR: "</span> + e.getClass().getSimpleName());
+    }
+    System.out.println(<span class="str">"ELAPSED_MS="</span> + (System.currentTimeMillis() - start));
+  }
+}</pre>
+
+  <div class="idnote"><b>このコードは、あえて配布します。</b>Copilot に書かせると、<b><code>new Socket(host, port)</code> というタイムアウトを指定できない書き方</b>を高い確率で提案してくるためです。<b>まずこの形を体に入れてから、Copilot に頼んでください。</b></div>
+
+  <h2>C-2　3種類の失敗を、順に起こす</h2>
+  <p class="note"><b>失敗は「どの段階まで進んで止まったか」で3種類に分かれます。</b>下の図を見てから、3つのコマンドを順に実行してください。</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 660 360" xmlns="http://www.w3.org/2000/svg" font-family="'Hiragino Kaku Gothic ProN','Yu Gothic',Meiryo,sans-serif" role="img" aria-label="接続が失敗する3種類を、名前解決・接続要求・応答の3段階のどこで止まるかで示した図">
+      <!-- 段階のヘッダ -->
+      <text x="196" y="26" font-size="11.5" font-weight="800" fill="#52606d" text-anchor="middle">① 名前を引く</text>
+      <text x="352" y="26" font-size="11.5" font-weight="800" fill="#52606d" text-anchor="middle">② 接続要求を送る</text>
+      <text x="508" y="26" font-size="11.5" font-weight="800" fill="#52606d" text-anchor="middle">③ 相手が応答する</text>
+      <line x1="14" y1="38" x2="646" y2="38" stroke="#d9dee5" stroke-width="1.5"/>
+
+      <!-- ===== 行1：UNKNOWN_HOST ===== -->
+      <rect x="14" y="66" width="112" height="34" rx="5" fill="#fdecec" stroke="#c0392b" stroke-width="1.5"/>
+      <text x="70" y="88" font-size="11.5" font-weight="800" fill="#7a1f1f" text-anchor="middle" font-family="Consolas,Menlo,monospace">UNKNOWN_HOST</text>
+      <line x1="136" y1="83" x2="560" y2="83" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="5 5"/>
+      <circle cx="196" cy="83" r="14" fill="#fdecec" stroke="#c0392b" stroke-width="2"/>
+      <text x="196" y="89" font-size="14" font-weight="800" fill="#c0392b" text-anchor="middle">✕</text>
+      <circle cx="352" cy="83" r="14" fill="#f4f6f9" stroke="#cbd5e1" stroke-width="2"/>
+      <text x="352" y="89" font-size="14" font-weight="700" fill="#a3adb8" text-anchor="middle">–</text>
+      <circle cx="508" cy="83" r="14" fill="#f4f6f9" stroke="#cbd5e1" stroke-width="2"/>
+      <text x="508" y="89" font-size="14" font-weight="700" fill="#a3adb8" text-anchor="middle">–</text>
+      <text x="576" y="88" font-size="11.5" font-weight="800" fill="#c0392b">≒ 0ms</text>
+      <text x="136" y="114" font-size="11.5" fill="#52606d">名前をIPアドレスに変換できない。<tspan font-weight="700" fill="#1f2933">まだ1バイトも送信していない</tspan></text>
+
+      <!-- ===== 行2：REFUSED ===== -->
+      <rect x="14" y="166" width="112" height="34" rx="5" fill="#fdecec" stroke="#c0392b" stroke-width="1.5"/>
+      <text x="70" y="188" font-size="11.5" font-weight="800" fill="#7a1f1f" text-anchor="middle" font-family="Consolas,Menlo,monospace">REFUSED</text>
+      <line x1="136" y1="183" x2="508" y2="183" stroke="#52606d" stroke-width="2"/>
+      <line x1="508" y1="183" x2="560" y2="183" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="5 5"/>
+      <circle cx="196" cy="183" r="14" fill="#eafaf0" stroke="#2f9e44" stroke-width="2"/>
+      <text x="196" y="189" font-size="13" font-weight="800" fill="#2f9e44" text-anchor="middle">✓</text>
+      <circle cx="352" cy="183" r="14" fill="#eafaf0" stroke="#2f9e44" stroke-width="2"/>
+      <text x="352" y="189" font-size="13" font-weight="800" fill="#2f9e44" text-anchor="middle">✓</text>
+      <circle cx="508" cy="183" r="14" fill="#fdecec" stroke="#c0392b" stroke-width="2"/>
+      <text x="508" y="189" font-size="14" font-weight="800" fill="#c0392b" text-anchor="middle">✕</text>
+      <text x="576" y="188" font-size="11.5" font-weight="800" fill="#c0392b">≒ 1ms</text>
+      <text x="136" y="214" font-size="11.5" fill="#52606d">相手のPCは居る。しかし<tspan font-weight="700" fill="#1f2933">その番号で誰も待っていない</tspan>ので、拒否がすぐ返る</text>
+
+      <!-- ===== 行3：TIMEOUT ===== -->
+      <rect x="14" y="266" width="112" height="34" rx="5" fill="#fdecec" stroke="#c0392b" stroke-width="1.5"/>
+      <text x="70" y="288" font-size="11.5" font-weight="800" fill="#7a1f1f" text-anchor="middle" font-family="Consolas,Menlo,monospace">TIMEOUT</text>
+      <line x1="136" y1="283" x2="352" y2="283" stroke="#52606d" stroke-width="2"/>
+      <line x1="352" y1="283" x2="560" y2="283" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="5 5"/>
+      <circle cx="196" cy="283" r="14" fill="#eafaf0" stroke="#2f9e44" stroke-width="2"/>
+      <text x="196" y="289" font-size="13" font-weight="800" fill="#2f9e44" text-anchor="middle">✓</text>
+      <circle cx="352" cy="283" r="14" fill="#eafaf0" stroke="#2f9e44" stroke-width="2"/>
+      <text x="352" y="289" font-size="13" font-weight="800" fill="#2f9e44" text-anchor="middle">✓</text>
+      <circle cx="508" cy="283" r="14" fill="#f4f6f9" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="4 4"/>
+      <text x="508" y="289" font-size="11" font-weight="700" fill="#8a97a3" text-anchor="middle">無</text>
+      <text x="576" y="288" font-size="11.5" font-weight="800" fill="#c0392b">≒ 2000ms</text>
+      <text x="136" y="314" font-size="11.5" fill="#52606d"><tspan font-weight="700" fill="#1f2933">拒否すら返ってこない。</tspan>指定した2秒を待ちきってから諦める</text>
+
+      <line x1="14" y1="336" x2="646" y2="336" stroke="#d9dee5" stroke-width="1.5"/>
+      <text x="14" y="354" font-size="11.5" font-weight="800" fill="#1f2933">「つながらない」は1種類ではない。どこまで進んだかが、所要時間に表れる</text>
+    </svg>
+    <p class="cap"><b>図3　接続が失敗する3通り。</b><code>ELAPSED_MS</code> の値が、そのまま「どこで止まったか」の手がかりになります。<b>課題 <code>NetProbe.java</code> の問3は、この3つを区別して出力する問題</b>です。</p>
+  </div>
+
+  <table class="levels">
+    <thead><tr><th style="width:38%;">実行するコマンド</th><th style="width:26%;">出るはずの結果</th><th>なぜそうなるか</th></tr></thead>
+    <tbody>
+      <tr><td><code>java Connect localhost 40001</code></td><td><b>REFUSED</b></td><td>そのPCは存在するが、<b>そのポートで誰も待っていない</b>ので、即座に拒否が返る</td></tr>
+      <tr><td><code>java Connect no-such-host.invalid 40001</code></td><td><b>UNKNOWN_HOST</b></td><td><b>名前がIPに変換できない。</b>接続以前の段階で失敗している</td></tr>
+      <tr><td><code>java Connect 10.255.255.1 40001</code></td><td><b>TIMEOUT</b></td><td>宛先まで到達できず、<b>拒否も返ってこない</b>ので、2秒待って諦める</td></tr>
+    </tbody>
+  </table>
+
+  <div class="verify"><b>★ <code>ELAPSED_MS</code> の値を3つ並べて比べてください。</b>REFUSED はごく短く、TIMEOUT はほぼ 2000 になります。<b>この差が、「拒否された」と「返事がない」の違い</b>です。</div>
+  <div class="warn"><b>3つ目が TIMEOUT にならない環境があります。</b>学内ネットワークの構成によっては即座に別のエラーになることがあります。その場合は <code>ERROR:</code> で出た<b>例外クラス名を控えて</b>ください。<b>環境によって結果が変わること自体が、ネットワークの実際です。</b></div>
+
+  <h2>C-3　次に、成功させる</h2>
+  <p class="note">配布した <code>EchoServer.jar</code> を、<b>自分のPCで</b>起動します。<b>ターミナルをもう1枚開いてください。</b></p>
+<pre class="code"><span class="cmt"># ターミナル①（このまま起動しっぱなしにする）</span>
+java -jar EchoServer.jar 40001
+
+<span class="cmt"># ターミナル②（別ウィンドウで実行する）</span>
+java Connect localhost 40001</pre>
+
+  <div class="verify">
+    ① <b>ターミナル② に <code>CONNECTED</code> が出る</b><br>
+    ② <b>もう一度 <code>netstat</code> を実行すると、<code>40001</code> が LISTENING に現れている</b><br>
+    ③ <b>ターミナル① を <code>Ctrl</code>＋<code>C</code> で止めると、再び <code>REFUSED</code> に戻る</b>
+  </div>
+
+  <div class="ainote"><b>★ ②を飛ばさないでください。</b>演習Aで一覧に<b>なかった</b>ポート 40001 が、自分がプログラムを起動したことで一覧に<b>現れます。</b>そして止めれば<b>また消えます。</b><br><br><b>LISTEN とは、「そのポートで待っているプログラムが、今この瞬間に動いている」という状態のこと</b>です。文章で読むより、この往復を1回やるほうが速く分かります。</div>
+
+  <div class="foot">PART 4 ／ 演習C</div>
+</section>
+
+<!-- ============================ PART 5 ============================ -->
+<section class="sheet k5" id="part5">
+  <div class="eyebrow">PART <span class="no">5</span><span class="badge">演習D</span></div>
+  <h1>演習D：やりとりされたバイト列を見る</h1>
+  <p class="lead"><b>「文字列を送っている」と思っているものが、実際には何なのか</b>を確認します。</p>
+
+  <div class="idnote"><b>★ この授業では Wireshark を使いません。</b>パケットキャプチャにはドライバの導入が必要で、<b>管理者権限のない環境では利用できない</b>ためです。代わりに、<b>自分のプログラムが送受信したバイト列を、自分で16進表示します。</b>見える範囲は狭くなりますが、<b>「自分が書いた行が、何バイトになったか」は完全に分かります。</b></div>
+
+  <h2>D-1　作るもの</h2>
+  <p class="note"><code>Connect.java</code> を <code>Dump.java</code> としてコピーし、接続成功後に<b>1行送って、返ってきたものを16進で表示</b>するよう変更します。</p>
+
+  <h2>D-2　Copilot への指示</h2>
+<pre class="code"><span class="cmt">// 接続に成功したら、UTF-8 で "HELLO\n" を送信する。</span>
+<span class="cmt">// 返ってきたバイト列を最大64バイト読み取り、</span>
+<span class="cmt">// 1バイトずつ "%02X " の形式で16進表示する。</span>
+<span class="cmt">// そのあと、同じバイト列を UTF-8 の文字列としても表示する。</span></pre>
+
+  <div class="verify"><b>期待される出力(例)</b><br>
+  <code>HEX: 48 45 4C 4C 4F 0A</code><br>
+  <code>TEXT: HELLO</code>
+  </div>
+
+  <h2>D-3　★ ここで気づいてほしいこと</h2>
+  <table class="levels">
+    <thead><tr><th style="width:120px;">見るもの</th><th>気づくこと</th></tr></thead>
+    <tbody>
+      <tr><td><b><code>0A</code></b></td><td><b>改行は1バイトの文字である。</b>目には見えないが、確かに送られている</td></tr>
+      <tr><td><b>6バイト</b></td><td>"HELLO" は5文字だが、送られたのは<b>6バイト</b>。<b>文字数とバイト数は違う</b></td></tr>
+      <tr><td><b>日本語を送ると</b></td><td>1文字が<b>3バイト</b>になる。<b>ここが第2回の主題</b>です</td></tr>
+    </tbody>
+  </table>
+
+  <div class="notimerule"><span class="big">★</span><b>時間が余った人は、送信する文字列を日本語に変えてみてください。</b>バイト数が何倍になるか、<b>実際に数えてから</b>第2回に来ると理解が速くなります。</div>
+
+  <div class="warn"><b>演習Dが動いていなくても、PART 6 が始まったら手を止めてください。</b>演習Dは<b>課題の必須要素ではありません。</b>ここで粘って課題の説明を聞き逃すほうが、はるかに損です。</div>
+
+  <div class="foot">PART 5 ／ 演習D</div>
+</section>
+
+<!-- ============================ PART 6 ============================ -->
+<section class="sheet k6" id="part6">
+  <div class="eyebrow">PART <span class="no">6</span><span class="badge">課題提示</span></div>
+  <h1>課題の提示と、教室内での着手</h1>
+  <p class="lead"><b>全5問あります。説明して終わりにはしません。</b>この時間のうちに、<b>1ケースでも自己採点を通す</b>ところまで進めます。</p>
+
+  <h2>6-1　このパートの進め方(順番は固定です)</h2>
+  <table class="levels">
+    <thead><tr><th style="width:56px;">順</th><th>やること</th></tr></thead>
+    <tbody>
+      <tr><td><b>1</b></td><td>課題の説明(<a class="ulink" href="#hw"><code>NetProbe.java</code></a> 全5問)</td></tr>
+      <tr><td><b>2</b></td><td><b>採点スクリプトの実演を見る</b>(わざと1ケース落とした状態を見せます)</td></tr>
+      <tr><td><b>3</b></td><td><b>各自で着手。</b>演習Cの <code>Connect.java</code> をコピーして始める</td></tr>
+      <tr><td><b>4</b></td><td>提出方法・締切の確認</td></tr>
+    </tbody>
+  </table>
+
+  <div class="design"><b>赤い <code>FAIL</code> は、故障ではありません。</b>実演では、わざと1ケース落とした状態を見せます。<b>作りかけのプログラムが FAIL になるのは当たり前</b>で、それを1つずつ <code>PASS</code> に変えていくのがこの課題です。<br><br><b>4 / 4 になってから提出してください。</b>途中経過で落ち込む必要はありません。</div>
+
+  <h2>6-2　着手の時間でやること</h2>
+  <div class="checklist">
+    <h4>教室を出る前に、ここまで</h4>
+    <ul>
+      <li><code>Connect.java</code> を <code>NetProbe.java</code> にコピーした</li>
+      <li><code>javac NetProbe.java</code> が通った</li>
+      <li>採点スクリプトを実行し、<b>1ケースでも PASS が出た</b>（問1〜問3まで進んでいれば出ます）</li>
+      <li><code>prompt_log.md</code> を作成し、<b>今日使ったプロンプトを1件書いた</b></li>
+    </ul>
+  </div>
+  <div class="timerule"><span class="big">★</span><b>採点スクリプトが「そもそも実行できない」場合は、教室を出る前に必ず手を挙げてください。</b>家に帰ってから気づくと、<b>締切まで誰にも聞けません。</b>環境の問題は、教室にいるうちにしか解決できません。</div>
+
+  <h2>6-3　提出</h2>
+  <table class="levels">
+    <tbody>
+      <tr><td style="width:110px;"><b>提出先</b></td><td>eclass</td></tr>
+      <tr><td><b>締切</b></td><td><b>次回授業の開始まで</b></td></tr>
+      <tr><td><b>提出物</b></td><td><code>NetProbe.java</code> ／ <code>prompt_log.md</code> の<b>2ファイル</b>(ZIP不可)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="foot">PART 6 ／ 課題提示</div>
+</section>
+
+<!-- ============================ 課題 ============================ -->
+<section class="sheet i2" id="hw">
+  <div class="eyebrow">第1回 課題 <span class="badge alt">次回授業の開始まで</span></div>
+  <h1>課題：<code>NetProbe.java</code>（全5問）</h1>
+  <p class="lead">ホスト名とポート番号を受け取り、<b>接続を試みた結果を、決められた形式で標準出力に出す</b>プログラムを作ります。<b>1問につき出力が1行ずつ増えます。</b>ファイルは1つだけで、問ごとに新しく作らず、同じ <code>NetProbe.java</code> を育てていきます。</p>
+
+  <h2>完成形</h2>
+<pre class="code">java NetProbe &lt;ホスト名&gt; &lt;ポート番号&gt;</pre>
+<pre class="code">HOST=localhost
+ADDR=127.0.0.1
+PORT=40001
+RESULT=CONNECTED
+ELAPSED_MS=3</pre>
+
+  <table class="levels">
+    <thead><tr><th style="width:64px;">問</th><th>やること</th><th style="width:30%;">この問で増える行</th></tr></thead>
+    <tbody>
+      <tr><td><b>問1</b></td><td>引数を受け取り、そのまま出力する</td><td><code>HOST=</code> / <code>PORT=</code></td></tr>
+      <tr><td><b>問2</b></td><td>名前解決して <code>ADDR=</code> を足す</td><td><code>ADDR=</code></td></tr>
+      <tr><td><b>問3</b></td><td>接続して <code>RESULT=</code> を4種に分ける</td><td><code>RESULT=</code></td></tr>
+      <tr><td><b>問4</b></td><td>所要時間を測り、出力を5行そろえる</td><td><code>ELAPSED_MS=</code></td></tr>
+      <tr><td><b>問5</b></td><td>自己採点を通し、記録を添えて提出する</td><td><code>4 / 4 passed</code></td></tr>
+    </tbody>
+  </table>
+  <div class="warn"><b>全問に共通。</b>どの入力でもスタックトレースを出さず、<b>正常終了すること。</b></div>
+
+  <!-- ===== 問1 ===== -->
+  <div class="level">
+    <div class="lvhead"><span class="chip c-beg">問1</span><span class="t">引数を受け取り、そのまま出力する</span></div>
+    <p><span class="lbl">やること</span></p>
+    <ul>
+      <li>コマンドライン引数を2つ受け取る</li>
+      <li>第1引数を <code>HOST=</code> に、第2引数を <code>PORT=</code> に出す</li>
+      <li><b>受け取った文字列を加工しない</b>（そのまま出す）</li>
+      <li>まだ接続もしないし、名前解決もしない</li>
+    </ul>
+    <p><span class="lbl">実行例</span></p>
+<pre class="code">&gt; java NetProbe localhost 40001
+
+HOST=localhost
+PORT=40001</pre>
+    <div class="warn"><b>ここでつまずく</b><br>引数が2つ渡されなかったときに、<b>配列の範囲外で落ちないこと。</b>何も渡されなくても、正常終了させます。</div>
+  </div>
+
+  <!-- ===== 問2 ===== -->
+  <div class="level">
+    <div class="lvhead"><span class="chip c-beg">問2</span><span class="t">名前解決して <code>ADDR=</code> を足す</span></div>
+    <p><span class="lbl">やること</span></p>
+    <ul>
+      <li><code>InetAddress.getByName()</code> で第1引数を解決する</li>
+      <li>解決できたら、そのIPアドレスを <code>ADDR=</code> に出す</li>
+      <li><code>UnknownHostException</code> なら <b><code>ADDR=-</code></b>（半角ハイフン1文字）</li>
+      <li>出力の順番は <code>HOST</code> → <code>ADDR</code> → <code>PORT</code></li>
+    </ul>
+    <p><span class="lbl">実行例</span></p>
+<pre class="code">&gt; java NetProbe localhost 40001
+HOST=localhost
+ADDR=127.0.0.1
+PORT=40001
+
+&gt; java NetProbe no-such-host.invalid 40001
+HOST=no-such-host.invalid
+ADDR=-
+PORT=40001</pre>
+    <div class="warn"><b>ここでつまずく</b><br>例外を <code>throws</code> で呼び出し元に逃がさないこと。自分で <code>catch</code> して <code>ADDR=-</code> を出します。<b>演習Bで直したのと同じ箇所</b>です。</div>
+  </div>
+
+  <!-- ===== 問3 ===== -->
+  <div class="level">
+    <div class="lvhead"><span class="chip c-adv">問3</span><span class="t">接続して <code>RESULT=</code> を4種に分ける</span></div>
+    <p><span class="lbl">やること</span></p>
+    <ul>
+      <li><code>Socket()</code> を作り、<code>connect(アドレス, 2000)</code> で接続する</li>
+      <li>成功したら <code>CONNECTED</code></li>
+      <li><code>UnknownHostException</code> → <code>UNKNOWN_HOST</code></li>
+      <li><code>ConnectException</code> → <code>REFUSED</code> ／ <code>SocketTimeoutException</code> → <code>TIMEOUT</code></li>
+    </ul>
+    <p><span class="lbl">実行例</span></p>
+<pre class="code">&gt; java NetProbe localhost 40099
+HOST=localhost
+ADDR=127.0.0.1
+PORT=40099
+RESULT=REFUSED
+
+<span class="cmt">※ RESULT に出る値はこの4種のみ</span>
+<span class="cmt">   CONNECTED / UNKNOWN_HOST / REFUSED / TIMEOUT</span></pre>
+    <div class="timerule"><span class="big">★</span><b>ここが課題の中心。2つとも落としやすい。</b><br><code>catch (Exception e)</code> でまとめないこと。もう1つは <code>catch</code> の順番で、<b>広い例外を先に書くと後ろの <code>catch</code> に到達しません。</b></div>
+  </div>
+
+  <!-- ===== 問4 ===== -->
+  <div class="level">
+    <div class="lvhead"><span class="chip c-mid">問4</span><span class="t">所要時間を測り、出力を5行そろえる</span></div>
+    <p><span class="lbl">やること</span></p>
+    <ul>
+      <li>接続を始める直前に <code>System.currentTimeMillis()</code> を記録</li>
+      <li>終わったあとの差を <code>ELAPSED_MS=</code> に整数で出す</li>
+      <li><b>どの入力でも、出力はちょうど5行にする</b></li>
+      <li>ポート番号が数値でないときも落ちずに終了する</li>
+    </ul>
+    <p><span class="lbl">実行例</span></p>
+<pre class="code">&gt; java NetProbe 10.255.255.1 40001
+HOST=10.255.255.1
+ADDR=10.255.255.1
+PORT=40001
+RESULT=TIMEOUT
+ELAPSED_MS=2001
+
+<span class="cmt">※ ELAPSED_MS の値は採点で見ません</span></pre>
+    <div class="warn"><b>ここでつまずく</b><br>デバッグ用に入れた <code>System.out.println</code> の消し忘れ。採点スクリプトが <code>出力が 6 行</code> として落とします。</div>
+  </div>
+
+  <!-- ===== 問5 ===== -->
+  <div class="level">
+    <div class="lvhead"><span class="chip c-exp">問5</span><span class="t">自己採点を通し、記録を添えて提出する</span></div>
+    <p><span class="lbl">やること</span></p>
+    <ul>
+      <li>別ウィンドウで EchoServer を 40001 で起動しておく</li>
+      <li>採点スクリプトを実行し、<b><code>4 / 4 passed</code></b> を確認する</li>
+      <li><code>prompt_log.md</code> に、使ったプロンプトを<b>3件、原文のまま</b>書く</li>
+      <li><code>NetProbe.java</code> と <code>prompt_log.md</code> の2ファイルを提出する</li>
+    </ul>
+    <p><span class="lbl">実行例</span></p>
+<pre class="code">&gt; java -jar EchoServer.jar 40001
+
+<span class="cmt">（別ウィンドウで）</span>
+&gt; check.bat          <span class="cmt">← Windows はダブルクリックでも可</span>
+&gt; bash check.sh      <span class="cmt">← macOS / Linux</span>
+
+PASS  ケース1  localhost:40001            -&gt; CONNECTED
+PASS  ケース2  localhost:40099            -&gt; REFUSED
+...
+4 / 4 passed</pre>
+    <div class="warn"><b>ケース4 が <code>TIMEOUT</code> にならなかったら</b><br>実際に出た結果と実行環境（自宅Wi-Fi／大学など）を <code>prompt_log.md</code> の末尾に書いてください。そのケースは減点しません。<b>合わせるために <code>RESULT</code> を決め打ちするほうが減点対象です。</b></div>
+  </div>
+
+  <h2>出力形式(1文字も変えないこと)</h2>
+  <p class="note"><b>5行。順番も固定です。</b>余計な行、装飾、空行を出してはいけません。</p>
+  <table class="levels">
+    <thead><tr><th style="width:130px;">行</th><th>入れる値</th></tr></thead>
+    <tbody>
+      <tr><td><code>HOST=</code></td><td>第1引数を<b>そのまま</b></td></tr>
+      <tr><td><code>ADDR=</code></td><td>解決できたIPアドレス。<b>解決できなかった場合は <code>-</code>(半角ハイフン1文字)</b></td></tr>
+      <tr><td><code>PORT=</code></td><td>第2引数を<b>そのまま</b></td></tr>
+      <tr><td><code>RESULT=</code></td><td><b><code>CONNECTED</code> ／ <code>UNKNOWN_HOST</code> ／ <code>REFUSED</code> ／ <code>TIMEOUT</code> の4種のみ</b></td></tr>
+      <tr><td><code>ELAPSED_MS=</code></td><td>計測した所要ミリ秒(整数)。<b>この行だけは採点で値を見ません</b></td></tr>
+    </tbody>
+  </table>
+
+  <h2>採点される4ケース</h2>
+  <table class="levels">
+    <thead><tr><th style="width:44px;">#</th><th>入力</th><th style="width:36%;">期待される <code>RESULT</code></th></tr></thead>
+    <tbody>
+      <tr><td><b>1</b></td><td><code>localhost 40001</code>(EchoServer 起動中)</td><td><b>CONNECTED</b></td></tr>
+      <tr><td><b>2</b></td><td><code>localhost 40099</code>(誰もいないポート)</td><td><b>REFUSED</b></td></tr>
+      <tr><td><b>3</b></td><td><code>no-such-host.invalid 40001</code></td><td><b>UNKNOWN_HOST</b>(かつ <code>ADDR=-</code>)</td></tr>
+      <tr><td><b>4</b></td><td><code>10.255.255.1 40001</code></td><td><b>TIMEOUT</b></td></tr>
+    </tbody>
+  </table>
+  <div class="verify"><b>各ケースで、採点スクリプトは次を見ています。</b><br>
+  ・出力が<b>ちょうど5行</b>であること<br>
+  ・<code>RESULT</code> が期待値で、かつ<b>4種類以外の値になっていない</b>こと<br>
+  ・<code>HOST</code> と <code>PORT</code> が<b>引数そのまま</b>であること<br>
+  ・<b>スタックトレースが出ていない</b>こと<br>
+  ・ケース3 で <code>ADDR=-</code> になっていること</div>
+
+  <h2><code>prompt_log.md</code> の形式</h2>
+  <p class="note"><b>Copilot に出した指示を3つ選んで記録します。</b>コードの中に書いたコメントでも、チャット欄に打った文でも構いません。</p>
+  <p class="note"><b>指示の文は、打ったものをコピーして貼ってください。</b>誤字があっても、言葉が足りなくても直さないこと。「どんな指示を出したら、どんなコードが返ってきたか」を見るための記録なので、<b>後からきれいに書き直すと意味がなくなります。</b></p>
+  <p class="plabel">書式（このまま写して埋める）</p>
+<pre class="code">## プロンプト 1
+- 打った文面: (原文のまま)
+- 生成結果の扱い: そのまま採用 / 修正して採用 / 破棄
+- 修正した場合、どこをどう直したか:
+- そのコードは今どのファイルの何行目にあるか:
+
+## プロンプト 2
+（同上）
+
+## プロンプト 3
+（同上）</pre>
+  <p class="plabel">記入例（1件分）</p>
+<pre class="code">## プロンプト 1
+- 打った文面: // ホストとポートに接続して、つながったらCONNECTEDと出す
+- 生成結果の扱い: 修正して採用
+- 修正した場合、どこをどう直したか: new Socket(host, port) だったので connect(addr, 2000) に直した
+- そのコードは今どのファイルの何行目にあるか: NetProbe.java 18〜20行目</pre>
+  <table class="levels">
+    <thead><tr><th style="width:28%;">項目</th><th>書くこと</th></tr></thead>
+    <tbody>
+      <tr><td>打った文面</td><td>Copilot に打った指示を<b>コピーして貼る</b></td></tr>
+      <tr><td>生成結果の扱い</td><td><b>そのまま採用／修正して採用／破棄</b>のどれか1つ</td></tr>
+      <tr><td>どこをどう直したか</td><td>「修正して採用」のときだけ。何が問題で、どう直したか</td></tr>
+      <tr><td>何行目にあるか</td><td>採用したコードが<b>今</b>どこにあるか。破棄したなら「なし」</td></tr>
+    </tbody>
+  </table>
+
+  <div class="dayof"><b>★ 「Copilot が書いたので分かりません」は通用しません。</b><br><br>
+  提出された <code>NetProbe.java</code> の任意の行について、次回授業で説明を求めることがあります。<b>動くことより、理解していることのほうが重要</b>であり、評価はその方針で行います。</div>
+
+  <h2>提出前チェックリスト</h2>
+  <div class="checklist">
+    <h4>Before you submit</h4>
+    <ul>
+      <li><b>問1</b>　引数をそのまま <code>HOST=</code> / <code>PORT=</code> に出している</li>
+      <li><b>問2</b>　解決できないとき <code>ADDR=-</code> になる</li>
+      <li><b>問3</b>　<code>RESULT=</code> が4種類以外を出さない。<code>catch (Exception e)</code> でまとめていない</li>
+      <li><b>問4</b>　どの入力でも<b>5行ちょうど</b>で、スタックトレースが出ない</li>
+      <li><b>問5</b>　採点スクリプトで <b><code>4 / 4 passed</code></b> を確認した</li>
+      <li><code>prompt_log.md</code> のプロンプトが<b>3件ある</b></li>
+      <li>提出ファイルは <code>NetProbe.java</code> と <code>prompt_log.md</code> の<b>2つだけ</b>(ZIP・<code>.class</code> を含めていない)</li>
+    </ul>
+  </div>
+
+  <div class="ainote"><b>この課題で測っているもの。</b><br><br>
+  接続処理そのものは10行程度です。<b>難しいのは、「失敗を3種類に区別すること」</b>のほうです。<b>ネットワークのプログラムは、成功したときの処理より、失敗したときの処理のほうが長くなります。</b>第13回まで、ずっとそうです。今日それを最初に体験しておいてください。</div>
+
+  <div class="foot">ネットワーク応用 ／ 第1回 課題</div>
+</section>
+
+<!-- ============================ 困ったときは ============================ -->
+<section class="sheet i1" id="help">
+  <div class="eyebrow">困ったときは <span class="badge">持ち帰り用</span></div>
+  <h1>自己診断・採点スクリプト・用語の確認</h1>
+  <p class="lead">授業後に自宅で詰まったときは、まずここを見てください。<b>ほとんどの「動きません」は、下の4つの質問で場所が特定できます。</b></p>
+
+  <h2>詰まったときの自己診断</h2>
+  <p class="note"><b>上から順に自分に聞いてください。</b>最初に「いいえ」になったところが、原因のある場所です。</p>
+  <table class="levels">
+    <thead><tr><th style="width:40%;">自分への質問</th><th>「いいえ」だった場合、原因はここ</th></tr></thead>
+    <tbody>
+      <tr><td><b>演習Aのコマンドは動いた?</b></td><td>ターミナルの使い方の問題です。<b>ネットワークはまだ関係ありません</b></td></tr>
+      <tr><td><b>演習Bの <code>Lookup</code> は動いた?</b></td><td><code>javac</code> か、実行するフォルダの問題です。<code>.java</code> のあるフォルダで実行していますか</td></tr>
+      <tr><td><b>C-1 で <code>REFUSED</code> は出た?</b></td><td>出ていれば、<b>あなたの接続処理は正常です。</b>残るはサーバ起動の問題だけです</td></tr>
+      <tr><td><b>ターミナルを2枚開いている?</b></td><td><b>いちばん多い原因。</b>サーバを起動したウィンドウは、起動したまま固まっているように見えます。<b>それが正常</b>です。実行は別のウィンドウで行ってください</td></tr>
+    </tbody>
+  </table>
+  <div class="notimerule"><span class="big">★</span>質問するときは、<b>「動きません」ではなく「◯◯までは通って、△△で止まっています」</b>と伝えてください。それだけで、回答までの時間が大きく変わります。</div>
+
+  <h2>採点スクリプトの使い方</h2>
+  <p class="note">eclass から <code>check.ps1</code>(Windows)をダウンロードし、<code>NetProbe.java</code> と<b>同じフォルダ</b>に置いてください。</p>
+  <ol class="steps">
+    <li><b>ターミナルを2枚開く</b></li>
+    <li>1枚目で <code>java -jar EchoServer.jar 40001</code> を実行し、<b>そのまま放置する</b></li>
+    <li>2枚目で <code>powershell -ExecutionPolicy Bypass -File check.ps1</code> を実行する</li>
+    <li><b><code>4 / 4 passed</code> になったら提出</b></li>
+  </ol>
+  <div class="verify"><b>表示の見方</b><br>
+  <code>PASS</code> … そのケースは仕様どおり<br>
+  <code>FAIL</code> … <code>expected=</code> が期待値、<code>got=</code> が実際の出力。<b>両方を見比べれば、直す場所が分かります</b><br>
+  <code>lines=</code> … 出力した行数。<b><code>5</code> 以外なら、余計な出力が混ざっています</b>
+  </div>
+  <div class="warn"><b>ケース4(<code>TIMEOUT</code>)は、ネットワーク環境によって結果が変わります。</b>自宅で <code>TIMEOUT</code> にならなかった場合は、<b><code>prompt_log.md</code> の末尾に、実際に出た結果と環境(自宅Wi-Fi／大学など)を書いてください。</b>そのケースは減点しません。<br><br>
+  <b>合わせるために <code>RESULT</code> を決め打ちで返すコードを書くと、そちらが減点対象になります。</b></div>
+
+  <h2>よくあるつまずき</h2>
+  <table class="levels">
+    <thead><tr><th style="width:38%;">起きること</th><th>原因と直し方</th></tr></thead>
+    <tbody>
+      <tr><td><code>Address already in use</code></td><td>前に起動した <code>EchoServer</code> がまだ生きています。<b>そのウィンドウで <code>Ctrl</code>＋<code>C</code></b>。閉じたつもりでも残っていることがあります</td></tr>
+      <tr><td>スタックトレースが出て終了する</td><td>例外を捕まえていません。<b>課題の要件違反</b>です。<code>try-catch</code> を確認してください</td></tr>
+      <tr><td><code>lines=6</code> と表示される</td><td>デバッグ用の <code>System.out.println</code> が残っています。<b>消してください</b></td></tr>
+      <tr><td>すべて <code>UNKNOWN_HOST</code> になる</td><td><code>catch</code> の順番が原因のことがあります。<b>広い例外を先に書くと、後ろの <code>catch</code> に到達しません</b></td></tr>
+      <tr><td><code>ClassNotFoundException</code></td><td><code>java NetProbe.class</code> と打っていませんか。<b>正しくは <code>java NetProbe</code></b> です</td></tr>
+    </tbody>
+  </table>
+
+  <h2>今日出てきた用語</h2>
+  <table class="levels">
+    <thead><tr><th style="width:30%;">用語</th><th>この授業での意味</th></tr></thead>
+    <tbody>
+      <tr><td><b>ソケット</b></td><td><b>(IPアドレス, ポート番号) の組。</b>通信の「口」。図1参照</td></tr>
+      <tr><td><b>ポート番号</b></td><td>1台のPCの中で、<b>どのプログラムに渡すか</b>を決める番号。<b>この授業では 40001 以降だけ</b>を使う</td></tr>
+      <tr><td><b>LISTEN / LISTENING</b></td><td>そのポートで<b>接続を待っているプログラムが動いている</b>状態</td></tr>
+      <tr><td><b><code>localhost</code> / <code>127.0.0.1</code></b></td><td><b>自分自身のPC。</b>この回の通信はすべてPCの中で完結する</td></tr>
+      <tr><td><b>ESTABLISHED</b></td><td>接続が成立して、通信できる状態</td></tr>
+      <tr><td><b>タイムアウト</b></td><td><b>応答がないときに、待つのをやめるまでの時間。</b>課題では 2000ms 固定</td></tr>
+    </tbody>
+  </table>
+
+  <h2>次回までにやること</h2>
+  <div class="checklist">
+    <h4>Before next class</h4>
+    <ul>
+      <li><b><code>NetProbe.java</code> が <code>4 / 4 passed</code> になった</b></li>
+      <li><code>prompt_log.md</code> にプロンプトを<b>3件</b>書いた</li>
+      <li><b>2ファイルを eclass に提出した</b>(ZIP不可・<code>.class</code> を含めない)</li>
+      <li>自分が書いた <code>NetProbe.java</code> を、<b>上から下まで一度読み直した</b></li>
+    </ul>
+  </div>
+  <div class="dayof"><b>★ 最後の1つを飛ばさないでください。</b><br><br>
+  次回、提出したコードの<b>任意の行について説明を求めることがあります。</b><b>「Copilot が書いたので分かりません」は通用しません。</b>読み直して、意味の分からない行が1つでもあれば、<b>そこが次回いちばん質問すべき場所</b>です。</div>
+
+  <div class="foot">ネットワーク応用 ／ 第1回 演習資料</div>
+</section>
+
+<script>
+(function(){
+  // --- コード欄にコピーボタン ---
+  document.querySelectorAll('pre.code').forEach(function(pre){
+    var w=document.createElement('div'); w.className='codewrap';
+    pre.parentNode.insertBefore(w,pre); w.appendChild(pre);
+    var b=document.createElement('button'); b.type='button'; b.className='copybtn'; b.textContent='コピー';
+    b.addEventListener('click',function(){
+      var t=pre.innerText;
+      var done=function(){ b.textContent='コピーしました'; b.classList.add('done');
+        setTimeout(function(){ b.textContent='コピー'; b.classList.remove('done'); },1600); };
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(t).then(done,function(){fallback(t,done);});
+      } else { fallback(t,done); }
+    });
+    w.appendChild(b);
+  });
+  function fallback(t,cb){
+    var ta=document.createElement('textarea'); ta.value=t;
+    ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); cb(); }catch(e){}
+    document.body.removeChild(ta);
+  }
+
+  // --- チェックリストをクリックで消し込み ---
+  document.querySelectorAll('.checklist').forEach(function(cl){
+    var items=cl.querySelectorAll('li'), h4=cl.querySelector('h4');
+    var prog=document.createElement('span'); prog.className='ckprog';
+    if(h4) h4.appendChild(prog);
+    var hint=document.createElement('p'); hint.className='ckhint';
+    hint.textContent='※ クリックすると消し込みできます（保存はされません）';
+    if(h4) h4.insertAdjacentElement('afterend',hint);
+    function upd(){ prog.textContent=cl.querySelectorAll('li.done').length+' / '+items.length; }
+    items.forEach(function(li){
+      li.addEventListener('click',function(e){
+        if(e.target.closest('a')) return;
+        li.classList.toggle('done'); upd();
+      });
+    });
+    upd();
+  });
+
+  // --- 現在位置をナビに反映 ---
+  var links=[].slice.call(document.querySelectorAll('.topnav .links a'));
+  var secs=links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  function spy(){
+    var idx=-1;
+    secs.forEach(function(s,i){ if(s && s.getBoundingClientRect().top<=96) idx=i; });
+    links.forEach(function(a,i){ a.classList.toggle('on', i===idx); });
+    var on=links[idx];
+    if(on && on.parentNode.scrollWidth>on.parentNode.clientWidth){
+      var p=on.parentNode, l=on.offsetLeft-p.offsetLeft;
+      if(l<p.scrollLeft || l+on.offsetWidth>p.scrollLeft+p.clientWidth){
+        p.scrollTo({left:l-16,behavior:'smooth'});
+      }
+    }
+  }
+  window.addEventListener('scroll',spy,{passive:true});
+  window.addEventListener('resize',spy); spy();
+})();
+</script>
+</body>
+</html>
