@@ -157,7 +157,7 @@ ul.bullets code{background:#e8edf3;border:1px solid #b8c2ce;border-radius:4px;pa
 .roomnote code{background:#fff;border:1px solid #7ccc95;border-radius:4px;padding:0 4px;}
 @media print{html{scroll-behavior:auto;}body{background:#fff;padding:0;}.topnav,.copybtn,.ckprog,.ckhint{display:none!important;}a.ulink{border-bottom:none;}.sheet{box-shadow:none;border:none;border-radius:0;max-width:none;padding:24px 28px;margin:0;}.topnotice{box-shadow:none;max-width:none;margin:0 0 14px;}.sheet.i2,.sheet.k1,.sheet.k2,.sheet.k3,.sheet.k4,.sheet.k5,.sheet.k6{page-break-before:always;}.level,pre.code,.record,.card,.verify,.checklist,.ainote,.warn,.dayof,.idnote,.figure,table.levels{break-inside:avoid;}}
 @media (max-width:640px){.topnav .inner{height:50px;gap:9px;}.topnav .brand span{display:none;}.topnav .go{padding:6px 10px;font-size:11px;}.sheet{padding:30px 22px 40px;}h1{font-size:23px;}pre.code{font-size:12px;padding:15px;}.record{flex-direction:column;align-items:flex-start;}.frow{flex-wrap:wrap;gap:7px;}}
-pre.fig{margin:14px 0 0;background:#fff;border:1px solid var(--line);border-left:6px solid var(--soft);border-radius:6px;padding:16px 18px;overflow-x:auto;font-family:"SFMono-Regular",Consolas,Menlo,"Yu Gothic",monospace;font-size:12.5px;line-height:1.75;color:#27313b;white-space:pre;}pre.fig{font-size:11px;padding:12px;}pre.fig{break-inside:avoid;}code{white-space:pre-wrap;}.figure.shot img{display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid var(--line);border-radius:6px;}.plabel.sub{text-transform:none;letter-spacing:.02em;font-size:13px;color:var(--ink);margin:22px 0 8px;}</style></head>
+pre.fig{margin:14px 0 0;background:#fff;border:1px solid var(--line);border-left:6px solid var(--soft);border-radius:6px;padding:16px 18px;overflow-x:auto;font-family:"SFMono-Regular",Consolas,Menlo,"Yu Gothic",monospace;font-size:12.5px;line-height:1.75;color:#27313b;white-space:pre;}pre.fig{font-size:11px;padding:12px;}pre.fig{break-inside:avoid;}code{white-space:pre-wrap;}td code{overflow-wrap:anywhere;}.figure.shot img{display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid var(--line);border-radius:6px;}.plabel.sub{text-transform:none;letter-spacing:.02em;font-size:13px;color:var(--ink);margin:22px 0 8px;}</style></head>
 <body>
 
 <header class="topnav">
@@ -197,6 +197,17 @@ pre.fig{margin:14px 0 0;background:#fff;border:1px solid var(--line);border-left
       <tr><td><b>3</b></td><td><b>ターミナルを開いて、<code>java -version</code> が通るか確かめる</b></td><td><a class="ulink" href="#s3">3 ターミナルを開く</a></td></tr>
     </tbody>
   </table>
+  <h2 id="books">参考図書（同志社SSO → 電子図書館で読めます）</h2>
+  <p class="note">次の2冊は、<b>同志社SSO でログインしたうえで、電子図書館（KinoDen）から読めます。</b> 買う必要はありません。<b>下のリンクを開くと、ログイン画面を経て本文に進めます。</b></p>
+  <table class="levels">
+    <thead><tr><th>本</th><th>いつ開くか</th><th>何のために</th></tr></thead>
+    <tbody>
+      <tr><td><a class="ulink" href="https://kinoden.kinokuniya.co.jp/doshisha/bookdetail/p/KP00132684" target="_blank" rel="noopener"><b>Visual Studio Codeで学ぶ！ GitHub Copilot入門</b></a><br>山田裕進<br><code>https://kinoden.kinokuniya.co.jp/doshisha/bookdetail/p/KP00132684</code></td><td><b>画面の操作で手が止まったとき</b></td><td><b>サインイン（<a class="ulink" href="#s2">2</a>）や Copilot の使い方（<a class="ulink" href="#s5">5</a>）を、自分のペースでもう一度たどり直せます。</b> この付録は手順だけを短く書いていますが、こちらは画面つきで説明されています</td></tr>
+      <tr><td><a class="ulink" href="https://kinoden.kinokuniya.co.jp/doshisha/bookdetail/p/KP00091199" target="_blank" rel="noopener"><b>生成AI時代の新プログラミング実践ガイド : Pythonで学ぶGPTとCopilotの活用ベストプラクティス</b></a><br>松本直樹<br><code>https://kinoden.kinokuniya.co.jp/doshisha/bookdetail/p/KP00091199</code></td><td><b>課題で、Copilot に頼みながら書くとき</b></td><td><b>頼み方と、出てきたコードの扱い方。</b> <a class="ulink" href="#s5-6">5-6 分からないときの聞き方</a> の先にある話です。<b>例は Python ですが、頼み方と確かめ方は Java でも同じ</b>です</td></tr>
+    </tbody>
+  </table>
+  <div class="verify"><b>開き方</b>　<b>同志社SSO にログイン</b> → <b>電子図書館</b> → 上のリンク（または KinoDen で書名を検索）。<b>学内・学外のどちらからでも、SSO を通せば読めます。</b> うまく開けないときは、先に SSO にログインしてから、もう一度リンクを開いてください。</div>
+  <div class="ainote"><b>★ この2冊は、答えを写すためのものではありません。</b> この授業では<b>「Copilot が書いたので分かりません」は通用しません。</b> 本を読む目的は、<b>自分のコードを説明できるようになること</b>です。<br><br><b>使いどころは3つです。</b>　<b>①</b> 授業で手が止まったとき、その場で該当箇所を開く　<b>②</b> 課題で1人で詰まったとき、15分粘る前に調べる　<b>③</b> <code>prompt_log.md</code> の「どこをどう直したか」に、<b>自分の判断の根拠として書く</b>（「この本にこう書かれていたので、こう直した」は強い説明になります）。</div>
   <div class="foot">ネットワーク応用 ／ 付録</div>
 </section>
 
