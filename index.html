@@ -1,8 +1,8 @@
 <!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>ネットワーク応用 ／ 授業資料（小板）</title><style>
-:root{--paper:#fbfaf7;--ink:#1f2933;--soft:#52606d;--line:#d9dee5;}
+:root{--paper:#ffffff;--ink:#0f172a;--soft:#334155;--line:#a7b1be;}
 *{box-sizing:border-box;}html,body{margin:0;padding:0;}
-body{background:#e8ebef;color:var(--ink);font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased;padding:40px 16px 80px;}
-.sheet{max-width:880px;margin:0 auto;background:var(--paper);border:1px solid var(--line);border-radius:6px;box-shadow:0 8px 30px rgba(20,30,45,.10);padding:44px 48px 52px;--accent:#1668B5;--accent-deep:#0E4A82;--accentbg:#E6F1FB;--accentbd:#B6D6EF;}
+body{background:#dce2e9;color:var(--ink);font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased;padding:40px 16px 80px;}
+.sheet{max-width:880px;margin:0 auto;background:var(--paper);border:1px solid var(--line);border-top:6px solid #0f766e;border-radius:6px;box-shadow:0 8px 30px rgba(20,30,45,.10);padding:44px 48px 52px;--accent:#1668B5;--accent-deep:#0E4A82;--accentbg:#dbeafb;--accentbd:#7fb1e0;}
 .eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:700;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;}
 h1{font-size:28px;font-weight:800;margin:6px 0 0;line-height:1.25;}
 .lead{margin:13px 0 0;color:var(--soft);font-size:14px;}
@@ -11,50 +11,40 @@ h2{font-size:16px;font-weight:800;margin:30px 0 6px;display:flex;align-items:cen
 h2::before{content:"";width:4px;height:18px;background:var(--accent);border-radius:2px;}
 .note{font-size:12.8px;color:var(--soft);margin:0 0 14px;}
 .docs{margin-top:14px;display:flex;flex-direction:column;gap:12px;}
-.doc{display:block;text-decoration:none;color:inherit;background:#fff;border:1px solid var(--accentbd);border-left:4px solid var(--accent);border-radius:8px;padding:17px 20px;transition:box-shadow .14s,transform .14s;}
+.doc{display:block;text-decoration:none;color:inherit;background:#fff;border:1px solid var(--accentbd);border-left:6px solid var(--accent);border-radius:8px;padding:17px 20px;transition:box-shadow .14s,transform .14s;}
 .doc:hover{box-shadow:0 6px 18px rgba(20,30,45,.10);transform:translateY(-1px);}
 .doc .tag{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.06em;color:#fff;background:var(--accent);border-radius:20px;padding:2px 10px;}
 .doc .t{font-size:16px;font-weight:800;margin:8px 0 5px;}
 .doc .d{font-size:12.8px;color:var(--soft);margin:0;line-height:1.7;}
-.doc .d code{font-family:"SFMono-Regular",Consolas,Menlo,monospace;background:#f1f3f6;border:1px solid #e0e4ea;border-radius:4px;padding:0 4px;font-size:12px;}
-.doc.now{--accent:#E8A317;--accentbd:#EFD193;background:#FFFBF0;border-width:2px;border-left-width:6px;}
-.doc.now .tag{color:#1C2027;}
-.doc.ref{--accent:#334155;--accentbd:#cbd5e1;}
+.doc .d code{font-family:"SFMono-Regular",Consolas,Menlo,monospace;background:#e8edf3;border:1px solid #b8c2ce;border-radius:4px;padding:0 4px;font-size:12px;}
+.doc.now{--accent:#c99000;--accentbd:#e2b52e;background:#fff3cc;border-width:2px;border-left-width:6px;}
+.doc.now .tag{color:#1C2027;background:#e8a317;}
+.doc.ref{--accent:#334155;--accentbd:#a9b6c6;background:#f1f4f8;}
 .doc .url{display:block;font-size:11px;word-break:break-all;color:#52606d;margin-top:4px;}
-.doc.dl{--accent:#0F6B60;--accentbd:#A8DCD4;background:#F6FCFB;}
+.doc.dl{--accent:#0F6B60;--accentbd:#74c8bc;background:#e3f6f2;}
 .doc.dl .t::before{content:"⬇";margin-right:8px;color:var(--accent);font-weight:700;}
 .doc .meta{display:block;margin-top:7px;font-size:11.5px;font-weight:700;letter-spacing:.04em;color:#0F6B60;}
 .note.sub{margin:18px 0 0;font-size:12.4px;}
 .files{list-style:none;margin:8px 0 0;padding:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff;}
-.files li{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;padding:10px 15px;font-size:12.8px;border-top:1px solid #edf0f3;}
+.files li{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;padding:10px 15px;font-size:12.8px;border-top:1px solid #c2cbd6;}
 .files li:first-child{border-top:none;}
-.files a{color:#0E4A82;font-weight:700;text-decoration:none;border-bottom:1px solid #B6D6EF;}
+.files a{color:#0E4A82;font-weight:700;text-decoration:none;border-bottom:1px solid #5e9bd6;}
 .files a:hover{background:#E6F1FB;}
 .files .w{color:var(--soft);flex:1 1 260px;}
-.files .s{color:#8a93a0;font-size:11.5px;white-space:nowrap;}
-.ainote{margin-top:20px;padding:13px 16px;background:#E6F1FB;border:1px solid #B6D6EF;border-left:4px solid #1668B5;border-radius:8px;font-size:12.8px;color:#0E4A82;line-height:1.75;}
+.files .s{color:#55606d;font-size:11.5px;white-space:nowrap;}
+.ainote{margin-top:20px;padding:13px 16px;background:#d9ebfb;border:1px solid #7fb1e0;border-left:6px solid #1565c0;border-radius:8px;font-size:12.8px;color:#0E4A82;line-height:1.75;}
 .ainote b{font-weight:800;}
-.ainote.amber{background:#FDF6E6;border-color:#EFD193;border-left-color:#E8A317;color:#6B4D00;}
+.ainote.amber{background:#fff0bf;border-color:#e2b52e;border-left-color:#c99000;color:#4f3a00;}
 .foot{margin-top:30px;padding-top:14px;border-top:1px dashed var(--line);font-size:12px;color:var(--soft);}
 @media (max-width:640px){.sheet{padding:30px 22px 40px;}h1{font-size:23px;}body{padding:20px 12px 60px;}}
 
-.files a[download]::after{content:"  ⬇";font-weight:400;color:#8a93a0;}
+.files a[download]::after{content:"  ⬇";font-weight:400;color:#55606d;}
 .toc .files li a{min-width:13em;}
 </style></head><body>
 <section class="sheet">
   <div class="eyebrow">Network Applications</div>
   <h1>ネットワーク応用　授業資料</h1>
   <p class="lead">同志社大学　理工学部 情報システムデザイン学科 ／ 担当：小板<br><b>受講者向けの資料をここにまとめています。</b>スマホからも読めます。授業中は、このページから資料を開いてください。</p>
-
-  <h2>今週の資料</h2>
-  <p class="note"><b>授業の前に一度、上から目を通しておいてください。</b>当日は資料を見ながら手を動かします。</p>
-  <div class="docs">
-    <a class="doc now" href="第3回_学生用資料_ネットワーク応用.html">
-      <span class="tag">第3回　今週</span>
-      <div class="t">TCPサーバと ServerSocket</div>
-      <p class="d">待つ側を書く回。<code>bind</code> → <code>listen</code> → <code>accept</code> → <code>close</code> を1つずつ起こし、<b>1人ずつしか相手にできないサーバに2人目が来たとき、何が起きるか</b>を自分の目で見ます。課題は <code>LineServer.java</code>（全2問）。</p>
-    </a>
-  </div>
 
   <h2>開発環境の使い方（毎回）</h2>
   <p class="note"><b>JM教室のPCは、ログオフすると設定が消えます。</b>授業の最初に「毎回の授業の最初にやること」を済ませてください。各回の資料からも、ここの付録へリンクしています。</p>
@@ -86,6 +76,16 @@ h2::before{content:"";width:4px;height:18px;background:var(--accent);border-radi
     <li><a href="付録_VSCode_Copilot_Java.html#s6">6　うまくいかないとき</a>
         <span class="w">画面に出た文字から探す表。提案が出ない、<code>javac</code> が通らない、<code>Address already in use</code> など</span></li>
   </ul>
+  </div>
+
+  <h2>今週の資料</h2>
+  <p class="note"><b>授業の前に一度、上から目を通しておいてください。</b>当日は資料を見ながら手を動かします。</p>
+  <div class="docs">
+    <a class="doc now" href="第3回_学生用資料_ネットワーク応用.html">
+      <span class="tag">第3回　今週</span>
+      <div class="t">TCPサーバと ServerSocket</div>
+      <p class="d">待つ側を書く回。<code>bind</code> → <code>listen</code> → <code>accept</code> → <code>close</code> を1つずつ起こし、<b>1人ずつしか相手にできないサーバに2人目が来たとき、何が起きるか</b>を自分の目で見ます。課題は <code>LineServer.java</code>（全2問）。</p>
+    </a>
   </div>
 
   <h2>これまでの資料</h2>
