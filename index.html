@@ -96,16 +96,21 @@ h2::before{content:"";width:4px;height:18px;background:var(--accent);border-radi
   <h2>今週の資料</h2>
   <p class="note"><b>授業の前に一度、上から目を通しておいてください。</b>当日は資料を見ながら手を動かします。</p>
   <div class="docs">
-    <a class="doc now" href="第3回_学生用資料_ネットワーク応用.html">
-      <span class="tag">第3回　今週</span>
-      <div class="t">TCPサーバと ServerSocket</div>
-      <p class="d">待つ側を書く回。<code>bind</code> → <code>listen</code> → <code>accept</code> → <code>close</code> を1つずつ起こし、<b>1人ずつしか相手にできないサーバに2人目が来たとき、何が起きるか</b>を自分の目で見ます。課題は <code>LineServer.java</code>（全2問）。</p>
+    <a class="doc now" href="第4回_学生用資料_ネットワーク応用.html">
+      <span class="tag">第4回　今週</span>
+      <div class="t">スレッド①　待たせないサーバ</div>
+      <p class="d">接続ごとにスレッドを作り、<b>1人目が黙っていても2人目を待たせないサーバ</b>にします。Copilot にコメントから書かせ、<b>どの行をどのスレッドが実行するか</b>を自分で読んで確かめます。課題は <code>ThreadedServer.java</code> と <code>code_note.md</code>（目安30分）。</p>
     </a>
   </div>
 
   <h2>これまでの資料</h2>
   <p class="note">復習や課題のときに。</p>
   <div class="docs">
+    <a class="doc" href="第3回_学生用資料_ネットワーク応用.html">
+      <span class="tag">第3回</span>
+      <div class="t">TCPサーバと ServerSocket</div>
+      <p class="d">待つ側を書く回。<code>bind</code> → <code>listen</code> → <code>accept</code> → <code>close</code> を1つずつ起こし、<b>1人ずつしか相手にできないサーバに2人目が来たとき、何が起きるか</b>を自分の目で見ます。課題は <code>LineServer.java</code>（全2問）。</p>
+    </a>
     <a class="doc" href="第2回_学生用資料_ネットワーク応用.html">
       <span class="tag">第2回</span>
       <div class="t">ストリームと文字コード</div>
@@ -121,6 +126,11 @@ h2::before{content:"";width:4px;height:18px;background:var(--accent);border-radi
   <h2>配布ファイルのダウンロード</h2>
   <p class="note"><b>まず zip を1つ落とせば、中に全部入っています。</b>Windows のエクスプローラーでそのまま開けます。<b>zip の中から直接は動かないので、作業するフォルダに展開してから</b>使ってください。</p>
   <div class="docs">
+    <a class="doc dl" href="dist/第4回_学生配布セット.zip">
+      <span class="tag">第4回　一式</span>
+      <div class="t">スレッド①　待たせないサーバ ― 配布ファイル一式</div>
+      <p class="d">授業資料・付録・<code>ChatClient.java</code>・<code>check4.ps1</code> が入っています。デスクトップに展開すると <code>net04</code> というフォルダができます。<b>最初に「はじめに.txt」を読んでください。</b><span class="meta">ZIP 形式</span></p>
+    </a>
     <a class="doc dl" href="dist/第3回_学生配布セット.zip">
       <span class="tag">第3回　一式</span>
       <div class="t">TCPサーバと ServerSocket ― 配布ファイル一式</div>
@@ -137,6 +147,18 @@ h2::before{content:"";width:4px;height:18px;background:var(--accent);border-radi
       <p class="d">授業資料・スライド・<code>EchoServer.jar</code>・採点スクリプト（<code>check.ps1</code>・<code>check.bat</code>・<code>check.sh</code>）が入っています。展開すると <code>net_kai01_haifu</code> というフォルダができます。<b>最初に「はじめに.txt」を読んでください。</b><span class="meta">ZIP 形式</span></p>
     </a>
   </div>
+
+  <p class="note sub"><b>第4回</b>　1つずつ落とす場合は、こちらから。</p>
+  <ul class="files">
+    <li><a href="第4回_学生用資料_ネットワーク応用.html">授業資料</a>
+        <span class="w">HTML。ブラウザで開く。途中の送る欄と「できた」ボタンは、インターネットにつながっているときに使えます</span></li>
+    <li><a href="付録_VSCode_Copilot_Java.html">付録</a>
+        <span class="w">HTML。開発環境の使い方。授業資料と同じフォルダに置くと、資料のリンクから開けます</span></li>
+    <li><a href="dist/第4回/ChatClient.java" download>ChatClient.java</a>
+        <span class="w">届いた行をすぐ表示するクライアント。演習A〜Cで使います（第5回でも使います）</span></li>
+    <li><a href="dist/第4回/check4.ps1" download>check4.ps1</a>
+        <span class="w">課題 <code>ThreadedServer.java</code> の自己採点スクリプト。<code>ThreadedServer.java</code> と同じフォルダに置きます</span></li>
+  </ul>
 
   <p class="note sub"><b>第3回</b>　1つずつ落とす場合は、こちらから。</p>
   <ul class="files">
