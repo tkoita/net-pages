@@ -335,6 +335,7 @@ details.extra .extra-body{padding:0 16px 12px;font-size:13px;line-height:1.8;col
       <div class="frow"><span class="fno">3</span><span class="ftxt">ターミナル（PowerShell）。<b>今日は4枚開きます</b></span></div>
     </div>
   </div>
+  <div class="verify"><b>ターミナルに打つコマンドは、1つの枠に1行です。</b> 枠の「コピー」で写して貼り、<code>Enter</code> を押してから次の枠へ進みます。2行をまとめて貼ると、1行につながってエラーになることがあります。</div>
   <div class="verify"><b>今日は、エディタとターミナルの使い方から始めます（PART 0）。</b> 1つの手順が終わるたびに、資料の中の <b>「できた」</b> を押してください。止まったら <b>「ここで止まった」</b> を押します。<b>状態が変わったら、そのたびに押し直してください。</b><b>どこまで進んだかが、その場で先生に届きます。</b> 細かい説明は、付録「<a class="ulink" href="付録_VSCode_Copilot_Java.html">開発環境の使い方</a>」にあります。</div>
 </section>
 
@@ -468,8 +469,8 @@ details.extra .extra-body{padding:0 16px 12px;font-size:13px;line-height:1.8;col
   <ol class="steps" start="3">
     <li>次の2つを打つ</li>
   </ol>
-<pre class="code">dir
-java -version</pre>
+<pre class="code">dir</pre>
+<pre class="code">java -version</pre>
   <ul class="bullets">
     <li><code>dir</code> … いまのフォルダにあるファイルの一覧（図14の ①）。<code>ChatClient.java</code> や <code>LineServer.java</code> が出れば正しい場所です</li>
     <li><code>java -version</code> … Java の版（図14の ②）。<code>17</code> 以上の数字が出れば使えます</li>
@@ -505,8 +506,8 @@ java -version</pre>
   <ol class="steps" start="6">
     <li>下のターミナルで、<b>コンパイルしてから実行する</b></li>
   </ol>
-<pre class="code">javac -encoding UTF-8 Hello.java
-java Hello</pre>
+<pre class="code">javac -encoding UTF-8 Hello.java</pre>
+<pre class="code">java Hello</pre>
   <ul class="bullets">
     <li><code>javac</code> … <b>コンパイル</b>（<code>Hello.java</code> から、Java が動かせる <code>Hello.class</code> を作る）。<b>うまくいくと何も表示しません</b></li>
     <li><code>java Hello</code> … <b>実行</b>。<code>.java</code> も <code>.class</code> も付けません</li>
@@ -572,8 +573,8 @@ java Hello</pre>
     <li><b><code>Hello.java</code> など、ほかのファイルのタブを閉じる</b>（タブの × ）<ul class="bullets"><li>開いているファイルは、Copilot に文脈として渡ります。関係ないファイルを開いたままだと、提案が変な方向に行きます</li></ul></li>
     <li>コンパイルして、<b>一度起動してみる</b>。<code>LISTENING port=40001</code> が出たら、<code>Ctrl</code> ＋ <code>C</code> で止める</li>
   </ol>
-<pre class="code">javac -encoding UTF-8 ThreadedServer.java
-java ThreadedServer</pre>
+<pre class="code">javac -encoding UTF-8 ThreadedServer.java</pre>
+<pre class="code">java ThreadedServer</pre>
   <div class="verify"><b>ここで確認</b>　<code>javac</code> が何も表示せずに終わり、<code>java ThreadedServer</code> で <b><code>LISTENING port=40001</code><b> が出ればよい（まだ第3回と同じ動きです）。</b>確かめたら <code>Ctrl</code> ＋ <code>C</code> で止めます。</b> 止めないと、次に起動したとき <code>Address already in use</code> になります。</div>
   <div class="stepcheck" data-step="a1"><span class="sl">A-1 ThreadedServer.java を作った</span><button type="button" class="sdone">できた</button><button type="button" class="sstuck">ここで止まった</button><span class="scount" data-show="step-a1">できた <b>0</b>人 ／ 止まっている <b>0</b>人</span><span class="shint">状態が変わったら押し直す</span><span class="selapsed" data-first="a1">最初の1人が押してから <b>--分--秒</b>（まだ誰も押していません）</span><span class="msg"></span></div>
   <h2>A-2　コメントを書いて <code>Tab</code></h2>
@@ -609,8 +610,10 @@ java ThreadedServer</pre>
   <details class="extra"><summary>余裕があれば：コメントの書き方で、提案はどう変わるか</summary><div class="extra-body">新しいファイル <code>Zatsu.java</code> に <code>// スレッドにする</code> の1行だけを書いて、出てくる提案を見ます。上の丁寧なコメントと何が違うかを比べてください（採用はしない。見終わったらタブを閉じる）。<b>Copilot に渡っているのはコメントとファイルだけ</b>なので、伝え方で結果が変わります。</div></details>
   <h2>A-3　確かめる（ターミナル4枚）</h2>
   <p class="note">ターミナルを<b>4枚</b>にします。上のメニューの <b>「Terminal」→「新しいターミナル」</b>（図12）を3回押すと、ターミナルの右側に一覧が出ます（クリックで切り替え）。<b>1枚目をサーバ、2〜4枚目をクライアント</b>にします。</p>
-<pre class="code">java ThreadedServer 40001        （ターミナル1：サーバ。何も出ずに止まって見えるのは、待っているから）
-java ChatClient localhost 40001  （ターミナル2・3・4：それぞれで）</pre>
+  <p class="note"><b>ターミナル1（サーバ）</b>：<code>LISTENING port=40001</code> のあと何も出ずに止まって見えるのは、待っているからです。</p>
+<pre class="code">java ThreadedServer 40001</pre>
+  <p class="note"><b>ターミナル2・3・4（クライアント）</b>：それぞれで打ちます。</p>
+<pre class="code">java ChatClient localhost 40001</pre>
   <p class="note">ターミナル2・3・4 で、<b>閉じずに順に</b> <code>PING</code> を打ちます。</p>
   <div class="checklist">
     <h4>Checklist</h4>
@@ -932,6 +935,7 @@ FAIL  ケース2  1本目が黙っていても、2本目・3本目にすぐ答�
     <tbody>
       <tr><td><code>Address already in use</code></td><td><b>前に起動したサーバがまだ生きています。</b> <code>netstat -ano | findstr 40001</code> → <code>Stop-Process -Id &lt;いちばん右の数字&gt;</code></td></tr>
       <tr><td><code>ArrayIndexOutOfBoundsException</code>（起動した直後）</td><td>ポート番号を付けずに起動し、プログラムが <code>args[0]</code> を読んでいます。<code>java ThreadedServer 40001</code> と付けて起動する（課題では、省略したら 40001 にする）</td></tr>
+      <tr><td><code>クラス名'…javajava…'が受け入れられるのは…</code></td><td><b>2行のコマンドが1行につながっています。</b> 1行ずつ貼って、そのたびに <code>Enter</code></td></tr>
       <tr><td><code>メイン・クラス…を検出およびロードできませんでした</code></td><td><b>保存しないまま <code>javac</code> しています。</b> <code>Ctrl</code> ＋ <code>S</code>（タブの ● が × になる）→ <code>javac</code> → <code>java</code>（0-5 の図22）</td></tr>
       <tr><td><code>CLOSED by server</code> と <code>Socket is closed</code></td><td><code>main</code> の <code>try (Socket s = server.accept())</code>。演習Cへ</td></tr>
       <tr><td>Copilot の提案が <code>try (Socket s = server.accept())</code> になる</td><td><code>Esc</code> で捨てて <code>Alt</code> ＋ <code>]</code>。コメントに「try ( ) を使わない」と書く（A-2）</td></tr>
