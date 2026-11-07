@@ -8,11 +8,11 @@ import java.nio.charset.StandardCharsets;
 //  第4回は、このサーバをコピーして、接続ごとにスレッドを作る形に直します。
 //  自分の LineServer.java が動くなら、そちらを使ってください。
 //  コンパイル：javac -encoding UTF-8 LineServer.java
-//  実行      ：java LineServer 40001
+//  実行      ：java LineServer 40001（40001 は省略できる）
 // ============================================================================
 public class LineServer {
   public static void main(String[] args) throws IOException {
-    int port = Integer.parseInt(args[0]);
+    int port = (args.length > 0) ? Integer.parseInt(args[0]) : 40001;   // 省略したら 40001
 
     try (ServerSocket server = new ServerSocket(port)) {
       System.out.println("LISTENING port=" + port);
