@@ -706,35 +706,87 @@ details.extra .extra-body{padding:0 16px 12px;font-size:13px;line-height:1.8;col
 <section class="sheet k4" id="part4">
   <div class="eyebrow">PART <span class="no">4</span> <span class="badge">演習C　必須</span></div>
   <h1>わざと壊して、Copilot に直させる</h1>
+  <p class="note"><b>この演習でやること（2つ）</b></p>
+  <ol class="steps">
+    <li>演習Aで直した <code>main</code> を、わざと第3回の形（<code>try ( )</code> で囲む形）に戻して、<b>動かすと切れる</b>ことを見る（C-1）</li>
+    <li>そのエラーを Copilot に直させ、<b>「保持」を押す前に、なぜ直るのかを聞く</b>（C-2）</li>
+  </ol>
+  <p class="note">この間違いはコンパイルでは見つかりません。Copilot もときどき書きます。だから、自分で見分けられるようにしておきます。</p>
   <h2>C-1　壊す</h2>
-  <p class="note"><code>main</code> を、第3回の形の <code>try</code> で囲んだ形に戻します（<b>よくある間違いです。Copilot もときどき書きます</b>）。</p>
-<pre class="code">      while (true) {
-        try (Socket s = server.accept()) {          <span class="cmt">// ★ わざと try ( ) で囲む</span>
+  <ol class="steps">
+    <li><b>サーバを止める。</b> A-3 で動かしたままのターミナル1で <code>Ctrl</code> ＋ <code>C</code> を押す。ターミナル2〜4 の <code>ChatClient</code> は、サーバを止めると <code>CLOSED by server</code> と出て終わります（終わらなければ <code>Ctrl</code> ＋ <code>C</code>）</li>
+    <li><code>ThreadedServer.java</code> の <code>main</code> の中で、演習Aで書いた次の2行を探す</li>
+  </ol>
+<pre class="code">        Socket s = server.accept();
+        new Thread(() -&gt; serve(s)).start();</pre>
+  <ol class="steps" start="3">
+    <li>その2行を選んで、次の3行に<b>書き換える</b>（<code>while (true) {</code> と、その閉じかっこ <code>}</code> は残す）</li>
+  </ol>
+<pre class="code">        try (Socket s = server.accept()) {          <span class="cmt">// ★ わざと try ( ) で囲む</span>
           new Thread(() -&gt; serve(s)).start();
-        }
-      }</pre>
-  <p class="note">コンパイルし直して起動し、<code>ChatClient</code> で <code>PING</code> を打ちます。</p>
+        }</pre>
+  <p class="note">- 書き換えている途中で Copilot の提案（薄い字）が出ても、<b><code>Tab</code> は押さない</b></p>
+  <ol class="steps" start="4">
+    <li><code>Ctrl</code> ＋ <code>S</code> で保存する。<b>タブの名前の右に数字が出ていない</b>ことを確かめる</li>
+    <li>ターミナル1で、コンパイルして起動する</li>
+  </ol>
+<pre class="code">javac -encoding UTF-8 ThreadedServer.java</pre>
+<pre class="code">java ThreadedServer 40001</pre>
+  <ol class="steps" start="6">
+    <li>ターミナル2で <code>ChatClient</code> をつなぐ</li>
+  </ol>
+<pre class="code">java ChatClient localhost 40001</pre>
+  <div class="verify"><b>ここで確認</b>　<code>javac</code> は<b>何も言わずに通ります</b>。ところが <code>ChatClient</code> は、<code>PING</code> を打つ前に、すぐ切れます。次のように出れば、壊すのは成功です（<code>59787</code> のような数字は、人によって違います）。</div>
+  <p class="note">ターミナル2（<code>ChatClient</code>）：</p>
+<pre class="code">CONNECTED to localhost/127.0.0.1:40001
+CLOSED by server</pre>
+  <p class="note">ターミナル1（サーバ）：</p>
+<pre class="code">LISTENING port=40001
+ACCEPTED /127.0.0.1:59787 thread=Thread-0
+client error: Socket is closed
+CLOSED thread=Thread-0</pre>
   <div class="checklist">
     <h4>Checklist</h4>
     <ul>
-      <li><code>ChatClient</code> に <b><code>CLOSED by server</code><b>、サーバに </b><code>client error: Socket is closed</code></b> と出た</li>
+      <li><b><code>ChatClient</code> に <code>CLOSED by server</code>、サーバに <code>client error: Socket is closed</code> と出た</b></li>
       <li><b>コンパイルは通った。</b> エラーが出たのは、動かしたときだけ</li>
     </ul>
   </div>
+  <p class="note"><b>なぜ切れるのかは、まだ考えなくてかまいません。</b> C-2 で Copilot に聞きます。</p>
+  <p class="note"><b>うまくいかないとき</b></p>
+  <table class="levels">
+    <thead><tr><th>こうなった</th><th>直し方</th></tr></thead>
+    <tbody>
+      <tr><td><code>PONG</code> が返ってきた（切れない）</td><td>保存し忘れか、<code>javac</code> のし忘れです。<code>Ctrl</code> ＋ <code>S</code> → <code>javac</code> → <code>java</code> をやり直す</td></tr>
+      <tr><td><code>Address already in use</code></td><td>前のサーバが動いたままです。ほかのターミナルで <code>Ctrl</code> ＋ <code>C</code> を押してから起動し直す</td></tr>
+      <tr><td><code>javac</code> でエラーが出た</td><td>かっこの数が合っていません。上の3行の形と見比べる</td></tr>
+    </tbody>
+  </table>
   <h2>C-2　チャット欄で直させる。「保持」の前に、理由を聞く</h2>
+  <p class="note">チャット欄で頼むと、左のファイルが書き換わります。<b>押すまでは採用されません</b>（「保持」で採用、「元に戻す」で取り消し。画面は付録の「<a class="ulink" href="付録_VSCode_Copilot_Java.html#s5-4-chat">チャット欄で直させる</a>」の図）。</p>
   <ol class="steps">
-    <li>サーバのターミナルのエラー（<code>client error: Socket is closed</code> の行）をコピーし、右のチャット欄に次の文と一緒に貼る</li>
+    <li><b>左に <code>ThreadedServer.java</code> を開いたまま</b>にする（Copilot は、開いているファイルを見て答えます）</li>
+    <li>ターミナル1の <b><code>client error: Socket is closed</code> の行</b>をマウスで選び、<code>Ctrl</code> ＋ <code>C</code> でコピーする</li>
+    <li>右のチャット欄に次の文を入れ、最後の行にコピーしたエラーを貼って <code>Enter</code></li>
   </ol>
 <pre class="code">/fix 左の ThreadedServer.java で、ChatClient からつなぐとサーバにこのエラーが出ます。どこをどう直せばよいですか：
 （ここにエラーの行を貼る）</pre>
-  <ol class="steps" start="2">
-    <li>左のファイルが書き換わったら、<b>まだ「保持」を押さない</b></li>
+  <ol class="steps" start="4">
+    <li>左のファイルが書き換わり、変わったところに色が付きます。<b>まだ「保持」を押さない。</b> 先に、どこが変わったかを見ます</li>
+  </ol>
+  <div class="verify"><b>ここで確認</b>　多くの場合、<code>try (Socket s = server.accept()) {</code> が <code>Socket s = server.accept();</code> に戻り、<code>try</code> の閉じかっこ <code>}</code> が消えます（演習Aの形）。<b><code>try</code> を残したまま、別のところ（<code>Thread.sleep</code> や <code>join()</code> を足すなど）を直していたら、それは今日の直し方ではありません。</b> 「元に戻す」を押して、もう一度 <code>/fix</code> を送ります。</div>
+  <ol class="steps" start="5">
     <li>チャット欄に次の文を入れる</li>
   </ol>
 <pre class="code">/explain なぜ try ( ) で囲むと Socket is closed になるのですか。main と serve のスレッドが、それぞれいつ何をするかの順番で説明してください。</pre>
-  <ol class="steps" start="4">
-    <li>理由が自分で言えたら <b>「保持」</b>。言えなければ <b>「元に戻す」</b>を押して、手を挙げる</li>
-    <li>直したら、もう一度 <code>ChatClient</code> で <code>PING</code> → <code>PONG</code> を確かめる</li>
+  <ol class="steps" start="6">
+    <li>答えを読んで、<b>次の形の1文で言えるか</b>、自分に聞く。言えたら <b>「保持」</b>。言えなければ <b>「元に戻す」</b>を押して、手を挙げる</li>
+  </ol>
+<pre class="code">main は（　　　）のあと、すぐに（　　　）。そのとき serve は（　　　）。だから Socket is closed になる。</pre>
+  <ol class="steps" start="7">
+    <li><code>Ctrl</code> ＋ <code>S</code> で保存し、ターミナル1で <code>Ctrl</code> ＋ <code>C</code> → <code>javac</code> → <code>java ThreadedServer 40001</code> をやり直す</li>
+    <li>ターミナル2で <code>java ChatClient localhost 40001</code> → <code>PING</code> を打ち、<b><code>PONG</code> が返る</b>ことを確かめる</li>
+    <li>下の欄に、結果と、6 の1文を送る</li>
   </ol>
   <div class="pair" data-act="c">
   <div class="send" data-act="c">
@@ -747,6 +799,16 @@ details.extra .extra-body{padding:0 16px 12px;font-size:13px;line-height:1.8;col
   <div class="live"><h4>みんなの演習C</h4><div class="lstat" data-show="time"></div><p class="lockmsg">「送る」を押すと、ここに全員の状況が出ます。</p><div data-show="c"></div></div>
   </div>
   <div class="ainote"><b>★ <code>/fix</code> を連打しないでください。<b> 理由を聞かずに直し続けると、別のところが壊れていきます。</b>理由を言えない書き換えは、採用しません。</b></div>
+  <p class="note"><b>うまくいかないとき</b></p>
+  <table class="levels">
+    <thead><tr><th>こうなった</th><th>直し方</th></tr></thead>
+    <tbody>
+      <tr><td>「保持」が見つからない</td><td>チャット欄の下と、ファイルの下のほうに出ます。英語表示では「Keep」「Undo」</td></tr>
+      <tr><td>左のファイルが書き換わらず、チャット欄に説明だけが出た</td><td>説明どおりに自分で直してよい。直したら 7 へ</td></tr>
+      <tr><td>チャット欄に「token expired or invalid: 401」</td><td>サインインの期限切れです。付録の手順でサインインし直してから、同じ文を送る</td></tr>
+      <tr><td>Copilot の直し方が、何度やっても違う</td><td>A-3 の下の「この形を写してください」を写す</td></tr>
+    </tbody>
+  </table>
   <div class="foot">PART 4 ／ 演習C　必須</div>
 </section>
 
