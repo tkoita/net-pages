@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------
 #  使い方（ThreadedServer.java と code_note.md と同じフォルダで）:
 #
-#      powershell -ExecutionPolicy Bypass -File check5.ps1
+#      powershell -ExecutionPolicy Bypass -File check4.ps1
 #
 #  ・このスクリプトが、あなたの ThreadedServer を 40001 で起動し、接続して確かめ、
 #    終わったら止めます。★ 自分で起動した ThreadedServer は、先に止めておくこと。
@@ -292,8 +292,15 @@ function Case-Reverse {
         for ($i = 0; $i -lt 3; $i++) { $ks += ,(Open-Conn) }
         Start-Sleep -Milliseconds 200
         foreach ($i in @(2, 1, 0)) {
-            $g = Ask-One $ks[$i] "PING"
-            if ($g -cne "PONG") { [void]$bad.Add(("{0}本目の [PING]: expected=[PONG] got=[{1}]" -f ($i + 1), $g)); break }
+            Send-Line $ks[$i] "PING"
+            $r = Read-Reply $ks[$i]
+            if ($r.St -eq "TIMEOUT" -and $r.Bytes.Length -eq 0) {
+                [void]$bad.Add(("3本を開けたまま、{0}本目の [PING] への返事が {1} 秒待っても来ません" -f ($i + 1), ($READ_MS / 1000)))
+                [void]$bad.Add("先につないだ人と話しているあいだ、次の accept() に戻れていません。接続ごとに new Thread(...).start() しているか確かめてください")
+                break
+            }
+            $m = Judge-Reply $r "PING" "PONG"
+            if ($m) { [void]$bad.Add(("{0}本目: {1}" -f ($i + 1), $m)); break }
         }
     } catch {
         [void]$bad.Add($_.Exception.Message)
@@ -468,6 +475,7 @@ try {
     }
 
     # ケース7：最後まで生きていて、標準出力は LISTENING の1行だけ
+    Say "--- 共通 ---" "Cyan"
     $bad8 = New-Object System.Collections.ArrayList
     if ($srv.HasExited) {
         [void]$bad8.Add("ThreadedServer が途中で終了しています（最後まで待ち受けを続けること）")
@@ -519,6 +527,6 @@ if ($pass -eq $total) {
     exit 0
 } else {
     Say ("{0} / {1} passed" -f $pass, $total) "Red"
-    Say "赤い FAIL は故障ではありません。expected と got を見比べて、1つずつ直してください。"
+    Say "赤い FAIL は故障ではありません。FAIL の下の説明（expected と got が出ていれば、その2つ）を見て、1つずつ直してください。"
     exit 1
 }
