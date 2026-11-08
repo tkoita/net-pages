@@ -400,7 +400,7 @@ Hello</pre>
     <li><b>直したファイルだけ、保存 → <code>javac</code> → <code>java</code> をやり直します。</b> 直していないファイルの <code>.class</code> は、そのまま使えます</li>
     <li><b>Copilot は、開いているタブも文脈として読みます。</b> いま作っていないファイルのタブは閉じておくと、提案が混ざりません</li>
   </ul>
-  <div class="verify"><b>こう出たら、決まりの1つ目を見直す</b>　<code>class Hello is public, should be declared in a file named Hello.java</code> は、<b>ファイル名とクラス名（<code>Hello</code>）が違う</b>という意味です。中のクラス名を直して保存し、<code>javac</code> をやり直します。</div>
+  <div class="verify"><b>こう出たら、決まりの1つ目を見直す</b>　<code>Test.java:1: エラー: クラス Helloはpublicであり、ファイルHello.javaで宣言する必要があります</code> は、<b>ファイル名（<code>Test.java</code>）とクラス名（<code>Hello</code>）が違う</b>という意味です。ファイル名か中のクラス名のどちらかを直して保存し、<code>javac</code> をやり直します。</div>
   <div class="foot">付録 ／ 4　Java のプログラムを作って、実行する</div>
 </section>
 
@@ -556,8 +556,8 @@ new OutputStreamWriter(s.getOutputStream(), StandardCharsets.UTF_8) は何が違
       <tr><td>チャット欄で頼んだのに、ファイルが元のまま</td><td>「保持」を押していません。チャット欄の下かファイルの下の「保持」を押す</td></tr>
       <tr><td>VS Code が英語表示</td><td>一度閉じて、もう一度起動する（<a class="ulink" href="#s1-1">1-1</a>）</td></tr>
       <tr><td><code>java</code> や <code>javac</code> が「認識されません」</td><td>Java が使えない状態です。<b>手を挙げてください</b></td></tr>
-      <tr><td><code>error: file not found: Hello.java</code></td><td><b>ターミナルが、そのファイルのあるフォルダにいません。</b> <code>dir</code> で確かめる。VS Code で開いたフォルダが違うことが多い</td></tr>
-      <tr><td><code>class Hello is public, should be declared in a file named Hello.java</code></td><td><b>ファイル名とクラス名が違います。</b> 大文字・小文字も同じにする（<a class="ulink" href="#s4-6">4-6</a>）</td></tr>
+      <tr><td><code>エラー: ファイルが見つかりません: Hello.java</code></td><td>①<b>打ったファイル名と、左のエクスプローラーのファイル名が違う</b>（<code>Hello.java</code> と <code>hello.java</code> など）②<b>ターミナルが、そのファイルのあるフォルダにいない。</b> <code>dir</code> で確かめる</td></tr>
+      <tr><td><code>エラー: クラス Helloはpublicであり、ファイルHello.javaで宣言する必要があります</code></td><td><b>ファイル名とクラス名が違います。</b> 大文字・小文字も同じにする（<a class="ulink" href="#s4-6">4-6</a>）</td></tr>
       <tr><td><code>メイン・クラス…を検出およびロードできませんでした</code></td><td>①<b>保存しないまま <code>javac</code> しています。</b> <code>Ctrl</code> ＋ <code>S</code>（タブの ● が × になる）→ <code>javac</code> → <code>java</code>（<a class="ulink" href="#s4-3">4-3</a>）②<code>java Hello.class</code> と打っています。正しくは <b><code>java Hello</code></b></td></tr>
       <tr><td><code>クラス名'…javajava…'が受け入れられるのは…</code></td><td><b>2行のコマンドが1行につながっています。</b> 1つの枠を貼るたびに <code>Enter</code></td></tr>
       <tr><td>タブの名前の右に数字が出ている</td><td>問題（赤い波線）が残っています。波線にマウスを乗せて理由を読み、数字が消えるまで直す（<a class="ulink" href="#s4-2">4-2</a>）</td></tr>
