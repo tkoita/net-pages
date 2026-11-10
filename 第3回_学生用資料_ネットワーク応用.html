@@ -986,5 +986,147 @@ FAIL  ケース4  LEN こんにちは
   window.addEventListener('resize',spy); spy();
 })();
 </script>
+<!-- viewlog:start -->
+<style>/* ---- 学籍番号の入口（3科目共通。共通/live/viewgate.js といっしょに使う。2026-11-11）---- */
+html.vg-locked body > *:not(.vg-gate){filter:blur(7px);pointer-events:none;user-select:none;}
+html.vg-locked, html.vg-locked body{overflow:hidden;}
+.vg-gate{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(232,235,239,.72);}
+.vg-card{width:min(440px,100%);padding:26px 26px 20px;background:#fff;border:1px solid #d3d9e0;border-top:6px solid #1668B5;border-radius:12px;box-shadow:0 10px 30px rgba(31,41,51,.18);font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif;color:#1f2933;}
+.vg-t{font-size:20px;font-weight:800;margin-bottom:6px;}
+.vg-d{font-size:13.5px;line-height:1.7;margin:0 0 14px;color:#52606d;}
+.vg-in{display:block;width:100%;box-sizing:border-box;padding:11px 12px;font-size:20px;letter-spacing:.06em;border:2px solid #9aa5b1;border-radius:8px;font-family:"SFMono-Regular",Consolas,Menlo,monospace;}
+.vg-in:focus{outline:none;border-color:#1668B5;}
+.vg-go{margin-top:12px;width:100%;padding:11px;font-size:16px;font-weight:800;color:#fff;background:#1668B5;border:0;border-radius:8px;cursor:pointer;}
+.vg-go:disabled{opacity:.6;}
+.vg-msg{min-height:1.4em;margin:10px 0 0;font-size:13.5px;font-weight:700;color:#C62828;}
+.vg-note{margin:8px 0 0;font-size:11.5px;line-height:1.6;color:#7b8794;}
+.vg-badge{position:fixed;left:10px;bottom:10px;z-index:75;padding:4px 8px;font-size:11.5px;color:#52606d;background:rgba(255,255,255,.92);border:1px solid #d3d9e0;border-radius:6px;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;}
+.vg-badge button{margin-left:4px;font-size:11px;padding:1px 6px;border:1px solid #9aa5b1;background:#fff;border-radius:4px;cursor:pointer;}
+@media print{.vg-gate,.vg-badge{display:none!important;}html.vg-locked body > *{filter:none!important;}}
+</style>
+<script>window.VIEWLOG = {"url": "https://script.google.com/macros/s/AKfycbwDugtsYOtdKCJQwJ9KpZZKmOQKCDgSzKESiyQ4wHjwEfk3x0e3iHWS0mTARFZb5ueO/exec", "course": "net", "page": "第3回_学生用資料_ネットワーク応用"};</script>
+<script>// ---- 学籍番号の入口と、資料を見ていた時間の記録（3科目共通。2026-11-11、小板）-----------------
+// 原本は tkoita/Net の 共通/live/viewgate.js。Syspro・Exp へは 共通/tools/sync_viewlog.py で写す。
+// ページには 共通/tools/inject_viewlog.py が、この中身と viewgate.css と設定（window.VIEWLOG）を差し込む。
+//
+// ・学籍番号を入れるまで、資料の中身は見えない（入口の画面が上にかぶさる）。入れた番号はブラウザが覚える（科目ごと）
+// ・送り先（共通の記録シートの Apps Script）があれば、名簿にある番号かを確かめてから開く。
+//   つながらないときは、番号の形だけ確かめて開く（教室の外や、つながらない場所でも読めるように）
+// ・ページが画面に出ていて、5分以内に操作（スクロール・クリック・キー）があった時間だけを数え、
+//   1分たまるごとに送る。ページを隠す・閉じるときは、たまった分を送る
+// ・ページに「学籍番号」の欄（Net・Syspro の .me input[name=sid]、Exp の input[data-k=sid]）があれば、同じ番号を入れておく
+// ★ このファイルに閉じタグの文字列を書かないこと（HTML に埋め込むと、そこで script が終わる）
+(function(){
+  var C = window.VIEWLOG || {};
+  var URL = C.url || '', COURSE = C.course || 'x', PAGE = C.page || document.title;
+  var KEY = 'viewlog-sid-' + COURSE;
+  function store(k, v){ try { if (v === undefined) return localStorage.getItem(k) || ''; localStorage.setItem(k, v); } catch(e) { return ''; } }
+  function norm(x){
+    return String(x || '').replace(/[０-９Ａ-Ｚａ-ｚ]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); })
+      .toUpperCase().replace(/[^0-9A-Z]/g, '');
+  }
+  function okForm(s){ return /^\d{8,10}$/.test(s) || /^T\d{3}$/.test(s); }
+  function post(d, keep){
+    d.course = COURSE; d.page = PAGE;
+    return fetch(URL, {method:'POST', keepalive:!!keep, headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(d)})
+      .then(function(r){ return r.json(); });
+  }
+
+  // ---------------- 入口 ----------------
+  var sid = norm(store(KEY));
+  var gate = null;
+  function syncPageSid(){
+    document.querySelectorAll('.me input[name=sid], input[data-k=sid]').forEach(function(inp){
+      if (inp.value.trim()) return;
+      inp.value = sid;
+      try { inp.dispatchEvent(new Event('input', {bubbles:true})); } catch(e) {}
+    });
+  }
+  function open_(){
+    document.documentElement.classList.remove('vg-locked');
+    if (gate){ gate.parentNode.removeChild(gate); gate = null; }
+    syncPageSid();
+    badge();
+  }
+  function lock(msg){
+    document.documentElement.classList.add('vg-locked');
+    gate = document.createElement('div');
+    gate.className = 'vg-gate';
+    gate.innerHTML =
+      '<form class="vg-card" autocomplete="off">' +
+      '<div class="vg-t">学籍番号を入れてください</div>' +
+      '<p class="vg-d">入れると、資料が開きます。入れるのは最初の1回だけです（このブラウザが覚えます）。</p>' +
+      '<input class="vg-in" inputmode="numeric" placeholder="1116240000" aria-label="学籍番号">' +
+      '<button type="submit" class="vg-go">資料を開く</button>' +
+      '<p class="vg-msg"></p>' +
+      '<p class="vg-note">この資料を見ていた時間（画面に出ていて、5分以内に操作したとき）を、学籍番号といっしょに記録します。</p>' +
+      '</form>';
+    document.body.appendChild(gate);
+    var f = gate.querySelector('form'), inp = gate.querySelector('.vg-in'), m = gate.querySelector('.vg-msg'), b = gate.querySelector('.vg-go');
+    if (msg) m.textContent = msg;
+    setTimeout(function(){ try { inp.focus(); } catch(e) {} }, 50);
+    f.addEventListener('submit', function(ev){
+      ev.preventDefault();
+      var s = norm(inp.value);
+      if (!okForm(s)){ m.textContent = '学籍番号（数字だけ）を入れてください'; return; }
+      if (!URL){ sid = s; store(KEY, s); open_(); return; }
+      b.disabled = true; m.textContent = '確かめています…';
+      post({act:'join', sid:s}).then(function(r){
+        b.disabled = false;
+        if (r && r.ok){ sid = s; store(KEY, s); open_(); }
+        else m.textContent = (r && r.msg) || '受け付けられませんでした';
+      }).catch(function(){
+        // つながらないときは、形だけ確かめて開く（記録は、つながったときから）
+        b.disabled = false; sid = s; store(KEY, s); open_();
+      });
+    });
+  }
+  // 右下の小さな札（下4桁と「変える」）
+  function badge(){
+    var old = document.querySelector('.vg-badge');
+    if (old) old.parentNode.removeChild(old);
+    var e = document.createElement('div');
+    e.className = 'vg-badge';
+    e.innerHTML = '学籍番号 下4桁 <b>' + sid.slice(-4) + '</b> <button type="button">変える</button>';
+    e.querySelector('button').addEventListener('click', function(){
+      flush();
+      store(KEY, ''); sid = '';
+      document.querySelectorAll('.me input[name=sid], input[data-k=sid]').forEach(function(inp){
+        inp.value = ''; try { inp.dispatchEvent(new Event('input', {bubbles:true})); } catch(x) {}
+      });
+      e.parentNode.removeChild(e);
+      lock();
+    });
+    document.body.appendChild(e);
+  }
+
+  // ---------------- 見ていた時間 ----------------
+  var SES = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  var acc = 0, lastTick = Date.now(), lastAct = Date.now();
+  ['scroll', 'mousemove', 'keydown', 'click', 'touchstart', 'wheel'].forEach(function(ev){
+    window.addEventListener(ev, function(){ lastAct = Date.now(); }, {passive:true});
+  });
+  function flush(){
+    var sec = Math.round(acc / 1000);
+    if (sec < 1 || !sid || !URL) { acc = 0; return; }
+    acc = 0;
+    try { post({act:'view', sid:sid, sec:sec, ses:SES}, true).catch(function(){}); } catch(e) {}
+  }
+  setInterval(function(){
+    var now = Date.now(), dt = now - lastTick;
+    lastTick = now;
+    if (sid && !gate && document.visibilityState === 'visible' && now - lastAct < 300000 && dt < 30000) acc += dt;
+    if (acc >= 60000) flush();
+  }, 5000);
+  document.addEventListener('visibilitychange', function(){ if (document.visibilityState === 'hidden') flush(); lastTick = Date.now(); });
+  window.addEventListener('pagehide', flush);
+
+  function start(){
+    if (okForm(sid)) open_(); else { sid = ''; lock(); }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
+</script>
+<!-- viewlog:end -->
 </body>
 </html>

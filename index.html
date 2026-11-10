@@ -81,16 +81,26 @@ h2::before{content:"";width:4px;height:18px;background:var(--accent);border-radi
   <h2>今週の資料</h2>
   <p class="note"><b>授業の前に一度、上から目を通しておいてください。</b>当日は資料を見ながら手を動かします。</p>
   <div class="docs">
-    <a class="doc now" href="第4回_学生用資料_ネットワーク応用.html">
-      <span class="tag">第4回　今週</span>
-      <div class="t">スレッド①　待たせないサーバ</div>
-      <p class="d">接続ごとにスレッドを作り、<b>1人目が黙っていても2人目を待たせないサーバ</b>にします。Copilot にコメントから書かせ、<b>どの行をどのスレッドが実行するか</b>を自分で読んで確かめます。課題は <code>ThreadedServer.java</code> と <code>code_note.md</code>（目安30分）。</p>
+    <a class="doc now" href="第5回_学生用資料_ネットワーク応用.html">
+      <span class="tag">第5回　今週</span>
+      <div class="t">スレッド②　共有すると、数が合わなくなる</div>
+      <p class="d">全員で使う変数 <code>total</code> を足し、50本を同時につないで数えます。<b>わざと隙を作ると、エラーも出ずに数が合わなくなる</b>ところを見て、<code>AtomicInteger</code> で直します。毎回の課題はなく、かわりに中間レポートを始めます。</p>
+    </a>
+    <a class="doc now" href="中間レポート_課題資料_ネットワーク応用.html">
+      <span class="tag">中間レポート　締切 2026-11-30（月）23:59</span>
+      <div class="t">同時につながっても、壊れないサーバ</div>
+      <p class="d">課題1（数が合わなくなる理由を測って説明する）と課題2（チャットサーバを作って、壊して、直す）。<b>2つをまとめて ZIP 1つで、1回だけ</b> eclass に出します。</p>
     </a>
   </div>
 
   <h2>これまでの資料</h2>
   <p class="note">復習や課題のときに。</p>
   <div class="docs">
+    <a class="doc" href="第4回_学生用資料_ネットワーク応用.html">
+      <span class="tag">第4回</span>
+      <div class="t">スレッド①　待たせないサーバ</div>
+      <p class="d">接続ごとにスレッドを作り、<b>1人目が黙っていても2人目を待たせないサーバ</b>にします。Copilot にコメントから書かせ、<b>どの行をどのスレッドが実行するか</b>を自分で読んで確かめます。課題は <code>ThreadedServer.java</code> と <code>code_note.md</code>（目安30分）。</p>
+    </a>
     <a class="doc" href="第3回_学生用資料_ネットワーク応用.html">
       <span class="tag">第3回</span>
       <div class="t">TCPサーバと ServerSocket</div>
@@ -111,6 +121,11 @@ h2::before{content:"";width:4px;height:18px;background:var(--accent);border-radi
   <h2>配布ファイルのダウンロード</h2>
   <p class="note"><b>まず zip を1つ落とせば、中に全部入っています。</b>Windows のエクスプローラーでそのまま開けます。<b>zip の中から直接は動かないので、作業するフォルダに展開してから</b>使ってください。</p>
   <div class="docs">
+    <a class="doc dl" href="dist/第5回_学生配布セット.zip">
+      <span class="tag">第5回　一式</span>
+      <div class="t">スレッド②　共有状態と競合 ＋ 中間レポート ― 配布ファイル一式</div>
+      <p class="d">授業資料・中間レポートの課題資料・付録・<code>ThreadedServer.java</code>（今日の出発点）・<code>Storm.java</code>・<code>ChatClient.java</code>・<code>check5.ps1</code> が入っています。デスクトップに置いて「すべて展開」すると、<code>第5回_学生配布セット</code> の中に <code>net05</code> ができます。<b>最初に「はじめに.txt」を読んでください。</b><span class="meta">ZIP 形式</span></p>
+    </a>
     <a class="doc dl" href="dist/第4回_学生配布セット.zip">
       <span class="tag">第4回　一式</span>
       <div class="t">スレッド①　待たせないサーバ ― 配布ファイル一式</div>
@@ -132,6 +147,20 @@ h2::before{content:"";width:4px;height:18px;background:var(--accent);border-radi
       <p class="d">授業資料・スライド・<code>EchoServer.jar</code>・採点スクリプト（<code>check.ps1</code>・<code>check.bat</code>・<code>check.sh</code>）が入っています。展開すると <code>net_kai01_haifu</code> というフォルダができます。<b>最初に「はじめに.txt」を読んでください。</b><span class="meta">ZIP 形式</span></p>
     </a>
   </div>
+
+  <p class="note sub"><b>第5回・中間レポート</b>　1つずつ落とす場合は、こちらから。</p>
+  <ul class="files">
+    <li><a href="第5回_学生用資料_ネットワーク応用.html">授業資料</a>
+        <span class="w">HTML。ブラウザで開く。途中の送る欄と「できた」ボタンは、インターネットにつながっているときに使えます</span></li>
+    <li><a href="中間レポート_課題資料_ネットワーク応用.html">中間レポートの課題資料</a>
+        <span class="w">HTML。締切 2026-11-30（月）23:59。課題1・2をまとめて ZIP 1つで出します</span></li>
+    <li><a href="dist/第5回/Storm.java" download>Storm.java</a>
+        <span class="w">50本を同時につなぎ、<code>total</code> の増え方を表示する（<code>java Storm 50 5</code> で5回）</span></li>
+    <li><a href="dist/第5回/ChatClient.java" download>ChatClient.java</a>
+        <span class="w">手で打って話すクライアント（第4回と同じもの）</span></li>
+    <li><a href="dist/第5回/check5.ps1" download>check5.ps1</a>
+        <span class="w">中間レポート課題2（<code>ChatServer.java</code>）の自己採点スクリプト。<code>ChatServer.java</code> と同じフォルダに置きます</span></li>
+  </ul>
 
   <p class="note sub"><b>第4回</b>　1つずつ落とす場合は、こちらから。</p>
   <ul class="files">
