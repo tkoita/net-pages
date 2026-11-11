@@ -746,7 +746,7 @@ total の増え方 3（50 増えるはず）
   window.addEventListener('resize',spy); spy();
 })();
 </script>
-<script>window.LIVE_URL = "";</script>
+<script>window.LIVE_URL = "https://script.google.com/macros/s/AKfycbzbitkCkwoZ3M-eQKnElfkLIY4uZwVMh7foe2_j2ThIBE7uuN8fkZj3_Y15QpF5oyM/exec";</script>
 <script>// ---- 第5回＋中間レポート：送る欄と、みんなの結果（送る先は Google スプレッドシート＋Apps Script。第5回/教員用/live/Code.gs）----
 // 第4回の live.js と同じ作り。違うのは「みんなの結果」の描き方（draw）と、右上の時間のバー（共通/live/timebar.js）に集計を渡すところ。
 // 第5回の資料と中間レポートの課題資料の両方で使う（学籍番号は同じキーで覚えるので、片方で入れれば両方で使える）。
@@ -793,7 +793,7 @@ total の増え方 3（50 増えるはず）
     lv.classList.remove('flash'); void lv.offsetWidth; lv.classList.add('flash');
   }
 
-  var GATED = /^(a|b1|b2|b3|m|r)$/;
+  var GATED = /^(a|b1|b2|b3|m|r|v)$/;
   function post(d, msg, btn, done){
     if (!URL){ say(msg, 'まだ準備中です（先生がこの欄を使えるようにします）', false); return; }
     if (!sid()){ say(msg, 'いちばん上の欄に、自分の学籍番号を入れてください', false); if(sidIn) sidIn.focus(); return; }
@@ -903,7 +903,8 @@ total の増え方 3（50 増えるはず）
       '<div><b>' + r.progress.b2 + '</b><span>B-2 壊した</span></div>' +
       '<div><b>' + r.progress.b3 + '</b><span>B-3 直した</span></div>' +
       '<div><b>' + r.progress.m + '</b><span>中間 測った</span></div>' +
-      '<div><b>' + r.progress.r + '</b><span>振り返り</span></div></div>' +
+      '<div><b>' + r.progress.r + '</b><span>振り返り</span></div>' +
+      '<div><b>' + (r.progress.v || 0) + '</b><span>アンケート</span></div></div>' +
       '<p class="lstat">' + N + '人中の人数</p>');
     (r.steps || []).forEach(function(x, i){
       var st = r.stepStuck && r.stepStuck[i] ? r.stepStuck[i].n : 0;
@@ -926,7 +927,8 @@ total の増え方 3（50 増えるはず）
       : (r.mm && r.mm.n ? dist(r.mm) + '<p class="lstat">中間レポートをいつ始めるか</p>' + bars(r.plan, 'am') : NONE));
 
     fill('diff', !r.show.diff ? '<p class="wait">' + r.diffN + ' 人が送りました。難しさの分布は先生の合図のあとで出ます。</p>'
-      : bars(['1 とても簡単', '2', '3 ちょうどよい', '4', '5 とても難しい'].map(function(l, i){ return {l:l, n:r.diff[i], c:(i >= 3 ? 'rd' : (i === 2 ? 'ok' : ''))}; })));
+      : '<div class="gl">今日の難しさ</div>' + bars(['1 とても簡単', '2', '3 ちょうどよい', '4', '5 とても難しい'].map(function(l, i){ return {l:l, n:r.diff[i], c:(i >= 3 ? 'rd' : (i === 2 ? 'ok' : ''))}; }))
+        + (r.pace ? '<div class="gl">進む速さ</div>' + bars(r.pace) : '') + (r.short ? '<div class="gl">時間が足りなかった所</div>' + bars(r.short) : ''));
 
     fill('stuck', !r.show.stuck ? WAIT : bars(Object.keys(r.stuck).map(function(k){ return {l:r.stuck[k].l, n:r.stuck[k].n}; }), 'am'));
     if (passIn) me.querySelector('.passrow').style.display = r.pass ? 'block' : 'none';

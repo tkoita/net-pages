@@ -321,6 +321,8 @@ details.extra .extra-body{padding:0 16px 12px;font-size:13px;line-height:1.8;col
   <div class="inner">
     <style>.topnav .inner{height:auto;min-height:54px;padding:5px 0;}.brandstack{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;gap:2px;}.topnav a.brand{text-decoration:none;}.topnav a.brand:hover{color:#0b5cad;text-decoration:underline;text-underline-offset:3px;}.brandstack .prev{font-size:11.5px;font-weight:800;color:#0b5cad;text-decoration:none;white-space:nowrap;line-height:1.2;}.brandstack .prev:hover{text-decoration:underline;text-underline-offset:3px;}@media (max-width:640px){.brandstack .prev{font-size:11px;}}@media print{.brandstack .prev{display:none!important;}}</style>
     <div class="brandstack"><a class="brand" href="https://tkoita.github.io/net-pages/" title="ネットワーク応用の資料一覧へ">第5回 演習資料<span>ネットワーク応用</span></a><a class="prev" href="https://tkoita.github.io/net-pages/第4回_学生用資料_ネットワーク応用.html">← 第4回の資料</a></div>
+    <style>.midstack{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px;}.midstack .links{width:100%;}.midstack .mid{font-size:11.5px;font-weight:800;color:#0f766e;text-decoration:none;white-space:nowrap;line-height:1.2;}.midstack .mid:hover{text-decoration:underline;text-underline-offset:3px;}@media print{.midstack .mid{display:none!important;}}</style>
+    <div class="midstack">
     <div class="links">
       <a href="#overview">全体像</a>
       <a href="#part0">PART 0</a>
@@ -329,9 +331,10 @@ details.extra .extra-body{padding:0 16px 12px;font-size:13px;line-height:1.8;col
       <a href="#part3">PART 3</a>
       <a href="#part4">PART 4</a>
       <a href="#part5">PART 5</a>
-      <a href="#all">みんなの結果</a>
       <a href="#help">困ったときは</a>
       <a href="#ref">参考</a>
+    </div>
+    <a class="mid" href="#all">みんなの進み具合 ↓</a>
     </div>
   </div>
 </header>
@@ -350,7 +353,7 @@ details.extra .extra-body{padding:0 16px 12px;font-size:13px;line-height:1.8;col
   <ul class="bullets">
     <li>今日足すコードは、<b>全部この資料に書いてあります。</b> 配布の <code>ThreadedServer.java</code> の ★ の目印の場所に写すだけです。</li>
     <li>今日の答えは <b>「例外もエラーも出ないのに、数が合わなくなる」</b> です。なぜそうなるのかを、図とコードで1文にします。</li>
-    <li>B-2 で測った数が、そのまま <b>中間レポート</b>（締切 <b>2026-11-30（月）23:59</b>）の1行目になります。最後の25分は、中間レポートを読んで振り返りを送るだけです（手は動かしません）。</li>
+    <li>B-2 で測った数が、そのまま <b>中間レポート</b>（締切 <b>2026-11-30（月）23:59</b>）の1行目になります。最後の25分は、中間レポートを読んで、振り返りと授業アンケートを送るだけです（手は動かしません）。</li>
   </ul>
   <div class="axis">
     <b>今日使うもの</b>
@@ -401,7 +404,7 @@ details.extra .extra-body{padding:0 16px 12px;font-size:13px;line-height:1.8;col
       <tr><td><b>PART 2</b></td><td>演習A：数える変数を足して、予測する</td><td>0:25〜0:40</td></tr>
       <tr><td><b>PART 3</b></td><td>演習B：わざと壊して、直す　★本日の中心</td><td>0:40〜1:05</td></tr>
       <tr><td><b>PART 4</b></td><td>中間レポートを読む（手は動かしません）</td><td>1:05〜1:20</td></tr>
-      <tr><td><b>PART 5</b></td><td>振り返りを送る（手は動かしません）</td><td>1:20〜1:30</td></tr>
+      <tr><td><b>PART 5</b></td><td>振り返りと授業アンケートを送る（手は動かしません）</td><td>1:20〜1:30</td></tr>
     </tbody>
   </table>
   <div class="design"><b>なぜこの順番なのか。</b> 先に予測し、次に壊し、最後に直します。<b>壊れるところを自分で見てから直すと、直した1行の意味が分かります。</b> 中間レポートは、その「壊れ方」を家でもう少し丁寧に測って、説明する課題です。</div>
@@ -765,43 +768,37 @@ java ThreadedServer 40001</pre>
 
 <!-- ============================ PART 5 ============================ -->
 <section class="sheet k5" id="part5">
-  <div class="eyebrow">PART <span class="no">5</span> <span class="badge">振り返り　送るだけ<span class="tslot">1:20〜1:30（10分）</span></span></div>
-  <h1>振り返りを送る</h1>
-  <div class="goal"><b>このパートのゴール</b>　振り返りを送った。<b>手は動かしません。</b></div>
+  <div class="eyebrow">PART <span class="no">5</span> <span class="badge">振り返り・アンケート　送るだけ<span class="tslot">1:20〜1:30（10分）</span></span></div>
+  <h1>振り返りとアンケートを送る</h1>
+  <div class="goal"><b>このパートのゴール</b>　振り返りと授業アンケートを送った。<b>手は動かしません。</b></div>
   <p class="note"><b>このパートでやっていること：</b> 今日の答えを、自分の言葉の1文にします。先生は、この1文と「まだ分からないこと」を次回の最初に使います。</p>
   <h2>振り返り</h2>
   <div class="pair" data-act="r">
   <div class="send" data-act="r">
-    <h4><span class="tag must">送る</span>振り返り（3つとも書いてから送る）</h4>
-    <div class="row"><span class="lab">今日の難しさ</span><span><span class="chips"><label><input type="radio" name="diff" value="1"> 1 とても簡単</label><label><input type="radio" name="diff" value="2"> 2</label><label><input type="radio" name="diff" value="3"> 3 ちょうどよい</label><label><input type="radio" name="diff" value="4"> 4</label><label><input type="radio" name="diff" value="5"> 5 とても難しい</label></span></span></div>
+    <h4><span class="tag must">送る</span>振り返り（2つとも書いてから送る）</h4>
     <div class="row"><span class="lab">★ 例外もエラーも出ていないのに、total が 50 より小さくなったのはなぜか（1文で）</span><span><textarea name="why"></textarea> <span class="hint">「読む」「書く」「割り込まれる」を使って</span></span></div>
     <div class="row"><span class="lab">まだ分からないことを1つ</span><span><textarea name="unk"></textarea> <span class="hint">空欄では送れません</span></span></div>
     <button type="button" class="go">送る</button><span class="msg"></span>
     <p class="hint" style="margin:6px 0 0;">送ると、この手順は「できた」に数えます。止まったら右下の「止まったら押す」へ。</p>
   </div>
-  <div class="live"><h4>みんなの難しさ</h4><div class="lstat" data-show="time"></div><p class="lockmsg">「送る」を押すと、ここに全員の結果が出ます。</p><div data-show="diff"></div></div>
+  <div class="live"><h4>振り返りを送った人</h4><div class="lstat" data-show="time"></div><p class="lockmsg">「送る」を押すと、ここに全員の結果が出ます。</p><div data-show="progress"></div></div>
   </div>
   <div class="ainote"><b>★ 今週は、毎回の課題はありません。</b> かわりに中間レポートを進めます。課題1と課題2は、<b>11/30（月）23:59 までに、まとめて1回だけ</b> 提出します。</div>
-  <div class="foot">PART 5 ／ 振り返り　送るだけ</div>
-</section>
-
-<!-- ============================ みんなの結果 ============================ -->
-<section class="sheet k5" id="all">
-  <div class="eyebrow">みんなの結果 <span class="badge">いつでも見られます</span></div>
-  <h1>みんなの結果</h1>
-  <p class="lead">教室の全員が送った結果です。<b>人数と分布だけ</b>が出ます。だれが何を送ったかは出ません。</p>
-  <div class="lstat" data-show="time"></div>
-  <div class="live"><h4>ここまで来た人</h4><div data-show="progress"></div></div>
-  <div class="live"><h4>手順ごとの「できた」</h4><div data-show="steps"></div></div>
-  <div class="live"><h4>予測と Copilot の答え</h4><div data-show="pred"></div></div>
-  <div class="live"><h4>B-1：50本を3回。50 ちょうど増えたか</h4><div data-show="meas"></div></div>
-  <div class="live"><h4>B-2：隙を作ったとき</h4><div data-show="slept"></div></div>
-  <div class="live"><h4>B-3：直し方</h4><div data-show="fix"></div></div>
-  <div class="live"><h4>中間レポートをいつ始めるか</h4><div data-show="mm"></div></div>
-  <div class="live"><h4>いま止まっている人（直ったら0に戻ります）</h4><div data-show="stuck"></div></div>
-  <div class="live"><h4>今日の難しさ</h4><div data-show="diff"></div></div>
-  <div class="axis" style="margin-top:16px;font-size:16px;text-align:center;"><b>動いたかどうかは、数えるまで分からない。</b></div>
-  <div class="foot">みんなの結果 ／ 第5回</div>
+  <h2>今日の授業アンケート（1分）</h2>
+  <p class="note">最後に、下の4つを送ってください。次の回と来年度の進め方を直すために使います。成績には関係しません。選んだものの人数は教室の全員に見えますが、感想の文と、誰が何を選んだかは、先生にしか見えません。</p>
+  <div class="pair" data-act="v">
+  <div class="send" data-act="v">
+    <h4><span class="tag must">送る</span>今日の授業アンケート（1分。4つとも答えてから送る）</h4>
+<p class="hint" style="margin:0 0 6px;">次の回と来年度の進め方を直すために使います。成績には関係しません。</p>    <div class="row"><span class="lab">今日の難しさ</span><span><span class="chips"><label><input type="radio" name="diff" value="1"> 1 とても簡単</label><label><input type="radio" name="diff" value="2"> 2</label><label><input type="radio" name="diff" value="3"> 3 ちょうどよい</label><label><input type="radio" name="diff" value="4"> 4</label><label><input type="radio" name="diff" value="5"> 5 とても難しい</label></span></span></div>
+    <div class="row"><span class="lab">進む速さ</span><span><span class="chips"><label><input type="radio" name="pace" value="fast"> 速かった</label><label><input type="radio" name="pace" value="ok"> ちょうどよい</label><label><input type="radio" name="pace" value="slow"> 遅かった</label></span></span></div>
+    <div class="row"><span class="lab">時間が足りなかった所</span><span><span class="chips"><label><input type="radio" name="short" value="none"> なかった</label><label><input type="radio" name="short" value="p0"> PART 0</label><label><input type="radio" name="short" value="p1"> PART 1</label><label><input type="radio" name="short" value="p2"> PART 2</label><label><input type="radio" name="short" value="p3"> PART 3</label><label><input type="radio" name="short" value="p4"> PART 4</label><label><input type="radio" name="short" value="p5"> PART 5</label></span> <span class="hint">いちばん足りなかった所を1つ</span></span></div>
+    <div class="row"><span class="lab">感想・分かりにくかった所</span><span><textarea name="note"></textarea> <span class="hint">1文でかまいません。空欄では送れません</span></span></div>
+    <button type="button" class="go">送る</button><span class="msg"></span>
+    <p class="hint" style="margin:6px 0 0;">送ると、この手順は「できた」に数えます。止まったら右下の「止まったら押す」へ。</p>
+  </div>
+  <div class="live"><h4>みんなの答え（人数だけ。感想の文は出ません）</h4><div class="lstat" data-show="time"></div><p class="lockmsg">「送る」を押すと、ここに全員の結果が出ます。</p><div data-show="diff"></div></div>
+  </div>
+  <div class="foot">PART 5 ／ 振り返り・アンケート　送るだけ</div>
 </section>
 
 <!-- ============================ 困ったとき ============================ -->
@@ -861,6 +858,24 @@ java ThreadedServer 40001</pre>
     </tbody>
   </table>
   <div class="foot">ネットワーク応用 ／ 第5回 演習資料</div>
+</section>
+
+<!-- ============================ みんなの進み具合 ============================ -->
+<section class="sheet k5" id="all">
+  <div class="eyebrow">みんなの進み具合 <span class="badge alt">授業中</span></div>
+  <h1>みんなの進み具合</h1>
+  <p class="lead">手順が1つ終わるたびに、その手順の下の「できた」を押してください。止まったら「ここで止まった」を押すと、先生に届きます。下の数は、1人目が押したときから教室の全員に見えます。出るのは人数だけで、誰が押したかは出ません。</p>
+  <div class="live"><h4>手順ごとの「できた」の人数</h4><div class="lstat" data-show="time"></div><div data-show="steps"></div><div data-show="stuck"></div></div>
+  <h2>送った結果</h2>
+  <div class="live"><h4>ここまで来た人</h4><div data-show="progress"></div></div>
+  <div class="live"><h4>予測と Copilot の答え</h4><div data-show="pred"></div></div>
+  <div class="live"><h4>B-1：50本を3回。50 ちょうど増えたか</h4><div data-show="meas"></div></div>
+  <div class="live"><h4>B-2：隙を作ったとき</h4><div data-show="slept"></div></div>
+  <div class="live"><h4>B-3：直し方</h4><div data-show="fix"></div></div>
+  <div class="live"><h4>中間レポートをいつ始めるか</h4><div data-show="mm"></div></div>
+  <div class="live"><h4>授業アンケート（難しさ・進む速さ・時間が足りなかった所）</h4><div data-show="diff"></div></div>
+  <div class="axis" style="margin-top:16px;font-size:16px;text-align:center;"><b>動いたかどうかは、数えるまで分からない。</b></div>
+  <div class="foot">みんなの進み具合 ／ 第5回</div>
 </section>
 
 <div class="help">
@@ -935,7 +950,7 @@ java ThreadedServer 40001</pre>
   window.addEventListener('resize',spy); spy();
 })();
 </script>
-<script>window.TIMEBAR = {date:'2026-11-17', start:'10:45', parts:[{id:'part0',label:'PART 0 準備（復習）',from:0,to:15,step:'p5'},{id:'part1',label:'PART 1 講義',from:15,to:25},{id:'part2',label:'PART 2 演習A',from:25,to:40,step:'a3'},{id:'part3',label:'PART 3 演習B',from:40,to:65,step:'b3'},{id:'part4',label:'PART 4 中間レポートを読む',from:65,to:80,step:'m1'},{id:'part5',label:'PART 5 振り返り',from:80,to:90,step:'progress.r'}]};</script>
+<script>window.TIMEBAR = {date:'2026-11-17', start:'10:45', parts:[{id:'part0',label:'PART 0 準備（復習）',from:0,to:15,step:'p5'},{id:'part1',label:'PART 1 講義',from:15,to:25},{id:'part2',label:'PART 2 演習A',from:25,to:40,step:'a3'},{id:'part3',label:'PART 3 演習B',from:40,to:65,step:'b3'},{id:'part4',label:'PART 4 中間レポートを読む',from:65,to:80,step:'m1'},{id:'part5',label:'PART 5 振り返り・アンケート',from:80,to:90,step:'progress.v'}]};</script>
 <script>// ---- 右上の時間のバー（全回共通。2026-11-11、小板）----------------------------------------
 // 授業資料のページの右上に、いつも次の3つを出す。
 //   ・いまの時刻と、授業の開始から何分か
@@ -1044,7 +1059,7 @@ java ThreadedServer 40001</pre>
   setInterval(paint, 5000);
 })();
 </script>
-<script>window.LIVE_URL = "";</script>
+<script>window.LIVE_URL = "https://script.google.com/macros/s/AKfycbzbitkCkwoZ3M-eQKnElfkLIY4uZwVMh7foe2_j2ThIBE7uuN8fkZj3_Y15QpF5oyM/exec";</script>
 <script>// ---- 第5回＋中間レポート：送る欄と、みんなの結果（送る先は Google スプレッドシート＋Apps Script。第5回/教員用/live/Code.gs）----
 // 第4回の live.js と同じ作り。違うのは「みんなの結果」の描き方（draw）と、右上の時間のバー（共通/live/timebar.js）に集計を渡すところ。
 // 第5回の資料と中間レポートの課題資料の両方で使う（学籍番号は同じキーで覚えるので、片方で入れれば両方で使える）。
@@ -1091,7 +1106,7 @@ java ThreadedServer 40001</pre>
     lv.classList.remove('flash'); void lv.offsetWidth; lv.classList.add('flash');
   }
 
-  var GATED = /^(a|b1|b2|b3|m|r)$/;
+  var GATED = /^(a|b1|b2|b3|m|r|v)$/;
   function post(d, msg, btn, done){
     if (!URL){ say(msg, 'まだ準備中です（先生がこの欄を使えるようにします）', false); return; }
     if (!sid()){ say(msg, 'いちばん上の欄に、自分の学籍番号を入れてください', false); if(sidIn) sidIn.focus(); return; }
@@ -1201,7 +1216,8 @@ java ThreadedServer 40001</pre>
       '<div><b>' + r.progress.b2 + '</b><span>B-2 壊した</span></div>' +
       '<div><b>' + r.progress.b3 + '</b><span>B-3 直した</span></div>' +
       '<div><b>' + r.progress.m + '</b><span>中間 測った</span></div>' +
-      '<div><b>' + r.progress.r + '</b><span>振り返り</span></div></div>' +
+      '<div><b>' + r.progress.r + '</b><span>振り返り</span></div>' +
+      '<div><b>' + (r.progress.v || 0) + '</b><span>アンケート</span></div></div>' +
       '<p class="lstat">' + N + '人中の人数</p>');
     (r.steps || []).forEach(function(x, i){
       var st = r.stepStuck && r.stepStuck[i] ? r.stepStuck[i].n : 0;
@@ -1224,7 +1240,8 @@ java ThreadedServer 40001</pre>
       : (r.mm && r.mm.n ? dist(r.mm) + '<p class="lstat">中間レポートをいつ始めるか</p>' + bars(r.plan, 'am') : NONE));
 
     fill('diff', !r.show.diff ? '<p class="wait">' + r.diffN + ' 人が送りました。難しさの分布は先生の合図のあとで出ます。</p>'
-      : bars(['1 とても簡単', '2', '3 ちょうどよい', '4', '5 とても難しい'].map(function(l, i){ return {l:l, n:r.diff[i], c:(i >= 3 ? 'rd' : (i === 2 ? 'ok' : ''))}; })));
+      : '<div class="gl">今日の難しさ</div>' + bars(['1 とても簡単', '2', '3 ちょうどよい', '4', '5 とても難しい'].map(function(l, i){ return {l:l, n:r.diff[i], c:(i >= 3 ? 'rd' : (i === 2 ? 'ok' : ''))}; }))
+        + (r.pace ? '<div class="gl">進む速さ</div>' + bars(r.pace) : '') + (r.short ? '<div class="gl">時間が足りなかった所</div>' + bars(r.short) : ''));
 
     fill('stuck', !r.show.stuck ? WAIT : bars(Object.keys(r.stuck).map(function(k){ return {l:r.stuck[k].l, n:r.stuck[k].n}; }), 'am'));
     if (passIn) me.querySelector('.passrow').style.display = r.pass ? 'block' : 'none';
