@@ -965,7 +965,7 @@ html.vg-locked, html.vg-locked body{overflow:hidden;}
 .vg-badge button{margin-left:4px;font-size:11px;padding:1px 6px;border:1px solid #9aa5b1;background:#fff;border-radius:4px;cursor:pointer;}
 @media print{.vg-gate,.vg-badge{display:none!important;}html.vg-locked body > *{filter:none!important;}}
 </style>
-<script>window.VIEWLOG = {"url": "https://script.google.com/macros/s/AKfycbwDugtsYOtdKCJQwJ9KpZZKmOQKCDgSzKESiyQ4wHjwEfk3x0e3iHWS0mTARFZb5ueO/exec", "course": "net", "page": "中間レポート_課題資料_ネットワーク応用"};</script>
+<script>window.VIEWLOG = {"url": "https://script.google.com/macros/s/AKfycbwDugtsYOtdKCJQwJ9KpZZKmOQKCDgSzKESiyQ4wHjwEfk3x0e3iHWS0mTARFZb5ueO/exec", "course": "net", "page": "中間レポート_課題資料_ネットワーク応用", "noPhone": true};</script>
 <script>// ---- 学籍番号の入口と、資料を見ていた時間の記録（3科目共通。2026-11-11、小板）-----------------
 // 原本は tkoita/Net の 共通/live/viewgate.js。Syspro・Exp へは 共通/tools/sync_viewlog.py で写す。
 // ページには 共通/tools/inject_viewlog.py が、この中身と viewgate.css と設定（window.VIEWLOG）を差し込む。
@@ -975,6 +975,8 @@ html.vg-locked, html.vg-locked body{overflow:hidden;}
 //   つながらないときは、番号の形だけ確かめて開く（教室の外や、つながらない場所でも読めるように）
 // ・ページが画面に出ていて、5分以内に操作（スクロール・クリック・キー）があった時間だけを数え、
 //   1分たまるごとに送る。ページを隠す・閉じるときは、たまった分を送る
+// ・携帯（スマートフォン）では開かない科目がある（設定 noPhone。Net・Syspro。2026-11-12、小板）。
+//   入口に「パソコンで開いてください」と出し、番号の欄を出さない。タブレットとパソコンは開ける
 // ・ページに「学籍番号」の欄（Net・Syspro の .me input[name=sid]、Exp の input[data-k=sid]）があれば、同じ番号を入れておく
 // ★ このファイルに閉じタグの文字列を書かないこと（HTML に埋め込むと、そこで script が終わる）
 (function(){
@@ -1082,7 +1084,27 @@ html.vg-locked, html.vg-locked body{overflow:hidden;}
   document.addEventListener('visibilitychange', function(){ if (document.visibilityState === 'hidden') flush(); lastTick = Date.now(); });
   window.addEventListener('pagehide', flush);
 
+  // 携帯かどうか。UA が携帯か、触って使う画面で短い辺が 600px より小さい（iPhone の「PC 版サイト」も含める）
+  function isPhone(){
+    var ua = navigator.userAgent || '';
+    if (navigator.userAgentData && navigator.userAgentData.mobile) return true;
+    if (/iPhone|iPod|Android.+Mobile|Windows Phone|Mobile.+Firefox|BlackBerry|Opera Mini/i.test(ua)) return true;
+    var w = Math.min(screen.width || 0, screen.height || 0);
+    return (navigator.maxTouchPoints || 0) > 0 && w > 0 && w < 600;
+  }
+  function lockPhone(){
+    document.documentElement.classList.add('vg-locked');
+    gate = document.createElement('div');
+    gate.className = 'vg-gate';
+    gate.innerHTML =
+      '<div class="vg-card">' +
+      '<div class="vg-t">パソコンで開いてください</div>' +
+      '<p class="vg-d">この資料は、携帯（スマートフォン）では開けません。教室のパソコンか、自分のパソコンで開いてください。</p>' +
+      '</div>';
+    document.body.appendChild(gate);
+  }
   function start(){
+    if (C.noPhone && isPhone()) { lockPhone(); return; }
     if (okForm(sid)) open_(); else { sid = ''; lock(); }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
