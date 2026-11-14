@@ -287,6 +287,13 @@ details.extra .extra-body{padding:0 16px 12px;font-size:13px;line-height:1.8;col
 .goal{margin:14px 0 18px;padding:12px 16px;border:2px solid #1668B5;border-radius:10px;background:#eef5fc;font-size:14.5px;line-height:1.75;}
 .goal b:first-child{display:inline-block;margin-right:6px;padding:1px 9px;border-radius:999px;background:#1668B5;color:#fff;font-size:12.5px;}
 .badge .tslot{margin-left:8px;padding-left:8px;border-left:1px solid currentColor;font-family:"SFMono-Regular",Consolas,Menlo,monospace;}
+
+/* 図や画像の入る折りたたみ（:::fold。2026-11-14） */
+details.extra.fold>summary{color:#334155;}
+details.extra.fold .extra-body .figure{margin-top:10px;}
+details.extra.fold .extra-body p.note{margin:8px 0;}
+/* 場面の図（figs/scene_figs.py）は、幅いっぱいに出す */
+.figure svg{width:100%;height:auto;}
 </style></head>
 <body>
 
@@ -310,7 +317,6 @@ details.extra .extra-body{padding:0 16px 12px;font-size:13px;line-height:1.8;col
     <div class="mel">
     <label>自分の学籍番号</label><input name="sid" inputmode="numeric" autocomplete="off" placeholder="1116240000"><span class="ok"></span>
     <div class="passrow"><label>合言葉</label><input name="pass" autocomplete="off"> <span class="hint">教室で伝えます</span></div>
-    <p class="hint" style="margin:6px 0 0;">最初に1回だけ入れてください。このブラウザが覚えます（第5回の資料と中間レポートの課題資料で共通）。止まったら、右下の「止まったら押す」を押してください。<b>状態が変わったら（直った・また止まった）、そのたびにボタンを押し直してください。</b></p>
     </div>
     <div class="mer" data-show="joined"></div>
   </div>
