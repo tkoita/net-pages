@@ -1210,7 +1210,7 @@ html.vg-locked, html.vg-locked body{overflow:hidden;}
       '<div class="vg-t">学籍番号を入れてください</div>' +
       '<p class="vg-d">入れると、資料が開きます。入れるのは最初の1回だけです（このブラウザが覚えます）。</p>' +
       '<input class="vg-in" inputmode="numeric" placeholder="1116240000" aria-label="学籍番号">' +
-      '<button type="submit" class="vg-go">資料を開く</button>' +
+      '<button type="button" class="vg-go">資料を開く</button>' +
       '<p class="vg-msg"></p>' +
       '<p class="vg-note">この資料を見ていた時間（画面に出ていて、5分以内に操作したとき）を、学籍番号といっしょに記録します。</p>' +
       '</form>';
@@ -1218,8 +1218,12 @@ html.vg-locked, html.vg-locked body{overflow:hidden;}
     var f = gate.querySelector('form'), inp = gate.querySelector('.vg-in'), m = gate.querySelector('.vg-msg'), b = gate.querySelector('.vg-go');
     if (msg) m.textContent = msg;
     setTimeout(function(){ try { inp.focus(); } catch(e) {} }, 50);
-    f.addEventListener('submit', function(ev){
-      ev.preventDefault();
+    // フォームの送信に頼らない（プレビューなど、送信が止められている枠の中でも開けるように。2026-11-14）
+    f.addEventListener('submit', function(ev){ ev.preventDefault(); });
+    inp.addEventListener('keydown', function(ev){ if (ev.key === 'Enter'){ ev.preventDefault(); go(); } });
+    b.addEventListener('click', go);
+    function go(){
+      if (b.disabled) return;
       var s = norm(inp.value);
       if (!okForm(s)){ m.textContent = '学籍番号（数字だけ）を入れてください'; return; }
       if (!URL){ sid = s; store(KEY, s); open_(); return; }
@@ -1232,7 +1236,7 @@ html.vg-locked, html.vg-locked body{overflow:hidden;}
         // つながらないときは、形だけ確かめて開く（記録は、つながったときから）
         b.disabled = false; sid = s; store(KEY, s); open_();
       });
-    });
+    }
   }
   // 右下の小さな札（下4桁と「変える」）
   function badge(){
