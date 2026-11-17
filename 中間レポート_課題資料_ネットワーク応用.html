@@ -157,7 +157,7 @@ ul.bullets code{background:#e8edf3;border:1px solid #b8c2ce;border-radius:4px;pa
 .roomnote code{background:#fff;border:1px solid #7ccc95;border-radius:4px;padding:0 4px;}
 @media print{html{scroll-behavior:auto;}body{background:#fff;padding:0;}.topnav,.copybtn,.ckprog,.ckhint{display:none!important;}a.ulink{border-bottom:none;}.sheet{box-shadow:none;border:none;border-radius:0;max-width:none;padding:24px 28px;margin:0;}.topnotice{box-shadow:none;max-width:none;margin:0 0 14px;}.sheet.i2,.sheet.k1,.sheet.k2,.sheet.k3,.sheet.k4,.sheet.k5,.sheet.k6{page-break-before:always;}.level,pre.code,.record,.card,.verify,.checklist,.ainote,.warn,.dayof,.idnote,.figure,table.levels{break-inside:avoid;}}
 @media (max-width:640px){.topnav .inner{height:50px;gap:9px;}.topnav .brand span{display:none;}.topnav .go{padding:6px 10px;font-size:11px;}.sheet{padding:30px 22px 40px;}h1{font-size:23px;}pre.code{font-size:12px;padding:15px;}.record{flex-direction:column;align-items:flex-start;}.frow{flex-wrap:wrap;gap:7px;}}
-pre.fig{margin:14px 0 0;background:#fff;border:1px solid var(--line);border-left:6px solid var(--soft);border-radius:6px;padding:16px 18px;overflow-x:auto;font-family:"SFMono-Regular",Consolas,Menlo,"Yu Gothic",monospace;font-size:12.5px;line-height:1.75;color:#27313b;white-space:pre;}pre.fig{font-size:11px;padding:12px;}pre.fig{break-inside:avoid;}code{white-space:pre-wrap;}td code{overflow-wrap:anywhere;}.figure.shot img{display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid var(--line);border-radius:6px;}.cap.ipsj{text-align:center;font-size:13.5px;color:var(--ink);margin-top:10px;}.cap.ipsj b{margin-right:.8em;}.plabel.sub{text-transform:none;letter-spacing:.02em;font-size:13px;color:var(--ink);margin:22px 0 8px;}/* ---- 第4回・第5回・中間レポート：送る欄・みんなの結果・止まったらボタン・折りたたみ ----
+pre.fig{margin:14px 0 0;background:#fff;border:1px solid var(--line);border-left:6px solid var(--soft);border-radius:6px;padding:16px 18px;overflow-x:auto;font-family:"SFMono-Regular",Consolas,Menlo,"Yu Gothic",monospace;font-size:12.5px;line-height:1.75;color:#27313b;white-space:pre;}pre.fig{font-size:11px;padding:12px;}pre.fig{break-inside:avoid;}code{white-space:pre-wrap;}td code{overflow-wrap:anywhere;}.figure.shot img{display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid var(--line);border-radius:6px;}.cap.ipsj{text-align:center;font-size:13.5px;color:var(--ink);margin-top:10px;}.cap.ipsj b{margin-right:.8em;}.plabel.sub{text-transform:none;letter-spacing:.02em;font-size:13px;color:var(--ink);margin:22px 0 8px;}.vbox{margin:18px 0;padding:12px 16px 6px;border:1px solid;border-left-width:6px;border-radius:8px;}.vbox .vhead{font-size:15.5px;font-weight:800;margin:0 0 8px;line-height:1.5;}.vbox .note{margin:8px 0 6px;}.vbox pre.code{margin:6px 0 12px;}.vbox.red{background:#FCF1EC;border-color:#EDBCA9;border-left-color:#BE3E1B;}.vbox.red .vhead{color:#8C2D12;}.vbox.teal{background:#EEF9F7;border-color:#A8DCD4;border-left-color:#0F6B60;}.vbox.teal .vhead{color:#0A4A42;}.vbox.blue{background:#EEF5FC;border-color:#B6D6EF;border-left-color:#1668B5;}.vbox.blue .vhead{color:#0E4A82;}.vbox.amber{background:#FEF7E6;border-color:#EFD193;border-left-color:#E8A317;}.vbox.amber .vhead{color:#8A6200;}@media print{.vbox{break-inside:avoid;}}/* ---- 第4回・第5回・中間レポート：送る欄・みんなの結果・止まったらボタン・折りたたみ ----
    システムプログラミング（tkoita/Syspro）week05/_build/extra.css から。色は第5回の図にそろえる：
    青 ＝ 測った数字（担当者・Socket と同じ青）、アンバー ＝ 予測・人の側、赤 ＝ 合わなかった数、緑 ＝ 合っていた数 */
 /* 自分の学籍番号 */
@@ -294,7 +294,7 @@ details.extra.fold .extra-body .figure{margin-top:10px;}
 details.extra.fold .extra-body p.note{margin:8px 0;}
 /* 場面の図（figs/scene_figs.py）は、幅いっぱいに出す */
 .figure svg{width:100%;height:auto;}
-</style></head>
+.topnav .updated{flex:0 0 auto;margin-left:auto;font-size:10px;font-weight:700;color:#7b8794;line-height:1.3;text-align:right;white-space:nowrap;letter-spacing:.02em;}.topnav .updated b{display:block;font-weight:700;color:#52606d;font-variant-numeric:tabular-nums;}@media (max-width:640px){.topnav .updated{font-size:9.5px;}}</style></head>
 <body>
 
 <header class="topnav">
@@ -309,6 +309,7 @@ details.extra.fold .extra-body p.note{margin:8px 0;}
       <a href="#mid-submit">提出</a>
       <a href="#mid-help">困ったとき</a>
     </div>
+    <span class="updated" title="この資料を最後に直した日時">最終更新<b>2026-11-17 14:32</b></span>
   </div>
 </header>
 
@@ -325,23 +326,23 @@ details.extra.fold .extra-body p.note{margin:8px 0;}
 <section class="sheet i1" id="mid-top">
   <div class="eyebrow">中間レポート <span class="badge">成績の20%　締切 2026-11-30（月）23:59</span></div>
   <h1>同時につながっても、壊れないサーバ</h1>
+  <h2>やること（3つ）</h2>
+  <ol class="steps">
+    <li><b>課題1</b>：サーバの <code>total</code> を <b>4つの書き方で5回ずつ測り</b>、② だけ数が減る理由を説明する</li>
+    <li><b>課題2</b>：1人の <code>SAY</code> が全員に届く <b><code>ChatServer.java</code> を作り</b>（採点 8 / 8）、わざと壊して、直す</li>
+    <li><b>提出</b>：<code>report.pdf</code>・<code>測定メモ.txt</code>・<code>ChatServer.java</code> を <b>ZIP 1つ</b> にして、<b>11/30（月）23:59 までに1回だけ</b> eclass に出す</li>
+  </ol>
+  <div class="ainote"><b>★ 2026-11-17 に直した所。</b> 課題1の問1-2（プログラムの書き換え）を、書き方ごとに「目印のすぐ下を、このとおりにする」形に書き直しました。課題2の作り方にも、書き換えたあとの形を足しました。<b>課題の中身・提出物・評価は変えていません。すでに測り終えた人は、やり直す必要はありません。</b></div>
   <h2>全体像</h2>
   <p class="note">図1は、中間レポートでやることの全体を示しています。アンバーは課題1、青は課題2、点線の枠は提出する ZIP です。<b>課題1では、サーバの <code>total</code> を4つの書き方で5回ずつ測り、② だけ減る理由を説明します。課題2では、1人の <code>SAY</code> が全員に届くチャットサーバを作ります。最後に、3つのファイルを ZIP 1つにまとめて出します。</b></p>
 <div class="figure"><svg viewBox="0 0 900 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="中間レポートの全体像。課題1はサーバの total を4つの書き方で測って説明する。課題2はチャットサーバを作り、1人の SAY を全員に届ける。成果は report.pdf・測定メモ.txt・ChatServer.java の3つを ZIP 1つにまとめて出す" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'><defs><marker id="a3s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#334155"/></marker><marker id="a3b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#0b5cad"/></marker><marker id="a3r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#b91c1c"/></marker><marker id="a3a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#7c5200"/></marker></defs><rect x="16" y="16" width="560" height="206" rx="12" fill="#ffefc4" stroke="#d39e1c" stroke-width="2"/><text x="34" y="46" font-size="17" fill="#7c5200" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">課題1　数が合わなくなる理由を、測って説明する</text><rect x="34" y="62" width="300" height="146" rx="8" fill="#ffffff" stroke="#d39e1c" stroke-width="1.5"/><text x="48" y="82" font-size="12.5" fill="#334155" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">java Storm 50 5 を4通り</text><text x="48" y="106" font-size="13.5" fill="#0f172a" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">① 守りなし</text><text x="318" y="106" font-size="13.5" fill="#14532d" text-anchor="end" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">+50 ×5回</text><text x="48" y="132" font-size="13.5" fill="#0f172a" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">② 隙あり</text><text x="318" y="132" font-size="13.5" fill="#b91c1c" text-anchor="end" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">+3 ×5回</text><text x="48" y="158" font-size="13.5" fill="#0f172a" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">③ AtomicInteger</text><text x="318" y="158" font-size="13.5" fill="#14532d" text-anchor="end" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">+50 ×5回</text><text x="48" y="184" font-size="13.5" fill="#0f172a" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">④ synchronized＋隙</text><text x="318" y="184" font-size="13.5" fill="#14532d" text-anchor="end" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">+50 ×5回</text><line x1="340" y1="136" x2="384" y2="136" stroke="#7c5200" stroke-width="2.4" marker-end="url(#a3a)"/><rect x="392" y="70" width="166" height="132" rx="8" fill="#ffffff" stroke="#d39e1c" stroke-width="1.5"/><text x="475" y="96" font-size="13.5" fill="#7c5200" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">なぜ ② だけ減る？</text><text x="475" y="122" font-size="12.5" fill="#0f172a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>読む → 書く の間に</text><text x="475" y="142" font-size="12.5" fill="#b91c1c" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">割り込まれる</text><text x="475" y="172" font-size="12" fill="#334155" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>Copilot の答えとも</text><text x="475" y="190" font-size="12" fill="#334155" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>比べる</text><rect x="16" y="238" width="560" height="216" rx="12" fill="#dbeafb" stroke="#5e9bd6" stroke-width="2"/><text x="34" y="268" font-size="17" fill="#0b5cad" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">課題2　チャットサーバを作って、壊して、直す</text><rect x="44" y="300" width="104" height="40" rx="7" fill="#ffffff" stroke="#5e9bd6" stroke-width="1.5"/><text x="96" y="325" font-size="12.5" fill="#0b5cad" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">A：SAY hello</text><line x1="150" y1="320" x2="214" y2="352" stroke="#0b5cad" stroke-width="2" marker-end="url(#a3b)"/><rect x="218" y="300" width="160" height="136" rx="10" fill="#f4f6f9" stroke="#7b8794" stroke-width="1.6"/><text x="298" y="322" font-size="13.5" fill="#0f172a" text-anchor="middle" font-family='"SFMono-Regular",Consolas,Menlo,"Yu Gothic","Meiryo",monospace' font-weight="700">ChatServer</text><rect x="232" y="334" width="132" height="88" rx="8" fill="#ffffff" stroke="#de6f6f" stroke-width="2"/><text x="298" y="354" font-size="11.5" fill="#b91c1c" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">黒板：ALL（全員の出口）</text><rect x="246" y="366" width="30" height="26" rx="5" fill="#fde0e0" stroke="#de6f6f" stroke-width="1.5"/><text x="261" y="384" font-size="12.5" fill="#b91c1c" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">A</text><rect x="284" y="366" width="30" height="26" rx="5" fill="#fde0e0" stroke="#de6f6f" stroke-width="1.5"/><text x="299" y="384" font-size="12.5" fill="#b91c1c" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">B</text><rect x="322" y="366" width="30" height="26" rx="5" fill="#fde0e0" stroke="#de6f6f" stroke-width="1.5"/><text x="337" y="384" font-size="12.5" fill="#b91c1c" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">C</text><text x="298" y="412" font-size="11" fill="#b91c1c" text-anchor="middle" font-family='"SFMono-Regular",Consolas,Menlo,"Yu Gothic","Meiryo",monospace'>CopyOnWriteArrayList</text><line x1="380" y1="362" x2="436" y2="336" stroke="#0b5cad" stroke-width="2" marker-end="url(#a3b)"/><rect x="440" y="316" width="120" height="40" rx="7" fill="#ffffff" stroke="#5e9bd6" stroke-width="1.5"/><text x="500" y="341" font-size="12.5" fill="#0b5cad" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">B：MSG 1 hello</text><line x1="380" y1="362" x2="436" y2="406" stroke="#0b5cad" stroke-width="2" marker-end="url(#a3b)"/><rect x="440" y="386" width="120" height="40" rx="7" fill="#ffffff" stroke="#5e9bd6" stroke-width="1.5"/><text x="500" y="411" font-size="12.5" fill="#0b5cad" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">C：MSG 1 hello</text><text x="96" y="372" font-size="13" fill="#14532d" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">8 / 8 passed</text><text x="96" y="394" font-size="12" fill="#334155" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>1人が切れても</text><text x="96" y="412" font-size="12" fill="#334155" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>残りに届く</text><line x1="580" y1="120" x2="622" y2="190" stroke="#334155" stroke-width="2.4" marker-end="url(#a3s)"/><line x1="580" y1="346" x2="622" y2="286" stroke="#334155" stroke-width="2.4" marker-end="url(#a3s)"/><rect x="628" y="120" width="256" height="262" rx="12" fill="#ffffff" stroke="#7b8794" stroke-width="2" stroke-dasharray="6 4"/><text x="756" y="146" font-size="13" fill="#0f172a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">学籍番号_net_midterm.zip</text><path d="M640,162 h88 l18,18 v78 h-106 z" fill="#ffffff" stroke="#7b8794" stroke-width="2"/><path d="M728,162 v18 h18" fill="none" stroke="#7b8794" stroke-width="2"/><text x="693" y="214" font-size="12" fill="#0f172a" text-anchor="middle" font-family='"SFMono-Regular",Consolas,Menlo,"Yu Gothic","Meiryo",monospace' font-weight="700">report.pdf</text><text x="693" y="236" font-size="10.5" fill="#334155" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>課題1・2・AI の説明</text><path d="M766,162 h88 l18,18 v78 h-106 z" fill="#ffefc4" stroke="#d39e1c" stroke-width="2"/><path d="M854,162 v18 h18" fill="none" stroke="#d39e1c" stroke-width="2"/><text x="819" y="214" font-size="12" fill="#7c5200" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">測定メモ.txt</text><text x="819" y="236" font-size="10.5" fill="#334155" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>ターミナルの出力</text><path d="M703,272 h88 l18,18 v78 h-106 z" fill="#dbeafb" stroke="#5e9bd6" stroke-width="2"/><path d="M791,272 v18 h18" fill="none" stroke="#5e9bd6" stroke-width="2"/><text x="756" y="324" font-size="12" fill="#0b5cad" text-anchor="middle" font-family='"SFMono-Regular",Consolas,Menlo,"Yu Gothic","Meiryo",monospace' font-weight="700">ChatServer.java</text><text x="756" y="346" font-size="10.5" fill="#334155" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>8 / 8 の版</text><text x="756" y="410" font-size="15" fill="#b91c1c" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">締切 2026-11-30（月）23:59</text><text x="756" y="434" font-size="13" fill="#334155" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>eclass に ZIP 1つ</text></svg><p class="cap ipsj"><b>図1</b>中間レポートの全体像</p></div>
   <p class="note">図2は、授業から提出までの流れを示しています。<b>提出は 11/30（月）23:59 までに1回だけです。</b> 課題1と課題2を、まとめて ZIP 1つで出します（課題ごとに分けて出しません）。</p>
 <div class="figure"><svg viewBox="0 0 900 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="授業と中間レポートの予定。11月17日の第5回の授業で数えて壊して直す。そのあと家で課題1と課題2を進め、11月30日23時59分までに、まとめて ZIP 1つで1回だけ提出する" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'><defs><marker id="a3s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#334155"/></marker><marker id="a3b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#0b5cad"/></marker><marker id="a3r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#b91c1c"/></marker><marker id="a3a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#7c5200"/></marker></defs><line x1="60" y1="92" x2="846" y2="92" stroke="#7b8794" stroke-width="4" marker-end="url(#a3s)"/><text x="210" y="46" font-size="15" fill="#0b5cad" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">11/17（火）</text><circle cx="210" cy="92" r="11" fill="#ffffff" stroke="#0b5cad" stroke-width="4"/><rect x="110" y="118" width="200" height="112" rx="10" fill="#dbeafb" stroke="#5e9bd6" stroke-width="2"/><text x="210" y="146" font-size="17" fill="#0b5cad" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">第5回の授業</text><text x="210" y="176" font-size="13" fill="#0f172a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>数える・壊す・直す</text><text x="210" y="200" font-size="13" fill="#0f172a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>測定メモの1行目</text><text x="460" y="46" font-size="15" fill="#7c5200" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">家で（自分のペースで）</text><circle cx="460" cy="92" r="11" fill="#ffffff" stroke="#7c5200" stroke-width="4"/><rect x="360" y="118" width="200" height="112" rx="10" fill="#ffefc4" stroke="#d39e1c" stroke-width="2"/><text x="460" y="146" font-size="17" fill="#7c5200" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">課題1 と 課題2</text><text x="460" y="176" font-size="13" fill="#0f172a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>課題1：測って説明する</text><text x="460" y="200" font-size="13" fill="#0f172a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>課題2：ChatServer を作る</text><text x="710" y="46" font-size="15" fill="#b91c1c" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">11/30（月）23:59 まで</text><circle cx="710" cy="92" r="11" fill="#ffffff" stroke="#b91c1c" stroke-width="4"/><rect x="610" y="118" width="200" height="112" rx="10" fill="#fde0e0" stroke="#de6f6f" stroke-width="2"/><text x="710" y="146" font-size="17" fill="#b91c1c" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">まとめて提出</text><text x="710" y="176" font-size="13" fill="#0f172a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>課題1・2 を ZIP 1つに</text><text x="710" y="200" font-size="13" fill="#0f172a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif'>eclass に1回だけ出す</text><text x="60" y="70" font-size="12" fill="#334155" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">教室</text><text x="846" y="70" font-size="12" fill="#334155" text-anchor="end" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo",sans-serif' font-weight="700">家で</text></svg><p class="cap ipsj"><b>図2</b>授業と中間レポートの予定</p></div>
-  <h2>中間レポートで、あなたがやること</h2>
-  <p class="note"><b>第5回の演習Bを家で丁寧に測って説明し（課題1）、複数人で話せるチャットサーバを作って、壊して、直します（課題2）。</b></p>
+  <h2>進め方</h2>
   <ul class="bullets">
-    <li><b>締切：2026-11-30（月）23:59</b>（eclass に提出）</li>
-    <li><b>提出：ZIP 1つ</b>（<code>学籍番号_net_midterm.zip</code>）。中身は <code>report.pdf</code>・<code>測定メモ.txt</code>・<code>ChatServer.java</code> の3つ</li>
     <li>第6回からは新しい内容に進むので、<b>授業の中で中間レポートの時間は取りません。</b> この資料だけで、1人で進められるように書いてあります</li>
-    <li>各手順の下の「できた」「ここで止まった」を押すと、先生に進み具合が届きます。家からでも押せます</li>
-  </ul>
-  <p class="plabel sub">提出は1回だけ</p>
-  <ul class="bullets">
-    <li>課題1と課題2を <b>まとめて</b>、締切までに <b>1回だけ</b> 出します。課題ごとに分けて出しません</li>
     <li>進める順番は自由です。課題1は第5回の授業の続きなので、課題1から始めると進めやすいです</li>
+    <li>各手順の下の「できた」「ここで止まった」を押すと、先生に進み具合が届きます。家からでも押せます</li>
   </ul>
   <h2>この課題のゴール（2つ）</h2>
   <div class="checklist">
@@ -425,39 +426,74 @@ total の増え方 3（50 増えるはず）
   <p class="note">レポートに、次の2つを書きます。</p>
   <ol class="steps">
     <li>第5回の A-3 で送った <b>自分の予測</b> と <b>Copilot の答え</b>（覚えていなければ、いまの予測と「覚えていない」と書く）</li>
-    <li>下の表の ①〜④ のそれぞれで、「50本を同時につないだら、<code>total</code> はちょうど 50 増えるか」の予測（はい／いいえ／分からない）</li>
+    <li>問1-2 の ①〜④ の書き方のそれぞれで、「50本を同時につないだら、<code>total</code> はちょうど 50 増えるか」の予測（はい／いいえ／分からない）</li>
   </ol>
   <h2>問1-2　4つの書き方で、5回ずつ測る</h2>
-  <p class="note"><code>ThreadedServer.java</code> の <b>★ A-1 ①</b> と <b>★ A-1 ②</b> を、下の表の行ごとに書き換えて測ります。<b>② は第5回の B-2 で測り終えています</b>（<code>測定メモ.txt</code> にあれば、測り直さなくて構いません）。</p>
-  <table class="levels">
-    <thead><tr><th>行</th><th>★ A-1 ①（クラスの先頭）</th><th>★ A-1 ②（serve の先頭）</th></tr></thead>
-    <tbody>
-      <tr><td><b>① 守りなし</b></td><td><code>static int total = 0;</code></td><td><code>total++;</code></td></tr>
-      <tr><td><b>② 隙あり</b></td><td><code>static int total = 0;</code></td><td>下の「②の3行」</td></tr>
-      <tr><td><b>③ AtomicInteger</b></td><td><code>static final AtomicInteger total = new AtomicInteger(0);</code></td><td><code>total.incrementAndGet();</code></td></tr>
-      <tr><td><b>④ synchronized ＋ 隙あり</b></td><td><code>static int total = 0;</code> と <code>static final Object LOCK = new Object();</code> の2行</td><td>下の「④の5行」</td></tr>
-    </tbody>
-  </table>
-  <p class="note"><b>②の3行</b>（第5回の B-2 と同じ）</p>
+  <p class="note">図3は、4つの書き方で、2つの目印のすぐ下に何を書くかを示しています。赤い行（①②）は守っていない書き方、緑の行（③④）は守っている書き方です。<b>書き換えるのは、いつも <code>ThreadedServer.java</code> の ★ A-1 ① と ★ A-1 ② の2か所だけです</b>（第5回の A-1 で写した所と同じ場所です）。</p>
+<div class="figure"><svg viewBox="0 0 720 304" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="4つの書き方で、目印 A-1 ① と A-1 ② のすぐ下に書くもの。① 守りなし、② 隙あり、③ AtomicInteger、④ synchronized と隙あり" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo","Noto Sans CJK JP",sans-serif'><text x="22.0" y="27.0" font-size="13" font-weight="800" fill="#52606d" text-anchor="start">書き方</text><text x="212.0" y="27.0" font-size="13" font-weight="800" fill="#8A6200" text-anchor="start">★ A-1 ① のすぐ下</text><text x="338.0" y="27.0" font-size="11.5" font-weight="700" fill="#52606d" text-anchor="start">（クラスの先頭）</text><text x="446.0" y="27.0" font-size="13" font-weight="800" fill="#8A6200" text-anchor="start">★ A-1 ② のすぐ下</text><text x="572.0" y="27.0" font-size="11.5" font-weight="700" fill="#52606d" text-anchor="start">（serve の先頭）</text><rect x="8" y="40" width="704" height="52" rx="10" fill="#FAE5DD" stroke="#EDBCA9" stroke-width="1.6"/><circle cx="30" cy="66" r="11" fill="#8C2D12"/><text x="30.0" y="70.6" font-size="13" font-weight="800" fill="#fff" text-anchor="middle">1</text><text x="48.0" y="63.0" font-size="13.5" font-weight="800" fill="#8C2D12" text-anchor="start">守りなし</text><text x="48.0" y="81.0" font-size="11.5" font-weight="700" fill="#52606d" text-anchor="start">A-1 と同じ形</text><rect x="212" y="52" width="78.1" height="28" rx="6" fill="#fff" stroke="#EDBCA9" stroke-width="1.6"/><text x="220.0" y="70.1" font-size="11.5" font-weight="800" fill="#8C2D12" text-anchor="start" font-family="SFMono-Regular,Consolas,Menlo,DejaVu Sans Mono,monospace" style="white-space:pre" textLength="62.1" lengthAdjust="spacing">int total</text><text x="298.1" y="71.0" font-size="11.5" font-weight="800" fill="#52606d" text-anchor="start">1行</text><rect x="446" y="52" width="71.2" height="28" rx="6" fill="#fff" stroke="#EDBCA9" stroke-width="1.6"/><text x="454.0" y="70.1" font-size="11.5" font-weight="800" fill="#8C2D12" text-anchor="start" font-family="SFMono-Regular,Consolas,Menlo,DejaVu Sans Mono,monospace" style="white-space:pre" textLength="55.2" lengthAdjust="spacing">total++;</text><text x="525.2" y="71.0" font-size="11.5" font-weight="800" fill="#52606d" text-anchor="start">1行</text><rect x="8" y="100" width="704" height="52" rx="10" fill="#FAE5DD" stroke="#EDBCA9" stroke-width="1.6"/><circle cx="30" cy="126" r="11" fill="#8C2D12"/><text x="30.0" y="130.6" font-size="13" font-weight="800" fill="#fff" text-anchor="middle">2</text><text x="48.0" y="123.0" font-size="13.5" font-weight="800" fill="#8C2D12" text-anchor="start">隙あり</text><text x="48.0" y="141.0" font-size="11.5" font-weight="700" fill="#52606d" text-anchor="start">B-2 と同じ形</text><rect x="212" y="112" width="78.1" height="28" rx="6" fill="#fff" stroke="#EDBCA9" stroke-width="1.6"/><text x="220.0" y="130.1" font-size="11.5" font-weight="800" fill="#8C2D12" text-anchor="start" font-family="SFMono-Regular,Consolas,Menlo,DejaVu Sans Mono,monospace" style="white-space:pre" textLength="62.1" lengthAdjust="spacing">int total</text><text x="298.1" y="131.0" font-size="11.5" font-weight="800" fill="#52606d" text-anchor="start">1行</text><rect x="446" y="112" width="167.8" height="28" rx="6" fill="#fff" stroke="#EDBCA9" stroke-width="1.6"/><text x="454.0" y="130.1" font-size="11.5" font-weight="800" fill="#8C2D12" text-anchor="start" font-family="SFMono-Regular,Consolas,Menlo,DejaVu Sans Mono,monospace" style="white-space:pre" textLength="151.8" lengthAdjust="spacing">読む → sleep(2) → 書く</text><text x="621.8" y="131.0" font-size="11.5" font-weight="800" fill="#52606d" text-anchor="start">3行</text><rect x="8" y="160" width="704" height="52" rx="10" fill="#E3F5F2" stroke="#A8DCD4" stroke-width="1.6"/><circle cx="30" cy="186" r="11" fill="#0A4A42"/><text x="30.0" y="190.6" font-size="13" font-weight="800" fill="#fff" text-anchor="middle">3</text><text x="48.0" y="183.0" font-size="13.5" font-weight="800" fill="#0A4A42" text-anchor="start">AtomicInteger</text><text x="48.0" y="201.0" font-size="11.5" font-weight="700" fill="#52606d" text-anchor="start">B-3 と同じ形</text><rect x="212" y="172" width="147.1" height="28" rx="6" fill="#fff" stroke="#A8DCD4" stroke-width="1.6"/><text x="220.0" y="190.1" font-size="11.5" font-weight="800" fill="#0A4A42" text-anchor="start" font-family="SFMono-Regular,Consolas,Menlo,DejaVu Sans Mono,monospace" style="white-space:pre" textLength="131.1" lengthAdjust="spacing">AtomicInteger total</text><text x="367.1" y="191.0" font-size="11.5" font-weight="800" fill="#52606d" text-anchor="start">1行</text><rect x="446" y="172" width="181.6" height="28" rx="6" fill="#fff" stroke="#A8DCD4" stroke-width="1.6"/><text x="454.0" y="190.1" font-size="11.5" font-weight="800" fill="#0A4A42" text-anchor="start" font-family="SFMono-Regular,Consolas,Menlo,DejaVu Sans Mono,monospace" style="white-space:pre" textLength="165.6" lengthAdjust="spacing">total.incrementAndGet();</text><text x="635.6" y="191.0" font-size="11.5" font-weight="800" fill="#52606d" text-anchor="start">1行</text><rect x="8" y="220" width="704" height="52" rx="10" fill="#E3F5F2" stroke="#A8DCD4" stroke-width="1.6"/><circle cx="30" cy="246" r="11" fill="#0A4A42"/><text x="30.0" y="250.6" font-size="13" font-weight="800" fill="#fff" text-anchor="middle">4</text><text x="48.0" y="243.0" font-size="13.5" font-weight="800" fill="#0A4A42" text-anchor="start">synchronized ＋ 隙あり</text><text x="48.0" y="261.0" font-size="11.5" font-weight="700" fill="#52606d" text-anchor="start">② を囲んだ形</text><rect x="212" y="232" width="133.3" height="28" rx="6" fill="#fff" stroke="#A8DCD4" stroke-width="1.6"/><text x="220.0" y="250.1" font-size="11.5" font-weight="800" fill="#0A4A42" text-anchor="start" font-family="SFMono-Regular,Consolas,Menlo,DejaVu Sans Mono,monospace" style="white-space:pre" textLength="117.3" lengthAdjust="spacing">int total と LOCK</text><text x="353.3" y="251.0" font-size="11.5" font-weight="800" fill="#52606d" text-anchor="start">2行</text><rect x="446" y="232" width="223.0" height="28" rx="6" fill="#fff" stroke="#A8DCD4" stroke-width="1.6"/><text x="454.0" y="250.1" font-size="11.5" font-weight="800" fill="#0A4A42" text-anchor="start" font-family="SFMono-Regular,Consolas,Menlo,DejaVu Sans Mono,monospace" style="white-space:pre" textLength="207.0" lengthAdjust="spacing">synchronized (LOCK) { ②の3行 }</text><text x="677.0" y="251.0" font-size="11.5" font-weight="800" fill="#52606d" text-anchor="start">5行</text><text x="22.0" y="294.0" font-size="12" font-weight="700" fill="#52606d" text-anchor="start">赤 ＝ 守っていない書き方　　緑 ＝ 守っている書き方　　★ A-1 ③ と import の行は、最初に1回そろえたら触らない</text></svg><p class="cap ipsj"><b>図3</b>4つの書き方と、書き換える2か所</p></div>
+  <p class="note">図の中は短く書いてあります。<b>写すコードは、下の ①〜④ に、そのまま全部書いてあります。</b></p>
+  <p class="plabel sub">最初に1回だけ：2つの行をそろえる</p>
+  <ol class="steps">
+    <li><code>ThreadedServer.java</code> を開く。<b>いちばん上の <code>import</code> の並び</b> に次の1行があるかを見て、なければ足す（③ で使います。ほかの書き方のときも、消さずに残します）</li>
+  </ol>
+<pre class="code">import java.util.concurrent.atomic.AtomicInteger;</pre>
+  <ol class="steps" start="2">
+    <li><code>Ctrl</code> ＋ <code>F</code> で <b><code>A-1 ③</code></b> を探し、目印のすぐ下を次の1行にする（第5回の B-3 で <code>total.get()</code> にした人は、ここで戻します）。<b>この1行は4つの書き方のどれでも動くので、このあとは触りません</b></li>
+  </ol>
+<pre class="code">    if (line.equals("TOTAL")) return String.valueOf(total);</pre>
+  <p class="plabel sub">1つの書き方の測り方（①〜④で、同じ5つの手順）</p>
+  <ol class="steps">
+    <li>ターミナル1のサーバを <code>Ctrl</code> ＋ <code>C</code> で止める</li>
+    <li><code>Ctrl</code> ＋ <code>F</code> で <code>A-1 ①</code> と <code>A-1 ②</code> を探し、<b>目印のすぐ下</b> を、その書き方の「このとおりにする」に書き換える<ul class="bullets"><li>目印の行（<code>// ★ A-1 ①：…</code> と <code>// ★ A-1 ②：…</code>）は消さない</li><li>前の書き方の行は、残さずに消す（残っていると、コンパイルが通りません）</li></ul></li>
+    <li><code>Ctrl</code> ＋ <code>S</code> で保存し、ターミナル1で次の2行を順に打つ（コンパイルしてから、起動）</li>
+  </ol>
+<pre class="code">javac -encoding UTF-8 ThreadedServer.java
+java ThreadedServer 40001</pre>
+  <ol class="steps" start="4">
+    <li>ターミナル2で次の1行を打つ（50本を同時につなぐ、を5回くり返します）</li>
+  </ol>
+<pre class="code">java Storm 50 5</pre>
+  <ol class="steps" start="5">
+    <li>ターミナル2の <code>---- 1 回目 ----</code> から最後の行までをコピーし、<code>測定メモ.txt</code> に「① 守りなし　2026-11-20 自分のPC」のような1行を付けて貼る</li>
+  </ol>
+  <div class="vbox red"><p class="vhead">① 守りなし（第5回の A-1 と同じ形）</p>
+  <p class="note"><b>★ A-1 ① のすぐ下を、このとおりにする</b>（1行）</p>
+<pre class="code">  static int total = 0;</pre>
+  <p class="note"><b>★ A-1 ② のすぐ下を、このとおりにする</b>（1行）</p>
+<pre class="code">    total++;</pre>
+  <p class="note"><b>こうなれば OK：</b> ほとんどの回が「合っている」。合わない回があっても、なくても、出たとおりに記録します（第5回の B-1 は3回だったので、ここで5回測ります）。</p>
+  </div>
+  <div class="vbox red"><p class="vhead">② 隙あり（第5回の B-2 と同じ形）</p>
+  <p class="note"><b>第5回の B-2 の5回が <code>測定メモ.txt</code> に残っていれば、② は測り直さなくて構いません。</b></p>
+  <p class="note"><b>★ A-1 ① のすぐ下を、このとおりにする</b>（1行。① と同じ）</p>
+<pre class="code">  static int total = 0;</pre>
+  <p class="note"><b>★ A-1 ② のすぐ下を、このとおりにする</b>（3行）</p>
 <pre class="code">    int tmp = total;                                              <span class="cmt">// (1) 読む</span>
     try { Thread.sleep(2); } catch (InterruptedException e) {}    <span class="cmt">// ここで割り込まれる</span>
     total = tmp + 1;                                              <span class="cmt">// (3) 書く</span></pre>
-  <p class="note"><b>④の5行</b>（②の3行を、<code>synchronized</code> で囲んだもの。<code>sleep</code> は残す）</p>
+  <p class="note"><b>こうなれば OK：</b> 「total の増え方」が 50 よりずっと小さい。例外は1つも出ていない。</p>
+  </div>
+  <div class="vbox teal"><p class="vhead">③ AtomicInteger（第5回の B-3 と同じ形）</p>
+  <p class="note"><b>★ A-1 ① のすぐ下を、このとおりにする</b>（1行）</p>
+<pre class="code">  static final AtomicInteger total = new AtomicInteger(0);</pre>
+  <p class="note"><b>★ A-1 ② のすぐ下を、このとおりにする</b>（1行）</p>
+<pre class="code">    total.incrementAndGet();</pre>
+  <p class="note"><b>こうなれば OK：</b> 5回とも「合っている」。</p>
+  </div>
+  <div class="vbox teal"><p class="vhead">④ synchronized ＋ 隙あり（② の3行を、<code>synchronized</code> で囲んだ形）</p>
+  <p class="note"><b>★ A-1 ① のすぐ下を、このとおりにする</b>（2行）</p>
+<pre class="code">  static int total = 0;
+  static final Object LOCK = new Object();</pre>
+  <p class="note"><b>★ A-1 ② のすぐ下を、このとおりにする</b>（5行。<code>sleep</code> は残します）</p>
 <pre class="code">    synchronized (LOCK) {
       int tmp = total;
       try { Thread.sleep(2); } catch (InterruptedException e) {}
       total = tmp + 1;
     }</pre>
-  <p class="note"><b>③のときだけ、2か所を足します：</b> ファイルのいちばん上に <code>import java.util.concurrent.atomic.AtomicInteger;</code>、★ A-1 ③ は <code>String.valueOf(total.get())</code>。①②④では <code>String.valueOf(total)</code> に戻します。</p>
-  <p class="note"><b>1つの行の測り方</b>（①〜④で同じ手順をくり返します）</p>
-  <ol class="steps">
-    <li>ターミナル1のサーバを <code>Ctrl</code> ＋ <code>C</code> で止める</li>
-    <li>表のとおりに書き換えて <code>Ctrl</code> ＋ <code>S</code></li>
-    <li>ターミナル1で <code>javac -encoding UTF-8 ThreadedServer.java</code> → <code>java ThreadedServer 40001</code></li>
-    <li>ターミナル2で <code>java Storm 50 5</code></li>
-    <li>出力をまるごとコピーし、<code>測定メモ.txt</code> に「① 守りなし　日付　自分のPC」のような1行を付けて貼る</li>
-  </ol>
-  <p class="note"><b>4つとも測れたら、レポートに次の表を作ります。</b></p>
+  <p class="note"><b>こうなれば OK：</b> <code>sleep</code> を残したままなのに、5回とも「合っている」。</p>
+  </div>
+  <p class="plabel sub">4つとも測れたら</p>
+  <p class="note">レポートに次の表を作ります。</p>
   <table class="levels">
     <thead><tr><th>書き方</th><th>1回目</th><th>2回目</th><th>3回目</th><th>4回目</th><th>5回目</th><th>合わなかった回数</th></tr></thead>
     <tbody>
@@ -525,14 +561,25 @@ total の増え方 3（50 増えるはず）
   </ol>
 <pre class="code">  static final List&lt;Writer&gt; ALL = new CopyOnWriteArrayList&lt;&gt;();   <span class="cmt">// 黒板：いまつながっている全員の出口</span></pre>
   <ol class="steps" start="4">
-    <li><b>★ 課題2 ②</b>（<code>handle</code> の中）：<code>while</code> の前で一覧に入れ、<code>while</code> が終わったら（切断でも）必ず外す</li>
+    <li><b>★ 課題2 ②</b>（<code>handle</code> の中）：<code>while</code> の前で一覧に入れ、<code>while</code> が終わったら（切断でも）必ず外す。下は、<b>目印の行から <code>handle</code> の終わりの手前まで<b> の、書き換えたあとの形です。</b>足すのは、<code>// ← 足す</code> と書いた5行だけ</b> で、そのほかは、もとからある行です（もとの行の字下げは、そのままでも動きます）</li>
   </ol>
-<pre class="code">    ALL.add(out);
-    try {
-      （もとからある String line; と while ( … ) { … } を、そのままここに入れる）
-    } finally {
-      ALL.remove(out);      <span class="cmt">// 切断しても、例外が起きても、必ず外す</span>
-    }</pre>
+<pre class="code">    <span class="cmt">// ★ 課題2 ②（もとからある目印の行）</span>
+    ALL.add(out);                              <span class="cmt">// ← 足す</span>
+    try {                                      <span class="cmt">// ← 足す</span>
+      String line;
+      while ((line = in.readLine()) != null) {
+        if (line.equals("QUIT")) {
+          send(out, "BYE");
+          return;
+        }
+
+        <span class="cmt">// ★ 課題2 ④（もとからある目印の行。手順6で、この下に SAY の5行を足す）</span>
+
+        send(out, reply(line));
+      }
+    } finally {                                <span class="cmt">// ← 足す</span>
+      ALL.remove(out);                         <span class="cmt">// ← 足す（切断しても、例外が起きても、必ず外す）</span>
+    }                                          <span class="cmt">// ← 足す</span></pre>
   <ol class="steps" start="5">
     <li><b>★ 課題2 ③</b>（<code>handle</code> の下）：全員に配るメソッドを足す</li>
   </ol>
@@ -548,8 +595,9 @@ total の増え方 3（50 増えるはず）
       }
     }
   }</pre>
+  <p class="note"><b>ここで1回、コンパイルします</b>（<code>javac -encoding UTF-8 ChatServer.java</code>）。何も表示されなければ、手順1〜5は合っています。</p>
   <ol class="steps" start="6">
-    <li><b>★ 課題2 ④</b>（<code>while</code> の中、<code>send(out, reply(line));</code> の前）：<code>SAY</code> を受けたときの5行</li>
+    <li><b>★ 課題2 ④</b>（<code>while</code> の中、<code>send(out, reply(line));</code> の前）：<code>SAY</code> を受けたときの5行。<b>この5行を足しただけでは、コンパイルが通りません</b>（<code>cannot find symbol</code> と <code>myId</code> が出ます）。<code>myId</code> は、次の手順7で作ります</li>
   </ol>
 <pre class="code">      if (line.startsWith("SAY ")) {
         send(out, "OK");
@@ -574,8 +622,16 @@ total の増え方 3（50 増えるはず）
   <h2>問2-2　わざと壊す：一覧を <code>ArrayList</code> に戻す</h2>
   <p class="note"><b>ここでやること：</b> 手順3の <code>CopyOnWriteArrayList</code> を、ふつうの <code>ArrayList</code> に戻し、配っている途中で1人が抜けると何が起きるかを見ます。</p>
   <ol class="steps">
-    <li>手順3の行を <code>static final List&lt;Writer&gt; ALL = new ArrayList&lt;&gt;();</code> に変える（<code>import java.util.*;</code> があるので、そのまま使えます）</li>
-    <li>手順5の <code>broadcast</code> の <code>for (Writer w : ALL) {</code> の <b>次の行</b>（<code>for</code> の中のいちばん上）に、<code>try { Thread.sleep(3000); } catch (InterruptedException e) {}</code> を足す（1人に配るたびに3秒かかる状態を作ります）</li>
+    <li>手順3の行（★ 課題2 ① のすぐ下）を、次の1行に変える（<code>CopyOnWriteArrayList</code> を <code>ArrayList</code> にするだけです。<code>import java.util.*;</code> があるので、そのまま使えます）</li>
+  </ol>
+<pre class="code">  static final List&lt;Writer&gt; ALL = new ArrayList&lt;&gt;();              <span class="cmt">// 黒板：ふつうの ArrayList に戻した</span></pre>
+  <ol class="steps" start="2">
+    <li>手順5の <code>broadcast</code> の <code>for (Writer w : ALL) {</code> の <b>すぐ下</b> に、<code>sleep</code> の1行を足す（1人に配るたびに3秒かかる状態を作ります）。下は、足したあとの3行です</li>
+  </ol>
+<pre class="code">    for (Writer w : ALL) {
+      try { Thread.sleep(3000); } catch (InterruptedException e) {}   <span class="cmt">// ← 足す</span>
+      if (w == except) continue;</pre>
+  <ol class="steps" start="3">
     <li>保存 → <code>javac -encoding UTF-8 ChatServer.java</code> → <code>java ChatServer 40001</code></li>
     <li>ターミナル2・3・4 で、それぞれ <code>java ChatClient localhost 40001</code>（ターミナルを4枚にします）</li>
     <li>ターミナル2で <code>SAY hello</code> と打ち、<b>3秒以内に</b> ターミナル3で <code>Ctrl</code> ＋ <code>C</code></li>
@@ -665,9 +721,11 @@ total の増え方 3（50 増えるはず）
     <thead><tr><th>起きること</th><th>原因と直し方</th></tr></thead>
     <tbody>
       <tr><td><code>Address already in use</code></td><td>前に起動したサーバがまだ動いています。そのターミナルで <code>Ctrl</code> ＋ <code>C</code>。分からなければ <code>netstat -ano | findstr 40001</code> → <code>Stop-Process -Id &lt;いちばん右の数字&gt;</code></td></tr>
-      <tr><td><code>Storm</code> が <code>TOTAL の返事が数ではありません</code></td><td>★ A-1 ③ の1行がありません。第5回の A-1 を見直す</td></tr>
+      <tr><td><code>Storm</code> が <code>TOTAL の返事が数ではありません</code></td><td>★ A-1 ③ の1行がありません。問1-2 の「最初に1回だけ」の 2 を見直す</td></tr>
       <tr><td>書き換えたのに数が変わらない</td><td>保存 → <code>javac</code> → <b>サーバの起動し直し</b> のどれかを飛ばしています</td></tr>
-      <tr><td><code>cannot find symbol</code></td><td><code>import</code> の行が足りないか、変数の名前（<code>myId</code>・<code>ALL</code>・<code>total</code>）が違います</td></tr>
+      <tr><td><code>cannot find symbol</code></td><td>下に出る名前を見ます。<code>AtomicInteger</code>・<code>CopyOnWriteArrayList</code> なら <code>import</code> の行、<code>LOCK</code> なら ④ の ★ A-1 ① の2行目、<code>myId</code> なら課題2の手順7 が足りません</td></tr>
+      <tr><td><code>int cannot be dereferenced</code>・<code>bad operand type AtomicInteger</code>・<code>incompatible types</code></td><td>★ A-1 ① と ★ A-1 ② が、同じ書き方の組になっていません。問1-2 のその書き方の2か所を、もう一度見比べる</td></tr>
+      <tr><td><code>variable total is already defined</code></td><td>前の書き方の行が残っています。★ A-1 ① のすぐ下を、その書き方の行だけにする</td></tr>
       <tr><td>採点の最初で止まり、止め方が表示される</td><td>自分で起動したサーバが 40001 を使ったままです。止めてから実行し直す</td></tr>
       <tr><td>ケース4だけ <code>FAIL</code></td><td><code>total</code> を守っていません（③ AtomicInteger の形にする）</td></tr>
       <tr><td>ケース3・7 が <code>FAIL</code></td><td><code>finally { ALL.remove(out); }</code> がないか、<code>COUNT</code> が <code>ALL.size()</code> になっていません</td></tr>
